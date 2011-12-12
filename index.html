@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<!--
+/*
+ * JavaScript Load Image Demo 1.0
+ * https://github.com/blueimp/JavaScript-Load-Image
+ *
+ * Copyright 2011, Sebastian Tschan
+ * https://blueimp.net
+ *
+ * Licensed under the MIT license:
+ * http://creativecommons.org/licenses/MIT/
+ */
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JavaScript Load Image</title>
+<link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+<style type="text/css">
+.page-header {
+    background-color: #f5f5f5;
+    padding: 80px 20px 10px;
+    margin: 0 -20px 20px;
+    border: 1px solid #DDD;
+    -webkit-border-radius: 0 0 6px 6px;
+       -moz-border-radius: 0 0 6px 6px;
+            border-radius: 0 0 6px 6px;
+}
+</style>
+<!--[if lt IE 7]>
+<style type="text/css">
+.span6, .span10 {
+    display: inline;
+    float: left;
+    margin-left: 20px;
+}
+.topbar {
+    position: absolute;
+}
+.topbar ul, .topbar .container {
+    padding-top: 10px;
+}
+.topbar li {
+    display: inline;
+    margin-right: 10px;
+}
+.topbar a:hover {
+    color: #fff;
+}
+</style>
+<![endif]-->
+<meta name="description" content="JavaScript Load Image is a function to load images provided as File or Blob objects or via URL. It returns an optionally scaled HTML img or canvas element.">
+</head>
+<body>
+<div class="topbar">
+    <div class="fill">
+        <div class="container">
+            <a class="brand" href="https://github.com/blueimp/JavaScript-Load-Image">JavaScript Load Image</a>
+            <ul class="nav">
+                <li class="active"><a href="#">Demo</a></li>
+                <li><a href="https://github.com/blueimp/JavaScript-Load-Image/downloads">Downloads</a></li>
+                <li><a href="https://github.com/blueimp/JavaScript-Load-Image">Source Code</a></li>
+                <li><a href="https://github.com/blueimp/JavaScript-Load-Image">Documentation</a></li>
+                <li><a href="https://github.com/blueimp/JavaScript-Load-Image/issues">Issues</a></li>
+                <li><a href="test/">Test</a></li>
+                <li><a href="https://blueimp.net">&copy; Sebastian Tschan</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="page-header">
+        <h1>JavaScript Load Image Demo</h1>
+        <p><a href="https://developer.mozilla.org/en/JavaScript/">JavaScript</a> Load Image is a function to load images provided as <a href="https://developer.mozilla.org/en/DOM/File">File</a> or <a href="https://developer.mozilla.org/en/DOM/Blob">Blob</a> objects or via URL.<br>
+            It returns an optionally scaled HTML <strong>img</strong> or <strong>canvas</strong> element.</p>
+    </div>
+    <div class="row">
+        <div class="span6">
+            <h2>Select an image file</h2>
+            <p><input type="file" id="file-input"></p>
+            <p>Or <strong>drag &amp; drop</strong> an image file onto this webpage.</p>
+        </div>
+        <div class="span10">
+            <h2>Result</h2>
+            <div class="well" id="result"><span><span class="label notice">Notice</span> This demo works only in browsers with support for the <a href="https://developer.mozilla.org/en/DOM/window.URL">URL</a> or <a href="https://developer.mozilla.org/en/DOM/FileReader">FileReader</a> API.</span></div>
+        </div>
+    </div>
+</div>
+<script src="load-image.min.js"></script>
+<script>
+/*global window, document */
+(function () {
+    'use strict';
+    var result = document.getElementById('result'),
+        load = function (e) {
+            e.preventDefault();
+            window.loadImage(
+                (e.dataTransfer || e.target).files[0],
+                function (img) {
+                    result.replaceChild(img, result.firstChild);
+                },
+                {
+                    maxWidth: 540,
+                    canvas: true
+                }
+            );
+        };
+    document.ondragover = function (e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = e.dataTransfer.effectAllowed = 'copy';
+    };
+    document.ondrop = load;
+    document.getElementById('file-input').onchange = load;
+}());
+</script>
+</body> 
+</html>
