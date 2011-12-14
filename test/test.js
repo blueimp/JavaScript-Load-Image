@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Test 1.1.1
+ * JavaScript Load Image Test 1.1.2
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -118,6 +118,22 @@
             $.strictEqual(img.width, 160);
             $.strictEqual(img.height, 120);
         }, {minHeight: 180, maxWidth: 160}));
+    });
+
+    $.asyncTest('Do not scale to max settings without min settings', function () {
+        $.ok($.loadImage(blob, function (img) {
+            $.start();
+            $.strictEqual(img.width, 80);
+            $.strictEqual(img.height, 60);
+        }, {maxWidth: 160, maxHeight: 120}));
+    });
+
+    $.asyncTest('Do not scale to min settings without max settings', function () {
+        $.ok($.loadImage(blob, function (img) {
+            $.start();
+            $.strictEqual(img.width, 80);
+            $.strictEqual(img.height, 60);
+        }, {minWidth: 40, minHeight: 30}));
     });
 
     $.module('Canvas');

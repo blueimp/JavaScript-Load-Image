@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.1.1
+ * JavaScript Load Image 1.1.2
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -57,14 +57,18 @@
                 (options.minWidth || img.width) / img.width,
                 (options.minHeight || img.height) / img.height
             );
-        img.width = parseInt(img.width * scale, 10);
-        img.height = parseInt(img.height * scale, 10);
+        if (scale > 1) {
+            img.width = parseInt(img.width * scale, 10);
+            img.height = parseInt(img.height * scale, 10);
+        }
         scale = Math.min(
             (options.maxWidth || img.width) / img.width,
             (options.maxHeight || img.height) / img.height
         );
-        img.width = parseInt(img.width * scale, 10);
-        img.height = parseInt(img.height * scale, 10);
+        if (scale < 1) {
+            img.width = parseInt(img.width * scale, 10);
+            img.height = parseInt(img.height * scale, 10);
+        }
         if (!options.canvas || !canvas.getContext) {
             return img;
         }
