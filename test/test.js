@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Test 1.0
+ * JavaScript Load Image Test 1.1
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -25,6 +25,11 @@
 
     $.module('Loading');
 
+    $.test('Return the img element or FileReader object to allow aborting the image load', function () {
+        var img = $.loadImage(blob, function () {});
+        $.strictEqual(img && typeof img.onload, 'function');
+    });
+
     $.asyncTest('Load image url', function () {
         $.ok($.loadImage(imageUrl, function (img) {
             $.start();
@@ -41,7 +46,7 @@
         }));
     });
 
-    $.asyncTest('Return image loading error', function () {
+    $.asyncTest('Return image loading error to callback', function () {
         $.ok($.loadImage('404', function (img) {
             $.start();
             $.ok(img instanceof $.Event);
@@ -85,7 +90,7 @@
 
     $.module('Canvas');
 
-    $.asyncTest('Return img element if options.canvas is not true', function () {
+    $.asyncTest('Return img element to callback if options.canvas is not true', function () {
         $.ok($.loadImage(blob, function (img) {
             $.start();
             $.ok(!img.getContext);
@@ -93,7 +98,7 @@
         }));
     });
 
-    $.asyncTest('Return canvas element if options.canvas is true', function () {
+    $.asyncTest('Return canvas element to callback if options.canvas is true', function () {
         $.ok($.loadImage(blob, function (img) {
             $.start();
             $.ok(img.getContext);
@@ -101,7 +106,7 @@
         }, {canvas: true}));
     });
 
-    $.asyncTest('Return scaled canvas element', function () {
+    $.asyncTest('Return scaled canvas element to callback', function () {
         $.ok($.loadImage(blob, function (img) {
             $.start();
             $.ok(img.getContext);

@@ -30,21 +30,36 @@ The JavaScript Load Image function has zero dependencies.
 ## API
 The **loadImage()** function accepts a [File](https://developer.mozilla.org/en/DOM/File) or [Blob](https://developer.mozilla.org/en/DOM/Blob) object or a simple image URL (e.g. "http://example.org/image.png") as first argument.
 
-It returns *true* if the browser supports the required APIs for loading the image file.
-This is true for all browsers when passing an image URL, else it is true if the browser supports the [URL](https://developer.mozilla.org/en/DOM/window.URL) or [FileReader](https://developer.mozilla.org/en/DOM/FileReader) API:
+If a [File](https://developer.mozilla.org/en/DOM/File) or [Blob](https://developer.mozilla.org/en/DOM/Blob) is passed as parameter, it returns a HTML **img** element if the browser supports the [URL](https://developer.mozilla.org/en/DOM/window.URL) API or a [FileReader](https://developer.mozilla.org/en/DOM/FileReader) object if supported, or **false**.  
+It always returns a HTML **img** element when passing an image URL:
 
 ```js
 document.getElementById('file-input').onchange = function (e) {
-    var isSupported = window.loadImage(
+    var loadingImage = window.loadImage(
         e.target.files[0],
         function (img) {
             document.body.appendChild(img);
         },
         {maxWidth: 600}
     );
-    if (!isSupported) {
+    if (!loadingImage) {
         // Alternative code ...
     }
+};
+```
+
+The **img** element or [FileReader](https://developer.mozilla.org/en/DOM/FileReader) object returned by the **loadImage()** function allows to abort the loading process by setting the **onload** and **onerror** event handlers to null:
+
+```js
+document.getElementById('file-input').onchange = function (e) {
+    var loadingImage = window.loadImage(
+        e.target.files[0],
+        function (img) {
+            document.body.appendChild(img);
+        },
+        {maxWidth: 600}
+    );
+    loadingImage.onload = loadingImage.onerror = null;
 };
 ```
 

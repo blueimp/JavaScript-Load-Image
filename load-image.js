@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.0
+ * JavaScript Load Image 1.1
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -37,7 +37,7 @@
             };
             if (url) {
                 img.src = url;
-                return true;
+                return img;
             } else {
                 return loadImage.readFile(file, function (url) {
                     img.src = url;
@@ -99,7 +99,7 @@
                 callback(e.target.result);
             };
             fileReader.readAsDataURL(file);
-            return true;
+            return fileReader;
         }
         return false;
     };
