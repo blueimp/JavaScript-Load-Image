@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Test 1.1
+ * JavaScript Load Image Test 1.1.1
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -86,6 +86,38 @@
             $.strictEqual(img.width, 320);
             $.strictEqual(img.height, 240);
         }, {minHeight: 240}));
+    });
+
+    $.asyncTest('Scale to options.minWidth but respect options.maxWidth', function () {
+        $.ok($.loadImage(blob, function (img) {
+            $.start();
+            $.strictEqual(img.width, 160);
+            $.strictEqual(img.height, 120);
+        }, {minWidth: 240, maxWidth: 160}));
+    });
+
+    $.asyncTest('Scale to options.minHeight but respect options.maxHeight', function () {
+        $.ok($.loadImage(blob, function (img) {
+            $.start();
+            $.strictEqual(img.width, 160);
+            $.strictEqual(img.height, 120);
+        }, {minHeight: 180, maxHeight: 120}));
+    });
+
+    $.asyncTest('Scale to options.minWidth but respect options.maxHeight', function () {
+        $.ok($.loadImage(blob, function (img) {
+            $.start();
+            $.strictEqual(img.width, 160);
+            $.strictEqual(img.height, 120);
+        }, {minWidth: 240, maxHeight: 120}));
+    });
+
+    $.asyncTest('Scale to options.minHeight but respect options.maxWidth', function () {
+        $.ok($.loadImage(blob, function (img) {
+            $.start();
+            $.strictEqual(img.width, 160);
+            $.strictEqual(img.height, 120);
+        }, {minHeight: 180, maxWidth: 160}));
     });
 
     $.module('Canvas');
