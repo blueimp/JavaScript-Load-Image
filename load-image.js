@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.1.2
+ * JavaScript Load Image 1.1.3
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -10,7 +10,7 @@
  */
 
 /*jslint nomen: true */
-/*global window, document, Blob, URL, webkitURL, FileReader, define */
+/*global window, document, URL, webkitURL, Blob, FileReader, define */
 
 (function ($) {
     'use strict';
@@ -22,7 +22,7 @@
             var img = document.createElement('img'),
                 url,
                 isFile;
-            if (file instanceof Blob) {
+            if (window.Blob && file instanceof Blob) {
                 url = loadImage.createObjectURL(file);
                 isFile = true;
             } else {
@@ -44,7 +44,8 @@
                 });
             }
         },
-        undef = 'undefined';
+        urlAPI = (window.createObjectURL && window) ||
+            (window.URL && URL) || (window.webkitURL && webkitURL);
 
     // Scales the given image (img HTML element)
     // using the given options.
@@ -80,24 +81,17 @@
     };
 
     loadImage.createObjectURL = function (file) {
-        var urlAPI = (typeof window.createObjectURL !== undef && window) ||
-                (typeof URL !== undef && URL) ||
-                (typeof webkitURL !== undef && webkitURL);
         return urlAPI ? urlAPI.createObjectURL(file) : false;
     };
 
     loadImage.revokeObjectURL = function (url) {
-        var urlAPI = (typeof window.revokeObjectURL !== undef && window) ||
-                (typeof URL !== undef && URL) ||
-                (typeof webkitURL !== undef && webkitURL);
         return urlAPI ? urlAPI.revokeObjectURL(url) : false;
     };
 
     // Loads a given File object via FileReader interface,
     // invokes the callback with a data url:
     loadImage.readFile = function (file, callback) {
-        if (typeof FileReader !== undef &&
-                FileReader.prototype.readAsDataURL) {
+        if (window.FileReader && FileReader.prototype.readAsDataURL) {
             var fileReader = new FileReader();
             fileReader.onload = function (e) {
                 callback(e.target.result);
@@ -108,7 +102,7 @@
         return false;
     };
 
-    if (typeof define !== undef && define.amd) {
+    if (typeof define !== 'undefined' && define.amd) {
         // Register as an AMD module:
         define('loadImage', function () {
             return loadImage;
