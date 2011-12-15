@@ -1,16 +1,42 @@
 {
     "name": "blueimp-load-image",
+    "version": "1.1.3",
+    "title": "JavaScript Load Image",
     "description": "JavaScript Load Image is a function to load images provided as File or Blob objects or via URL. It returns an optionally scaled HTML img or canvas element.",
+    "keywords": [
+        "javascript",
+        "load",
+        "loading",
+        "image",
+        "file",
+        "blob",
+        "url",
+        "scale",
+        "scaling",
+        "img",
+        "canvas"
+    ],
     "homepage": "https://github.com/blueimp/JavaScript-Load-Image",
     "author": {
         "name": "Sebastian Tschan",
         "url": "https://blueimp.net"
     },
+    "maintainers": [
+        {
+            "name": "Sebastian Tschan",
+            "url": "https://blueimp.net"
+        }
+    ],
     "repository": {
         "type": "git",
         "url": "git://github.com/blueimp/JavaScript-Load-Image.git"
     },
     "bugs": "https://github.com/blueimp/JavaScript-Load-Image/issues",
-    "main": "load-image",
-    "version": "1.1.3"
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "http://www.opensource.org/licenses/MIT"
+        }
+    ],
+    "main": "loadImage"
 }

@@ -109,4 +109,4 @@ window.loadImage(
 All options are optional. By default, the image is returned as HTML **img** element without any image size restrictions.
 
 ## License
-The JavaScript Load Image script is released under the [MIT license](http://creativecommons.org/licenses/MIT/).
+The JavaScript Load Image script is released under the [MIT license](http://www.opensource.org/licenses/MIT).
