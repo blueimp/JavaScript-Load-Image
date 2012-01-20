@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.1.3
+ * JavaScript Load Image 1.1.4
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -10,7 +10,7 @@
  */
 
 /*jslint nomen: true */
-/*global window, document, URL, webkitURL, Blob, FileReader, define */
+/*global window, document, URL, webkitURL, Blob, File, FileReader, define */
 
 (function ($) {
     'use strict';
@@ -21,20 +21,22 @@
     var loadImage = function (file, callback, options) {
             var img = document.createElement('img'),
                 url,
-                isFile;
-            if (window.Blob && file instanceof Blob) {
-                url = loadImage.createObjectURL(file);
-                isFile = true;
-            } else {
-                url = file;
-            }
+                oUrl;
             img.onerror = callback;
             img.onload = function () {
-                if (isFile) {
-                    loadImage.revokeObjectURL(url);
+                if (oUrl) {
+                    loadImage.revokeObjectURL(oUrl);
                 }
                 callback(loadImage.scale(img, options));
             };
+            if ((window.Blob && file instanceof Blob) ||
+                // Files are also Blob instances, but some browsers
+                // (Firefox 3.6) support the File API but not Blobs:
+                    (window.File && file instanceof File)) {
+                url = oUrl = loadImage.createObjectURL(file);
+            } else {
+                url = file;
+            }
             if (url) {
                 img.src = url;
                 return img;
