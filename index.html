@@ -15,25 +15,34 @@
 <head>
 <meta charset="utf-8">
 <title>JavaScript Load Image</title>
-<link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
-<!--[if lt IE 7]><link rel="stylesheet" href="http://blueimp.github.com/Bootstrap-Image-Gallery/bootstrap-ie6.min.css"><![endif]-->
-<style type="text/css">body {padding-top: 80px;}</style>
 <meta name="description" content="JavaScript Load Image is a function to load images provided as File or Blob objects or via URL. It returns an optionally scaled HTML img or canvas element.">
+<link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap.min.css">
+<style>body{padding-top:60px;}</style>
+<link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-responsive.min.css">
+<!--[if lt IE 7]><link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css"><![endif]-->
+<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
 <body>
-<div class="topbar">
-    <div class="fill">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
         <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
             <a class="brand" href="https://github.com/blueimp/JavaScript-Load-Image">JavaScript Load Image</a>
-            <ul class="nav">
-                <li class="active"><a href="#">Demo</a></li>
-                <li><a href="https://github.com/blueimp/JavaScript-Load-Image/downloads">Downloads</a></li>
-                <li><a href="https://github.com/blueimp/JavaScript-Load-Image">Source Code</a></li>
-                <li><a href="https://github.com/blueimp/JavaScript-Load-Image">Documentation</a></li>
-                <li><a href="https://github.com/blueimp/JavaScript-Load-Image/issues">Issues</a></li>
-                <li><a href="test/">Test</a></li>
-                <li><a href="https://blueimp.net">&copy; Sebastian Tschan</a></li>
-            </ul>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li class="active"><a href="#">Demo</a></li>
+                    <li><a href="https://github.com/blueimp/JavaScript-Load-Image/downloads">Downloads</a></li>
+                    <li><a href="https://github.com/blueimp/JavaScript-Load-Image">Source Code</a></li>
+                    <li><a href="https://github.com/blueimp/JavaScript-Load-Image">Documentation</a></li>
+                    <li><a href="https://github.com/blueimp/JavaScript-Load-Image/issues">Issues</a></li>
+                    <li><a href="test/">Test</a></li>
+                    <li><a href="https://blueimp.net">&copy; Sebastian Tschan</a></li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
@@ -47,43 +56,49 @@
     </blockquote>
     <br>
     <div class="row">
-        <div class="span6">
+        <div class="span5">
             <h2>Select an image file</h2>
             <p><input type="file" id="file-input"></p>
-            <p>Or <strong>drag &amp; drop</strong> an image file onto this webpage.</p>
+            <p><span class="label label-info">Notice</span> Or <strong>drag &amp; drop</strong> an image file onto this webpage.</p>
         </div>
-        <div class="span10">
+        <div class="span7">
             <h2>Result</h2>
-            <div class="well" id="result"><span><span class="label notice">Notice</span> This demo works only in browsers with support for the <a href="https://developer.mozilla.org/en/DOM/window.URL">URL</a> or <a href="https://developer.mozilla.org/en/DOM/FileReader">FileReader</a> API.</span></div>
+            <div class="well" id="result"><p><span class="label label-warning">Notice</span> This demo works only in browsers with support for the <a href="https://developer.mozilla.org/en/DOM/window.URL">URL</a> or <a href="https://developer.mozilla.org/en/DOM/FileReader">FileReader</a> API.</p></div>
         </div>
     </div>
 </div>
 <script src="load-image.min.js"></script>
+<!-- jQuery and Bootstrap JS are not required, but included for the demo -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="http://blueimp.github.com/cdn/js/bootstrap.min.js"></script>
 <script>
-/*global window, document */
-(function () {
+/*global jQuery, window, document */
+(function ($) {
     'use strict';
-    var result = document.getElementById('result'),
+    var result = $('#result'),
         load = function (e) {
+            e = e.originalEvent;
             e.preventDefault();
             window.loadImage(
                 (e.dataTransfer || e.target).files[0],
                 function (img) {
-                    result.replaceChild(img, result.firstChild);
+                    result.children().replaceWith(img);
                 },
                 {
-                    maxWidth: 540,
+                    maxWidth: result.children().outerWidth(),
                     canvas: true
                 }
             );
         };
-    document.ondragover = function (e) {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = e.dataTransfer.effectAllowed = 'copy';
-    };
-    document.ondrop = load;
-    document.getElementById('file-input').onchange = load;
-}());
+    $(document)
+        .on('dragover', function (e) {
+            e = e.originalEvent;
+            e.preventDefault();
+            e.dataTransfer.dropEffect = e.dataTransfer.effectAllowed = 'copy';
+        })
+        .on('drop', load);
+    $('#file-input').on('change', load);
+}(jQuery));
 </script>
 </body> 
 </html>
