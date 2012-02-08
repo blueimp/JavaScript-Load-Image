@@ -105,12 +105,10 @@
     };
 
     if (typeof define !== 'undefined' && define.amd) {
-        // Register as an AMD module:
-        define('loadImage', function () {
+        define(function () {
             return loadImage;
         });
     } else {
-        // Bind to the global (window) object:
         $.loadImage = loadImage;
     }
 }(this));
