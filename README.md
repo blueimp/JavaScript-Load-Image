@@ -27,6 +27,8 @@ document.getElementById('file-input').onchange = function (e) {
 ## Requirements
 The JavaScript Load Image function has zero dependencies.
 
+However, JavaScript Load Image is a very suitable complement to the [Canvas to Blob](https://github.com/blueimp/JavaScript-Canvas-to-Blob) function.
+
 ## API
 The **loadImage()** function accepts a [File](https://developer.mozilla.org/en/DOM/File) or [Blob](https://developer.mozilla.org/en/DOM/Blob) object or a simple image URL (e.g. "http://example.org/image.png") as first argument.
 

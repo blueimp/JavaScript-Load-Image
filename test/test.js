@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Test 1.1.2
+ * JavaScript Load Image Test 1.1.3
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -9,7 +9,7 @@
  * http://www.opensource.org/licenses/MIT
  */
 
-/*global window, describe, it, expect, require */
+/*global window, describe, it, expect */
 
 (function (expect, loadImage) {
     'use strict';
@@ -19,11 +19,7 @@
             'OctNqLs968+w+G4kiW5omm6sq27gvH8kzX9o3n+s73/g8MCofE' +
             'ovGITCqXzKbzCY1Kp9Sq9YrNarfcrvcLDovH5PKsAAA7',
 	    imageUrl = 'data:image/gif;base64,' + b64Data,
-	    BlobBuilder = window.MozBlobBuilder || window.WebKitBlobBuilder || window.BlobBuilder,
-	    builder = new BlobBuilder(),
-	    blob;
-	builder.append(window.Base64Binary.decodeArrayBuffer(b64Data));
-	blob = builder.getBlob('image/gif');
+    	blob = window.canvasToBlob.dataURItoBlob(imageUrl);
 
     describe('Loading', function () {
 
@@ -175,6 +171,6 @@
     });
 
 }(
-    this.expect || require('expect.js'),
-    this.loadImage || require('../load-image').loadImage
+    this.expect,
+    this.loadImage
 ));
