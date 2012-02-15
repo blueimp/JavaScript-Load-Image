@@ -38,8 +38,5 @@
             "url": "http://www.opensource.org/licenses/MIT"
         }
     ],
-    "files": [
-        "load-image.js"
-    ],
     "main": "load-image.js"
 }
