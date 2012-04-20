@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.1.5
+ * JavaScript Load Image 1.1.6
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -49,10 +49,11 @@
         urlAPI = (window.createObjectURL && window) ||
             (window.URL && URL) || (window.webkitURL && webkitURL);
 
-    // Scales the given image (img HTML element)
+    // Scales the given image (img or canvas HTML element)
     // using the given options.
-    // Returns a canvas object if the canvas option is true
-    // and the browser supports canvas, else the scaled image:
+    // Returns a canvas object if the browser supports canvas
+    // and the canvas option is true or a canvas object is passed
+    // as image, else the scaled image:
     loadImage.scale = function (img, options) {
         options = options || {};
         var canvas = document.createElement('canvas'),
@@ -74,16 +75,16 @@
             width = parseInt(width * scale, 10);
             height = parseInt(height * scale, 10);
         }
-        if (!options.canvas || !canvas.getContext) {
-            img.width = width;
-            img.height = height;
-            return img;
+        if (img.getContext || (options.canvas && canvas.getContext)) {
+            canvas.width = width;
+            canvas.height = height;
+            canvas.getContext('2d')
+                .drawImage(img, 0, 0, width, height);
+            return canvas;
         }
-        canvas.width = width;
-        canvas.height = height;
-        canvas.getContext('2d')
-            .drawImage(img, 0, 0, width, height);
-        return canvas;
+        img.width = width;
+        img.height = height;
+        return img;
     };
 
     loadImage.createObjectURL = function (file) {

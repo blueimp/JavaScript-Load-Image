@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Test 1.1.3
+ * JavaScript Load Image Test 1.1.6
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -19,7 +19,7 @@
             'OctNqLs968+w+G4kiW5omm6sq27gvH8kzX9o3n+s73/g8MCofE' +
             'ovGITCqXzKbzCY1Kp9Sq9YrNarfcrvcLDovH5PKsAAA7',
 	    imageUrl = 'data:image/gif;base64,' + b64Data,
-    	blob = window.canvasToBlob.dataURItoBlob(imageUrl);
+        blob = window.canvasToBlob.dataURItoBlob(imageUrl);
 
     describe('Loading', function () {
 
@@ -166,6 +166,19 @@
                 expect(img.width).to.be(40);
                 expect(img.height).to.be(30);
             }, {canvas: true, maxWidth: 40})).to.be.ok();
+        });
+
+        it('Accept a canvas element as parameter for loadImage.scale', function (done) {
+            expect(loadImage(blob, function (img) {
+                done();
+                img = loadImage.scale(img, {
+                    maxWidth: 40
+                });
+                expect(img.getContext).to.be.ok();
+                expect(img.nodeName.toLowerCase()).to.be('canvas');
+                expect(img.width).to.be(40);
+                expect(img.height).to.be(30);
+            }, {canvas: true})).to.be.ok();
         });
 
     });
