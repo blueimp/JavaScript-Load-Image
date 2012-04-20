@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.1.4
+ * JavaScript Load Image 1.1.5
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -56,29 +56,33 @@
     loadImage.scale = function (img, options) {
         options = options || {};
         var canvas = document.createElement('canvas'),
+            width = img.width,
+            height = img.height,
             scale = Math.max(
-                (options.minWidth || img.width) / img.width,
-                (options.minHeight || img.height) / img.height
+                (options.minWidth || width) / width,
+                (options.minHeight || height) / height
             );
         if (scale > 1) {
-            img.width = parseInt(img.width * scale, 10);
-            img.height = parseInt(img.height * scale, 10);
+            width = parseInt(width * scale, 10);
+            height = parseInt(height * scale, 10);
         }
         scale = Math.min(
-            (options.maxWidth || img.width) / img.width,
-            (options.maxHeight || img.height) / img.height
+            (options.maxWidth || width) / width,
+            (options.maxHeight || height) / height
         );
         if (scale < 1) {
-            img.width = parseInt(img.width * scale, 10);
-            img.height = parseInt(img.height * scale, 10);
+            width = parseInt(width * scale, 10);
+            height = parseInt(height * scale, 10);
         }
         if (!options.canvas || !canvas.getContext) {
+            img.width = width;
+            img.height = height;
             return img;
         }
-        canvas.width = img.width;
-        canvas.height = img.height;
+        canvas.width = width;
+        canvas.height = height;
         canvas.getContext('2d')
-            .drawImage(img, 0, 0, img.width, img.height);
+            .drawImage(img, 0, 0, width, height);
         return canvas;
     };
 
