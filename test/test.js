@@ -19,7 +19,7 @@
             'OctNqLs968+w+G4kiW5omm6sq27gvH8kzX9o3n+s73/g8MCofE' +
             'ovGITCqXzKbzCY1Kp9Sq9YrNarfcrvcLDovH5PKsAAA7',
 	    imageUrl = 'data:image/gif;base64,' + b64Data,
-        blob = window.canvasToBlob.dataURItoBlob(imageUrl);
+	    blob = window.dataURLtoBlob && window.dataURLtoBlob(imageUrl);
 
     describe('Loading', function () {
 
