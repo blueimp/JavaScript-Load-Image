@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <!--
 /*
- * JavaScript Load Image Demo 1.0
+ * JavaScript Load Image Demo 1.0.1
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -95,7 +95,7 @@
         .on('dragover', function (e) {
             e = e.originalEvent;
             e.preventDefault();
-            e.dataTransfer.dropEffect = e.dataTransfer.effectAllowed = 'copy';
+            e.dataTransfer.dropEffect = 'copy';
         })
         .on('drop', load);
     $('#file-input').on('change', load);

@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.1.6
+ * JavaScript Load Image 1.1.7
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -37,17 +37,19 @@
             } else {
                 url = file;
             }
-            if (url && !(window.File && url instanceof File)) {
+            if (url) {
                 img.src = url;
                 return img;
-            } else {
-                return loadImage.readFile(file, function (url) {
-                    img.src = url;
-                });
             }
+            return loadImage.readFile(file, function (url) {
+                img.src = url;
+            });
         },
+        // The check for URL.revokeObjectURL fixes an issue with Opera 12,
+        // which provides URL.createObjectURL but doesn't properly implement it:
         urlAPI = (window.createObjectURL && window) ||
-            (window.URL && URL) || (window.webkitURL && webkitURL);
+            (window.URL && URL.revokeObjectURL && URL) ||
+            (window.webkitURL && webkitURL);
 
     // Scales the given image (img or canvas HTML element)
     // using the given options.
@@ -92,7 +94,7 @@
     };
 
     loadImage.revokeObjectURL = function (url) {
-        return urlAPI && typeof urlAPI.revokeObjectURL !== 'undefined' ? urlAPI.revokeObjectURL(url) : false;
+        return urlAPI ? urlAPI.revokeObjectURL(url) : false;
     };
 
     // Loads a given File object via FileReader interface,
