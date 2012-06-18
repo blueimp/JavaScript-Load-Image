@@ -37,7 +37,7 @@
             } else {
                 url = file;
             }
-            if (url) {
+            if (url && !(window.File && url instanceof File)) {
                 img.src = url;
                 return img;
             } else {
@@ -92,7 +92,7 @@
     };
 
     loadImage.revokeObjectURL = function (url) {
-        return urlAPI ? urlAPI.revokeObjectURL(url) : false;
+        return urlAPI && typeof urlAPI.revokeObjectURL !== 'undefined' ? urlAPI.revokeObjectURL(url) : false;
     };
 
     // Loads a given File object via FileReader interface,
