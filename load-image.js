@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.1.7
+ * JavaScript Load Image 1.2
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -24,7 +24,7 @@
                 oUrl;
             img.onerror = callback;
             img.onload = function () {
-                if (oUrl && !options.nounload) {
+                if (oUrl && !options.noRevoke) {
                     loadImage.revokeObjectURL(oUrl);
                 }
                 callback(loadImage.scale(img, options));
