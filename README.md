@@ -89,6 +89,7 @@ The optional third argument is a map of options:
 * **minWidth**: Defines the minimum width of the img/canvas element.
 * **minHeight**: Defines the minimum height of the img/canvas element.
 * **canvas**: Defines if the returned element should be a [canvas](https://developer.mozilla.org/en/HTML/Canvas) element.
+* **noRevoke**: By default, the [created object URL](https://developer.mozilla.org/en/DOM/window.URL.createObjectURL) is revoked after the image has been loaded, except when this option is set to *true*.
 
 They can be used the following way:
 
@@ -103,12 +104,13 @@ window.loadImage(
         maxHeight: 300,
         minWidth: 100,
         minHeight: 50,
-        canvas: true
+        canvas: true,
+        noRevoke: true
     }
 );
 ```
 
-All options are optional. By default, the image is returned as HTML **img** element without any image size restrictions.
+All settings are optional. By default, the image is returned as HTML **img** element without any image size restrictions.
 
 ## License
 The JavaScript Load Image script is released under the [MIT license](http://www.opensource.org/licenses/MIT).
