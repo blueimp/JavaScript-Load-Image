@@ -24,7 +24,7 @@
                 oUrl;
             img.onerror = callback;
             img.onload = function () {
-                if (oUrl && !options.noRevoke) {
+                if (oUrl && !(typeof(options)!="undefined" && options.noRevoke)) {
                     loadImage.revokeObjectURL(oUrl);
                 }
                 callback(loadImage.scale(img, options));
