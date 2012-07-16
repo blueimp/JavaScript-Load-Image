@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Test 1.1.6
+ * JavaScript Load Image Test 1.2
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -51,6 +51,26 @@
                 done();
                 expect(img).to.be.a(window.Event);
                 expect(img.type).to.be('error');
+            })).to.be.ok();
+        });
+
+        it('Keep object URL if options.noRevoke is true', function (done) {
+            expect(loadImage(blob, function (img) {
+                loadImage(img.src, function (img2) {
+                    done();
+                    expect(img.width).to.be(img2.width);
+                    expect(img.height).to.be(img2.height);
+                });
+            }, {noRevoke: true})).to.be.ok();
+        });
+
+        it('Discard object URL if options.noRevoke is undefined or false', function (done) {
+            expect(loadImage(blob, function (img) {
+                loadImage(img.src, function (img2) {
+                    done();
+                    expect(img2).to.be.a(window.Event);
+                    expect(img2.type).to.be('error');
+                });
             })).to.be.ok();
         });
 
