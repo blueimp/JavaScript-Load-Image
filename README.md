@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/blueimp/JavaScript-Load-Image.png)](http://travis-ci.org/blueimp/JavaScript-Load-Image)
 # JavaScript Load Image
 
 ## Demo
