@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <!--
 /*
- * JavaScript Load Image Demo 1.2.1
+ * JavaScript Load Image Demo 1.2.3
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -70,27 +70,39 @@
     </div>
 </div>
 <script src="load-image.min.js"></script>
-<!-- jQuery and Bootstrap JS are not required, but included for the demo -->
+<!-- jQuery is not required, but included for the demo -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script src="http://blueimp.github.com/cdn/js/bootstrap.min.js"></script>
 <script>
-/*global jQuery, window, document */
+/*global jQuery, window, document, HTMLCanvasElement */
 (function ($) {
     'use strict';
     var result = $('#result'),
         load = function (e) {
             e = e.originalEvent;
             e.preventDefault();
-            window.loadImage(
-                (e.dataTransfer || e.target).files[0],
-                function (img) {
-                    result.children().replaceWith(img);
-                },
-                {
-                    maxWidth: result.children().outerWidth(),
-                    canvas: true
-                }
-            );
+            if (!window.loadImage(
+                    (e.dataTransfer || e.target).files[0],
+                    function (img) {
+                        if (!(img.src || img instanceof HTMLCanvasElement)) {
+                            img = $(
+                                '<span class="label label-important">Error</span>' +
+                                    ' <span>Loading image file failed</span>'
+                            );
+                        }
+                        result.children().replaceWith(img);
+                    },
+                    {
+                        maxWidth: result.children().outerWidth(),
+                        canvas: true
+                    }
+                )) {
+                result.children().replaceWith(
+                    $(
+                        '<span class="label label-important">Error</span>' +
+                            ' <span>Your browser does not support the URL or FileReader API.</span>'
+                    )
+                );
+            }
         };
     $(document)
         .on('dragover', function (e) {

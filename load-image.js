@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.2.2
+ * JavaScript Load Image 1.2.3
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -46,8 +46,13 @@
                 img.src = url;
                 return img;
             }
-            return loadImage.readFile(file, function (url) {
-                img.src = url;
+            return loadImage.readFile(file, function (e) {
+                var target = e.target;
+                if (target && target.result) {
+                    img.src = target.result;
+                } else {
+                    callback(e);
+                }
             });
         },
         // The check for URL.revokeObjectURL fixes an issue with Opera 12,
@@ -205,13 +210,12 @@
     };
 
     // Loads a given File object via FileReader interface,
-    // invokes the callback with a data url:
+    // invokes the callback with the event object (load or error).
+    // The result can be read via event.target.result:
     loadImage.readFile = function (file, callback) {
         if (window.FileReader && FileReader.prototype.readAsDataURL) {
             var fileReader = new FileReader();
-            fileReader.onload = function (e) {
-                callback(e.target.result);
-            };
+            fileReader.onload = fileReader.onerror = callback;
             fileReader.readAsDataURL(file);
             return fileReader;
         }
