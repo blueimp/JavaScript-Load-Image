@@ -145,8 +145,8 @@
                     0,
                     sw,
                     sh,
-                    Math.floor(sx * width / iw),
-                    Math.floor(sy * height / ih / vertSquashRatio),
+                    (sx * width / iw) << 0,
+                    (sy * height / ih / vertSquashRatio) << 0,
                     Math.ceil(sw * width / iw),
                     Math.ceil(sh * height / ih / vertSquashRatio)
                 );
@@ -173,16 +173,16 @@
                 (options.minHeight || height) / height
             );
         if (scale > 1) {
-            width = parseInt(width * scale, 10);
-            height = parseInt(height * scale, 10);
+            width = (width * scale) << 0;
+            height = (height * scale) << 0;
         }
         scale = Math.min(
             (options.maxWidth || width) / width,
             (options.maxHeight || height) / height
         );
         if (scale < 1) {
-            width = parseInt(width * scale, 10);
-            height = parseInt(height * scale, 10);
+            width = (width * scale) << 0;
+            height = (height * scale) << 0;
         }
         if (img.getContext || (options.canvas && canvas.getContext)) {
             canvas.width = width;
