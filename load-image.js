@@ -106,7 +106,7 @@
             }
             py = (ey + sy) >> 1;
         }
-        return py / ih;
+        return (py / ih) || 1;
     };
 
     // Renders image to canvas while working around iOS image scaling bugs:
