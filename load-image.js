@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.2.3
+ * JavaScript Load Image 1.3
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -119,10 +119,12 @@
             d = 1024, // size of tiling canvas
             tmpCanvas = document.createElement('canvas'),
             tmpCtx,
-            sy,
-            sh,
+            dw,
+            dh,
+            dx,
+            dy,
             sx,
-            sw;
+            sy;
         ctx.save();
         if (loadImage.detectSubsampling(img)) {
             iw /= 2;
@@ -131,28 +133,22 @@
         vertSquashRatio = loadImage.detectVerticalSquash(img, ih);
         tmpCanvas.width = tmpCanvas.height = d;
         tmpCtx = tmpCanvas.getContext('2d');
+        dw = Math.ceil(d * width / iw);
+        dh = Math.ceil(d * height / ih / vertSquashRatio);
+        dy = 0;
         sy = 0;
         while (sy < ih) {
-            sh = sy + d > ih ? ih - sy : d;
+            dx = 0;
             sx = 0;
             while (sx < iw) {
-                sw = sx + d > iw ? iw - sx : d;
                 tmpCtx.clearRect(0, 0, d, d);
                 tmpCtx.drawImage(img, -sx, -sy);
-                ctx.drawImage(
-                    tmpCanvas,
-                    0,
-                    0,
-                    sw,
-                    sh,
-                    (sx * width / iw) << 0,
-                    (sy * height / ih / vertSquashRatio) << 0,
-                    Math.ceil(sw * width / iw),
-                    Math.ceil(sh * height / ih / vertSquashRatio)
-                );
+                ctx.drawImage(tmpCanvas, 0, 0, d, d, dx, dy, dw, dh);
                 sx += d;
+                dx += dw;
             }
             sy += d;
+            dy += dh;
         }
         ctx.restore();
         tmpCanvas = tmpCtx = null;
