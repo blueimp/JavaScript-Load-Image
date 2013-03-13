@@ -1,4 +1,4 @@
 .PHONY: js
 
 js:
-	uglifyjs -nc load-image.js > load-image.min.js
+	uglifyjs load-image.js -c -o load-image.min.js
