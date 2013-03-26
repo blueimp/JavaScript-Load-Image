@@ -1,6 +1,6 @@
 {
     "name": "blueimp-load-image",
-    "version": "1.3.1",
+    "version": "1.3.2",
     "title": "JavaScript Load Image",
     "description": "JavaScript Load Image is a function to load images provided as File or Blob objects or via URL. It returns an optionally scaled HTML img or canvas element.",
     "keywords": [
