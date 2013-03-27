@@ -39,7 +39,7 @@
                 url = oUrl = loadImage.createObjectURL(file);
                 // Store the file type for resize processing:
                 img._type = file.type;
-            } else if(typeof file === "string") {
+            } else if (typeof file === 'string') {
                 url = file;
             }
             if (url) {
