@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.3.1
+ * JavaScript Load Image 1.3.2
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -39,7 +39,7 @@
                 url = oUrl = loadImage.createObjectURL(file);
                 // Store the file type for resize processing:
                 img._type = file.type;
-            } else {
+            } else if(typeof file === "string") {
                 url = file;
             }
             if (url) {
