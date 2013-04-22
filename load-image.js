@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.3.2
+ * JavaScript Load Image 1.4
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -30,17 +30,24 @@
                 if (oUrl && !(options && options.noRevoke)) {
                     loadImage.revokeObjectURL(oUrl);
                 }
-                callback(loadImage.scale(img, options));
+                if (callback) {
+                    callback(loadImage.scale(img, options));
+                }
             };
-            if ((window.Blob && file instanceof Blob) ||
-                // Files are also Blob instances, but some browsers
-                // (Firefox 3.6) support the File API but not Blobs:
-                    (window.File && file instanceof File)) {
+            if (loadImage.isInstanceOf('Blob', file) ||
+                    // Files are also Blob instances, but some browsers
+                    // (Firefox 3.6) support the File API but not Blobs:
+                    loadImage.isInstanceOf('File', file)) {
                 url = oUrl = loadImage.createObjectURL(file);
                 // Store the file type for resize processing:
                 img._type = file.type;
             } else if (typeof file === 'string') {
                 url = file;
+                if (options && options.crossOrigin) {
+                    img.crossOrigin = options.crossOrigin;
+                }
+            } else {
+                return img;
             }
             if (url) {
                 img.src = url;
@@ -51,7 +58,9 @@
                 if (target && target.result) {
                     img.src = target.result;
                 } else {
-                    callback(e);
+                    if (callback) {
+                        callback(e);
+                    }
                 }
             });
         },
@@ -60,6 +69,11 @@
         urlAPI = (window.createObjectURL && window) ||
             (window.URL && URL.revokeObjectURL && URL) ||
             (window.webkitURL && webkitURL);
+
+    loadImage.isInstanceOf = function (type, obj) {
+        // Cross-frame instanceof check
+        return Object.prototype.toString.call(obj) === '[object ' + type + ']';
+    };
 
     // Detects subsampling in JPEG images:
     loadImage.detectSubsampling = function (img) {
