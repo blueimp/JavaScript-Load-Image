@@ -89,6 +89,7 @@ The optional third argument is a map of options:
 * **minWidth**: Defines the minimum width of the img/canvas element.
 * **minHeight**: Defines the minimum height of the img/canvas element.
 * **canvas**: Defines if the returned element should be a [canvas](https://developer.mozilla.org/en/HTML/Canvas) element.
+* **crossOrigin**: Sets the crossOrigin property on the img element for loading [CORS enabled images](https://developer.mozilla.org/en-US/docs/HTML/CORS_Enabled_Image).
 * **noRevoke**: By default, the [created object URL](https://developer.mozilla.org/en/DOM/window.URL.createObjectURL) is revoked after the image has been loaded, except when this option is set to *true*.
 
 They can be used the following way:
