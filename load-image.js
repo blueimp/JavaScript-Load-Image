@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.4
+ * JavaScript Load Image 1.4.1
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -47,7 +47,7 @@
                     img.crossOrigin = options.crossOrigin;
                 }
             } else {
-                return img;
+                return false;
             }
             if (url) {
                 img.src = url;
