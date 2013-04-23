@@ -84,9 +84,10 @@
                     (e.dataTransfer || e.target).files[0],
                     function (img) {
                         if (!(img.src || img instanceof HTMLCanvasElement)) {
-                            img = $(
+                            img = $('<p>'+
                                 '<span class="label label-important">Error</span>' +
-                                    ' <span>Loading image file failed</span>'
+                                    ' <span>Loading image file failed</span>'+
+									'</p>
                             );
                         }
                         result.children().replaceWith(img);
