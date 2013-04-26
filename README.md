@@ -33,7 +33,7 @@ However, JavaScript Load Image is a very suitable complement to the [Canvas to B
 The **loadImage()** function accepts a [File](https://developer.mozilla.org/en/DOM/File) or [Blob](https://developer.mozilla.org/en/DOM/Blob) object or a simple image URL (e.g. "http://example.org/image.png") as first argument.
 
 If a [File](https://developer.mozilla.org/en/DOM/File) or [Blob](https://developer.mozilla.org/en/DOM/Blob) is passed as parameter, it returns a HTML **img** element if the browser supports the [URL](https://developer.mozilla.org/en/DOM/window.URL) API or a [FileReader](https://developer.mozilla.org/en/DOM/FileReader) object if supported, or **false**.  
-It always returns a HTML **img** element when passing an image URL:
+It always returns a HTML [img](https://developer.mozilla.org/en/docs/HTML/Element/Img) element when passing an image URL:
 
 ```js
 document.getElementById('file-input').onchange = function (e) {
@@ -88,6 +88,7 @@ The optional third argument is a map of options:
 * **maxHeight**: Defines the maximum height of the img/canvas element.
 * **minWidth**: Defines the minimum width of the img/canvas element.
 * **minHeight**: Defines the minimum height of the img/canvas element.
+* **crop**: Defines if the canvas element should be cropped to the maxWidth/maxHeight constraints.
 * **canvas**: Defines if the returned element should be a [canvas](https://developer.mozilla.org/en/HTML/Canvas) element.
 * **crossOrigin**: Sets the crossOrigin property on the img element for loading [CORS enabled images](https://developer.mozilla.org/en-US/docs/HTML/CORS_Enabled_Image).
 * **noRevoke**: By default, the [created object URL](https://developer.mozilla.org/en/DOM/window.URL.createObjectURL) is revoked after the image has been loaded, except when this option is set to *true*.

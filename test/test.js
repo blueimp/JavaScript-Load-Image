@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Test 1.2.1
+ * JavaScript Load Image Test 1.5
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -15,11 +15,11 @@
     'use strict';
 
     // 80x60px GIF image (color black, base64 data):
-	var b64Data = 'R0lGODdhUAA8AIABAAAAAP///ywAAAAAUAA8AAACS4SPqcvtD6' +
+    var b64Data = 'R0lGODdhUAA8AIABAAAAAP///ywAAAAAUAA8AAACS4SPqcvtD6' +
             'OctNqLs968+w+G4kiW5omm6sq27gvH8kzX9o3n+s73/g8MCofE' +
             'ovGITCqXzKbzCY1Kp9Sq9YrNarfcrvcLDovH5PKsAAA7',
-	    imageUrl = 'data:image/gif;base64,' + b64Data,
-	    blob = window.dataURLtoBlob && window.dataURLtoBlob(imageUrl);
+        imageUrl = 'data:image/gif;base64,' + b64Data,
+        blob = window.dataURLtoBlob && window.dataURLtoBlob(imageUrl);
 
     describe('Loading', function () {
 
@@ -156,6 +156,27 @@
                 expect(img.width).to.be(80);
                 expect(img.height).to.be(60);
             }, {minWidth: 40, minHeight: 30})).to.be.ok();
+        });
+
+    });
+
+
+    describe('Cropping', function () {
+
+        it('Crop to same values for options.maxWidth and options.maxHeight', function (done) {
+            expect(loadImage(blob, function (img) {
+                done();
+                expect(img.width).to.be(40);
+                expect(img.height).to.be(40);
+            }, {maxWidth: 40, maxHeight: 40, crop: true})).to.be.ok();
+        });
+
+        it('Crop to different values for options.maxWidth and options.maxHeight', function (done) {
+            expect(loadImage(blob, function (img) {
+                done();
+                expect(img.width).to.be(40);
+                expect(img.height).to.be(60);
+            }, {maxWidth: 40, maxHeight: 60, crop: true})).to.be.ok();
         });
 
     });

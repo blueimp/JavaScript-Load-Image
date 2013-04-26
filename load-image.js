@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.4.1
+ * JavaScript Load Image 1.5
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -77,40 +77,38 @@
 
     // Detects subsampling in JPEG images:
     loadImage.detectSubsampling = function (img) {
-        var iw = img.width,
-            ih = img.height,
-            canvas,
-            ctx;
-        if (iw * ih > 1024 * 1024) { // only consider mexapixel images
+        var canvas,
+            context;
+        if (img.width * img.height > 1024 * 1024) { // only consider mexapixel images
             canvas = document.createElement('canvas');
             canvas.width = canvas.height = 1;
-            ctx = canvas.getContext('2d');
-            ctx.drawImage(img, -iw + 1, 0);
+            context = canvas.getContext('2d');
+            context.drawImage(img, -img.width + 1, 0);
             // subsampled image becomes half smaller in rendering size.
             // check alpha channel value to confirm image is covering edge pixel or not.
             // if alpha value is 0 image is not covering, hence subsampled.
-            return ctx.getImageData(0, 0, 1, 1).data[3] === 0;
+            return context.getImageData(0, 0, 1, 1).data[3] === 0;
         }
         return false;
     };
 
     // Detects vertical squash in JPEG images:
-    loadImage.detectVerticalSquash = function (img, ih) {
+    loadImage.detectVerticalSquash = function (img, correctedHeight) {
         var canvas = document.createElement('canvas'),
-            ctx = canvas.getContext('2d'),
+            context = canvas.getContext('2d'),
             data,
             sy,
             ey,
             py,
             alpha;
         canvas.width = 1;
-        canvas.height = ih;
-        ctx.drawImage(img, 0, 0);
-        data = ctx.getImageData(0, 0, 1, ih).data;
+        canvas.height = correctedHeight;
+        context.drawImage(img, 0, 0);
+        data = context.getImageData(0, 0, 1, correctedHeight).data;
         // search image edge pixel position in case it is squashed vertically:
         sy = 0;
-        ey = ih;
-        py = ih;
+        ey = correctedHeight;
+        py = correctedHeight;
         while (py > sy) {
             alpha = data[(py - 1) * 4 + 3];
             if (alpha === 0) {
@@ -120,94 +118,164 @@
             }
             py = (ey + sy) >> 1;
         }
-        return (py / ih) || 1;
+        return (py / correctedHeight) || 1;
     };
 
     // Renders image to canvas while working around iOS image scaling bugs:
     // https://github.com/blueimp/JavaScript-Load-Image/issues/13
-    loadImage.renderImageToCanvas = function (img, canvas, width, height) {
-        var iw = img.width,
-            ih = img.height,
-            ctx = canvas.getContext('2d'),
-            vertSquashRatio,
-            d = 1024, // size of tiling canvas
+    loadImage.renderImageToCanvas = function (
+        canvas,
+        img,
+        sourceX,
+        sourceY,
+        sourceWidth,
+        sourceHeight,
+        destX,
+        destY,
+        destWidth,
+        destHeight
+    ) {
+        var context = canvas.getContext('2d'),
             tmpCanvas = document.createElement('canvas'),
-            tmpCtx,
-            dw,
-            dh,
-            dx,
-            dy,
-            sx,
-            sy;
-        ctx.save();
+            tileSize = tmpCanvas.width = tmpCanvas.height = 1024,
+            tmpContext = tmpCanvas.getContext('2d'),
+            vertSquashRatio,
+            tileX,
+            tileY;
+        context.save();
         if (loadImage.detectSubsampling(img)) {
-            iw /= 2;
-            ih /= 2;
+            sourceWidth /= 2;
+            sourceHeight /= 2;
         }
-        vertSquashRatio = loadImage.detectVerticalSquash(img, ih);
-        tmpCanvas.width = tmpCanvas.height = d;
-        tmpCtx = tmpCanvas.getContext('2d');
-        dw = Math.ceil(d * width / iw);
-        dh = Math.ceil(d * height / ih / vertSquashRatio);
-        dy = 0;
-        sy = 0;
-        while (sy < ih) {
-            dx = 0;
-            sx = 0;
-            while (sx < iw) {
-                tmpCtx.clearRect(0, 0, d, d);
-                tmpCtx.drawImage(img, -sx, -sy);
-                ctx.drawImage(tmpCanvas, 0, 0, d, d, dx, dy, dw, dh);
-                sx += d;
-                dx += dw;
+        vertSquashRatio = loadImage.detectVerticalSquash(img, sourceHeight);
+        destWidth = Math.ceil(tileSize * destWidth / sourceWidth);
+        destHeight = Math.ceil(
+            tileSize * destHeight / sourceHeight / vertSquashRatio
+        );
+        destY = 0;
+        tileY = 0;
+        while (tileY < sourceHeight) {
+            destX = 0;
+            tileX = 0;
+            while (tileX < sourceWidth) {
+                tmpContext.clearRect(0, 0, tileSize, tileSize);
+                tmpContext.drawImage(
+                    img,
+                    sourceX,
+                    sourceY,
+                    sourceWidth,
+                    sourceHeight,
+                    -tileX,
+                    -tileY,
+                    sourceWidth,
+                    sourceHeight
+                );
+                context.drawImage(
+                    tmpCanvas,
+                    0,
+                    0,
+                    tileSize,
+                    tileSize,
+                    destX,
+                    destY,
+                    destWidth,
+                    destHeight
+                );
+                tileX += tileSize;
+                destX += destWidth;
             }
-            sy += d;
-            dy += dh;
+            tileY += tileSize;
+            destY += destHeight;
         }
-        ctx.restore();
-        tmpCanvas = tmpCtx = null;
+        context.restore();
     };
 
     // Scales the given image (img or canvas HTML element)
     // using the given options.
     // Returns a canvas object if the browser supports canvas
-    // and the canvas option is true or a canvas object is passed
-    // as image, else the scaled image:
+    // and the canvas or crop option is true or a canvas object
+    // is passed as image, else the scaled image:
     loadImage.scale = function (img, options) {
         options = options || {};
         var canvas = document.createElement('canvas'),
+            useCanvas = img.getContext ||
+                ((options.canvas || options.crop) && canvas.getContext),
             width = img.width,
             height = img.height,
-            scale = Math.max(
-                (options.minWidth || width) / width,
-                (options.minHeight || height) / height
-            );
-        if (scale > 1) {
-            width = Math.ceil(width * scale);
-            height = Math.ceil(height * scale);
-        }
-        scale = Math.min(
-            (options.maxWidth || width) / width,
-            (options.maxHeight || height) / height
-        );
-        if (scale < 1) {
-            width = Math.ceil(width * scale);
-            height = Math.ceil(height * scale);
-        }
-        if (img.getContext || (options.canvas && canvas.getContext)) {
-            canvas.width = width;
-            canvas.height = height;
-            if (img._type === 'image/jpeg') {
-                loadImage
-                    .renderImageToCanvas(img, canvas, width, height);
+            maxWidth = options.maxWidth,
+            maxHeight = options.maxHeight,
+            sourceWidth = width,
+            sourceHeight = height,
+            sourceX = 0,
+            sourceY = 0,
+            destX = 0,
+            destY = 0,
+            destWidth,
+            destHeight,
+            scale;
+        if (useCanvas && maxWidth && maxHeight && options.crop) {
+            destWidth = maxWidth;
+            destHeight = maxHeight;
+            if (width / height < maxWidth / maxHeight) {
+                sourceHeight = maxHeight * width / maxWidth;
+                sourceY = (height - sourceHeight) / 2;
             } else {
-                canvas.getContext('2d')
-                    .drawImage(img, 0, 0, width, height);
+                sourceWidth = maxWidth * height / maxHeight;
+                sourceX = (width - sourceWidth) / 2;
+            }
+        } else {
+            destWidth = width;
+            destHeight = height;
+            scale = Math.max(
+                (options.minWidth || destWidth) / destWidth,
+                (options.minHeight || destHeight) / destHeight
+            );
+            if (scale > 1) {
+                destWidth = Math.ceil(destWidth * scale);
+                destHeight = Math.ceil(destHeight * scale);
+            }
+            scale = Math.min(
+                (maxWidth || destWidth) / destWidth,
+                (maxHeight || destHeight) / destHeight
+            );
+            if (scale < 1) {
+                destWidth = Math.ceil(destWidth * scale);
+                destHeight = Math.ceil(destHeight * scale);
+            }
+        }
+        if (useCanvas) {
+            canvas.width = destWidth;
+            canvas.height = destHeight;
+            if (img._type === 'image/jpeg') {
+                loadImage.renderImageToCanvas(
+                    canvas,
+                    img,
+                    sourceX,
+                    sourceY,
+                    sourceWidth,
+                    sourceHeight,
+                    destX,
+                    destY,
+                    destWidth,
+                    destHeight
+                );
+            } else {
+                canvas.getContext('2d').drawImage(
+                    img,
+                    sourceX,
+                    sourceY,
+                    sourceWidth,
+                    sourceHeight,
+                    destX,
+                    destY,
+                    destWidth,
+                    destHeight
+                );
             }
             return canvas;
         }
-        img.width = width;
-        img.height = height;
+        img.width = destWidth;
+        img.height = destHeight;
         return img;
     };
 
