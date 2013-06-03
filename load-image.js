@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.5
+ * JavaScript Load Image 1.6
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -73,6 +73,55 @@
     loadImage.isInstanceOf = function (type, obj) {
         // Cross-frame instanceof check
         return Object.prototype.toString.call(obj) === '[object ' + type + ']';
+    };
+
+    // Transform image orientation based on the given EXIF orientation data:
+    loadImage.transformCoordinates = function (canvas, orientation) {
+        var ctx = canvas.getContext('2d'),
+            width = canvas.width,
+            height = canvas.height;
+        if (orientation > 4) {
+            canvas.width = height;
+            canvas.height = width;
+        }
+        switch (orientation) {
+        case 2:
+            // horizontal flip
+            ctx.translate(width, 0);
+            ctx.scale(-1, 1);
+            break;
+        case 3:
+            // 180 rotate left
+            ctx.translate(width, height);
+            ctx.rotate(Math.PI);
+            break;
+        case 4:
+            // vertical flip
+            ctx.translate(0, height);
+            ctx.scale(1, -1);
+            break;
+        case 5:
+            // vertical flip + 90 rotate right
+            ctx.rotate(0.5 * Math.PI);
+            ctx.scale(1, -1);
+            break;
+        case 6:
+            // 90 rotate right
+            ctx.rotate(0.5 * Math.PI);
+            ctx.translate(0, -height);
+            break;
+        case 7:
+            // horizontal flip + 90 rotate right
+            ctx.rotate(0.5 * Math.PI);
+            ctx.translate(width, -height);
+            ctx.scale(-1, 1);
+            break;
+        case 8:
+            // 90 rotate left
+            ctx.rotate(-0.5 * Math.PI);
+            ctx.translate(-width, 0);
+            break;
+        }
     };
 
     // Detects subsampling in JPEG images:
@@ -202,17 +251,30 @@
                 ((options.canvas || options.crop) && canvas.getContext),
             width = img.width,
             height = img.height,
-            maxWidth = options.maxWidth,
-            maxHeight = options.maxHeight,
             sourceWidth = width,
             sourceHeight = height,
             sourceX = 0,
             sourceY = 0,
             destX = 0,
             destY = 0,
+            maxWidth,
+            maxHeight,
+            minWidth,
+            minHeight,
             destWidth,
             destHeight,
             scale;
+        if (useCanvas && options.orientation > 4) {
+            maxWidth = options.maxHeight;
+            maxHeight = options.maxWidth;
+            minWidth = options.minHeight;
+            minHeight = options.minWidth;
+        } else {
+            maxWidth = options.maxWidth;
+            maxHeight = options.maxHeight;
+            minWidth = options.minWidth;
+            minHeight = options.minHeight;
+        }
         if (useCanvas && maxWidth && maxHeight && options.crop) {
             destWidth = maxWidth;
             destHeight = maxHeight;
@@ -227,8 +289,8 @@
             destWidth = width;
             destHeight = height;
             scale = Math.max(
-                (options.minWidth || destWidth) / destWidth,
-                (options.minHeight || destHeight) / destHeight
+                (minWidth || destWidth) / destWidth,
+                (minHeight || destHeight) / destHeight
             );
             if (scale > 1) {
                 destWidth = Math.ceil(destWidth * scale);
@@ -246,6 +308,10 @@
         if (useCanvas) {
             canvas.width = destWidth;
             canvas.height = destHeight;
+            loadImage.transformCoordinates(
+                canvas,
+                options.orientation
+            );
             if (img._type === 'image/jpeg') {
                 loadImage.renderImageToCanvas(
                     canvas,
