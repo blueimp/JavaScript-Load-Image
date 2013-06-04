@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Test 1.5
+ * JavaScript Load Image Test 1.6
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -177,6 +177,42 @@
                 expect(img.width).to.be(40);
                 expect(img.height).to.be(60);
             }, {maxWidth: 40, maxHeight: 60, crop: true})).to.be.ok();
+        });
+
+    });
+
+    describe('Orientation', function () {
+
+        it('Should keep the orientation', function (done) {
+            expect(loadImage(blob, function (img) {
+                done();
+                expect(img.width).to.be(80);
+                expect(img.height).to.be(60);
+            }, {orientation: 1})).to.be.ok();
+        });
+
+        it('Should rotate right', function (done) {
+            expect(loadImage(blob, function (img) {
+                done();
+                expect(img.width).to.be(60);
+                expect(img.height).to.be(80);
+            }, {orientation: 6})).to.be.ok();
+        });
+
+        it('Should rotate left', function (done) {
+            expect(loadImage(blob, function (img) {
+                done();
+                expect(img.width).to.be(60);
+                expect(img.height).to.be(80);
+            }, {orientation: 8})).to.be.ok();
+        });
+
+        it('Should adjust constraints to new coordinates', function (done) {
+            expect(loadImage(blob, function (img) {
+                done();
+                expect(img.width).to.be(60);
+                expect(img.height).to.be(80);
+            }, {orientation: 6, maxWidth: 60, maxHeight: 80})).to.be.ok();
         });
 
     });
