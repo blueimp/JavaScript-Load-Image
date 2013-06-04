@@ -248,7 +248,8 @@
         options = options || {};
         var canvas = document.createElement('canvas'),
             useCanvas = img.getContext ||
-                ((options.canvas || options.crop) && canvas.getContext),
+                ((options.canvas || options.crop || options.orientation) &&
+                    canvas.getContext),
             width = img.width,
             height = img.height,
             sourceWidth = width,
