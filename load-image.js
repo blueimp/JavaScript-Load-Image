@@ -356,11 +356,15 @@
     // Loads a given File object via FileReader interface,
     // invokes the callback with the event object (load or error).
     // The result can be read via event.target.result:
-    loadImage.readFile = function (file, callback) {
+    loadImage.readFile = function (file, callback, method) {
         if (window.FileReader && FileReader.prototype.readAsDataURL) {
             var fileReader = new FileReader();
             fileReader.onload = fileReader.onerror = callback;
-            fileReader.readAsDataURL(file);
+            method = method || 'readAsDataURL';
+            if (!fileReader[method]) {
+                return false;
+            }
+            fileReader[method](file);
             return fileReader;
         }
         return false;
