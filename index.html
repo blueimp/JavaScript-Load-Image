@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <!--
 /*
- * JavaScript Load Image Demo 1.5
+ * JavaScript Load Image Demo 1.6
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -68,19 +68,19 @@
         </div>
     </div>
 </div>
-<script src="load-image.min.js"></script>
+<script src="load-image.js"></script>
 <!-- jQuery is not required, but included for the demo -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<!-- EXIF Reader library to demonstrate the orientation option -->
+<script src="vendor/exif-reader.js"></script>
 <script>
-/*global jQuery, window, document, HTMLCanvasElement */
+/*global jQuery, window, document, HTMLCanvasElement, ExifReader */
 (function ($) {
     'use strict';
     var result = $('#result'),
-        load = function (e) {
-            e = e.originalEvent;
-            e.preventDefault();
+        displayFile = function (file, options) {
             if (!window.loadImage(
-                    (e.dataTransfer || e.target).files[0],
+                    file,
                     function (img) {
                         if (!(img.src || img instanceof HTMLCanvasElement)) {
                             img = $('<div><span class="label label-important">Error</span>' +
@@ -88,16 +88,36 @@
                         }
                         result.children().replaceWith(img);
                     },
-                    {
-                        maxWidth: result.children().outerWidth(),
-                        canvas: true
-                    }
+                    options
                 )) {
                 result.children().replaceWith(
                     $('<div><span class="label label-important">Error</span>' +
                         ' <span>Your browser does not support the URL or FileReader API.</span></div>')
                 );
             }
+        },
+        dropChangeHandler = function (e) {
+            e = e.originalEvent;
+            e.preventDefault();
+            var file = (e.dataTransfer || e.target).files[0],
+                slice = file.slice || file.webkitSlice || file.mozSlice,
+                options = {
+                    maxWidth: result.children().outerWidth(),
+                    canvas: true
+                };
+            if (!window.DataView || !window.loadImage.readFile(
+                    (slice && slice.call(file, 0, 131072)) || file,
+                    function (e) {
+                        var exif = new ExifReader();
+                        exif.load(e.target.result);
+                        options.orientation = exif.getTagValue('Orientation');
+                        displayFile(file, options);
+                    },
+                    'readAsArrayBuffer'
+                )) {
+                displayFile(file, options);
+            }
+
         };
     $(document)
         .on('dragover', function (e) {
@@ -105,8 +125,8 @@
             e.preventDefault();
             e.dataTransfer.dropEffect = 'copy';
         })
-        .on('drop', load);
-    $('#file-input').on('change', load);
+        .on('drop', dropChangeHandler);
+    $('#file-input').on('change', dropChangeHandler);
 }(jQuery));
 </script>
 </body> 
