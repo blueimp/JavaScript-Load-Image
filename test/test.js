@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Test 1.6
+ * JavaScript Load Image Test 1.7
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
