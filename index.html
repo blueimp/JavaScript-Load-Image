@@ -136,8 +136,8 @@
         dropChangeHandler = function (e) {
             e = e.originalEvent;
             e.preventDefault();
-            var files = e.dataTransfer || e.target,
-                file = files && files[0],
+            var target = e.dataTransfer || e.target,
+                file = target && target.files && target.files[0],
                 options = {
                     maxWidth: result.children().outerWidth(),
                     canvas: true
