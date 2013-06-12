@@ -147,11 +147,14 @@ The extension provides the method **loadImage.parseMetaData**, which can be used
 loadImage.parseMetaData(
     fileOrBlob,
     function (data) {
+        if (!data.imageHead) {
+            return;
+        }
         // Combine data.imageHead with the image body of a resized file
         // to create scaled images with the original image meta data, e.g.:
         var blob = new Blob([
             data.imageHead,
-            // Resized images always have a head size of 20,
+            // Resized images always have a head size of 20 bytes,
             // including the JPEG marker and a minimal JFIF header:
             loadImage.blobSlice.call(resizedImage, 20)
         ], {type: resizedImage.type});

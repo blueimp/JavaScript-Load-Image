@@ -28,7 +28,10 @@
 }(function (loadImage) {
     'use strict';
 
-    loadImage.blobSlice = function () {
+    var hasblobSlice = window.Blob && (Blob.prototype.slice ||
+            Blob.prototype.webkitSlice || Blob.prototype.mozSlice);
+
+    loadImage.blobSlice = hasblobSlice && function () {
         var slice = this.slice || this.webkitSlice || this.mozSlice;
         return slice.apply(this, arguments);
     };
@@ -48,8 +51,8 @@
         options = options || {};
         var that = this,
             data = {},
-            noMetaData = !window.DataView  || !file || file.size < 12 ||
-                file.type !== 'image/jpeg';
+            noMetaData = !(window.DataView  && file && file.size >= 12 &&
+                file.type === 'image/jpeg' && loadImage.blobSlice);
         if (noMetaData || !loadImage.readFile(
                 // 128 KiB should contain all EXIF/ICC/IPTC segments:
                 loadImage.blobSlice.call(file, 0, 131072),
@@ -77,10 +80,10 @@
                             if ((markerBytes >= 0xffe0 && markerBytes <= 0xffef) ||
                                     markerBytes === 0xfffe) {
                                 // The marker bytes (2) are always followed by
-                                // the length bytes, indicating the length of the
-                                // marker segment, which include the length bytes,
+                                // the length bytes (2), indicating the length of the
+                                // marker segment, which includes the length bytes,
                                 // but not the marker bytes, so we add 2:
-                                markerLength = dataView.getUint16(offset + 2);
+                                markerLength = dataView.getUint16(offset + 2) + 2;
                                 if (offset + markerLength > dataView.byteLength) {
                                     console.log('Invalid meta data: Invalid segment size.');
                                     continue;
@@ -98,7 +101,7 @@
                                         );
                                     }
                                 }
-                                offset += markerLength + 2;
+                                offset += markerLength;
                                 headLength = offset;
                             } else {
                                 // Not an APPn or COM marker, probably safe to
