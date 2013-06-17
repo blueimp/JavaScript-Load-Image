@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Exif Map 1.0
+ * JavaScript Load Image Exif Map 1.0.1
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan
@@ -75,6 +75,7 @@
         0xA001: 'ColorSpace',                   // Color space information tag
         0xA002: 'PixelXDimension',              // Valid width of meaningful image
         0xA003: 'PixelYDimension',              // Valid height of meaningful image
+        0xA500: 'Gamma',
         0x9101: 'ComponentsConfiguration',      // Information about channels
         0x9102: 'CompressedBitsPerPixel',       // Compressed bits per pixel
         0x927C: 'MakerNote',                    // Any desired information written by the manufacturer
@@ -82,15 +83,21 @@
         0xA004: 'RelatedSoundFile',             // Name of related sound file
         0x9003: 'DateTimeOriginal',             // Date and time when the original image was generated
         0x9004: 'DateTimeDigitized',            // Date and time when the image was stored digitally
-        0x9290: 'SubsecTime',                   // Fractions of seconds for DateTime
-        0x9291: 'SubsecTimeOriginal',           // Fractions of seconds for DateTimeOriginal
-        0x9292: 'SubsecTimeDigitized',          // Fractions of seconds for DateTimeDigitized
+        0x9290: 'SubSecTime',                   // Fractions of seconds for DateTime
+        0x9291: 'SubSecTimeOriginal',           // Fractions of seconds for DateTimeOriginal
+        0x9292: 'SubSecTimeDigitized',          // Fractions of seconds for DateTimeDigitized
         0x829A: 'ExposureTime',                 // Exposure time (in seconds)
         0x829D: 'FNumber',
         0x8822: 'ExposureProgram',              // Exposure program
         0x8824: 'SpectralSensitivity',          // Spectral sensitivity
-        0x8827: 'ISOSpeedRatings',              // ISO speed rating
+        0x8827: 'PhotographicSensitivity',      // EXIF 2.3, ISOSpeedRatings in EXIF 2.2
         0x8828: 'OECF',                         // Optoelectric conversion factor
+        0x8830: 'SensitivityType',
+        0x8831: 'StandardOutputSensitivity',
+        0x8832: 'RecommendedExposureIndex',
+        0x8833: 'ISOSpeed',
+        0x8834: 'ISOSpeedLatitudeyyy',
+        0x8835: 'ISOSpeedLatitudezzz',
         0x9201: 'ShutterSpeedValue',            // Shutter speed
         0x9202: 'ApertureValue',                // Lens aperture
         0x9203: 'BrightnessValue',              // Value of brightness
@@ -116,7 +123,7 @@
         0xA401: 'CustomRendered',               // Special processing
         0xA402: 'ExposureMode',                 // Exposure mode
         0xA403: 'WhiteBalance',                 // 1 = auto white balance, 2 = manual
-        0xA404: 'DigitalZoomRation',            // Digital zoom ratio
+        0xA404: 'DigitalZoomRatio',             // Digital zoom ratio
         0xA405: 'FocalLengthIn35mmFilm',
         0xA406: 'SceneCaptureType',             // Type of scene
         0xA407: 'GainControl',                  // Degree of overall image gain adjustment
@@ -126,6 +133,12 @@
         0xA40B: 'DeviceSettingDescription',
         0xA40C: 'SubjectDistanceRange',         // Distance to subject
         0xA420: 'ImageUniqueID',                // Identifier assigned uniquely to each image
+        0xA430: 'CameraOwnerName',
+        0xA431: 'BodySerialNumber',
+        0xA432: 'LensSpecification',
+        0xA433: 'LensMake',
+        0xA434: 'LensModel',
+        0xA435: 'LensSerialNumber',
         // ==============
         // GPS Info tags:
         // ==============
@@ -159,7 +172,8 @@
         0x001B: 'GPSProcessingMethod',
         0x001C: 'GPSAreaInformation',
         0x001D: 'GPSDateStamp',
-        0x001E: 'GPSDifferential'
+        0x001E: 'GPSDifferential',
+        0x001F: 'GPSHPositioningError'
     };
 
     loadImage.ExifMap.prototype.stringValues = {
