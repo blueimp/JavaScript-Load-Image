@@ -46,6 +46,7 @@
     // with the following properties:
     // * imageHead: The complete image head as ArrayBuffer (Uint8Array for IE10)
     // The options arguments accepts an object and supports the following properties:
+    // * maxMetaDataSize: Defines the maximum number of bytes to parse.
     // * disableImageHead: Disables creating the imageHead property.
     loadImage.parseMetaData = function (file, callback, options) {
         options = options || {};
