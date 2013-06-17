@@ -160,12 +160,13 @@ loadImage.parseMetaData(
         ], {type: resizedImage.type});
     },
     {
+        maxMetaDataSize: 262144,
         disableImageHead: false
     }
 );
 ```
 
-The third argument is an options object which allows to disable the imageHead creation and is also passed along to segment parsers registered via loadImage extensions, e.g. the Exif parser.
+The third argument is an options object which defines the maximum number of bytes to parse for the image meta data, allows to disable the imageHead creation and is also passed along to segment parsers registered via loadImage extensions, e.g. the Exif parser.
 
 **Note:**  
 Blob objects of resized images can be created via [canvas.toBlob()](https://github.com/blueimp/JavaScript-Canvas-to-Blob).

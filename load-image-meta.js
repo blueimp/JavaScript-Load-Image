@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Meta 1.0
+ * JavaScript Load Image Meta 1.0.1
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan
@@ -50,12 +50,13 @@
     loadImage.parseMetaData = function (file, callback, options) {
         options = options || {};
         var that = this,
+            // 256 KiB should contain all EXIF/ICC/IPTC segments:
+            maxMetaDataSize = options.maxMetaDataSize || 262144,
             data = {},
             noMetaData = !(window.DataView  && file && file.size >= 12 &&
                 file.type === 'image/jpeg' && loadImage.blobSlice);
         if (noMetaData || !loadImage.readFile(
-                // 128 KiB should contain all EXIF/ICC/IPTC segments:
-                loadImage.blobSlice.call(file, 0, 131072),
+                loadImage.blobSlice.call(file, 0, maxMetaDataSize),
                 function (e) {
                     // Note on endianness:
                     // Since the marker and length bytes in JPEG files are always
@@ -86,7 +87,7 @@
                                 markerLength = dataView.getUint16(offset + 2) + 2;
                                 if (offset + markerLength > dataView.byteLength) {
                                     console.log('Invalid meta data: Invalid segment size.');
-                                    continue;
+                                    break;
                                 }
                                 parsers = loadImage.metaDataParsers.jpeg[markerBytes];
                                 if (parsers) {
