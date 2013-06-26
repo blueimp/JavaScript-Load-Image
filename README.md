@@ -3,21 +3,26 @@
 ## Demo
 [JavaScript Load Image Demo](http://blueimp.github.io/JavaScript-Load-Image/)
 
+## Description
+JavaScript Load Image is a library to load images provided as File or Blob objects or via URL.  
+It returns an optionally scaled and/or cropped HTML img or canvas element.  
+It also provides a method to parse image meta data to extract Exif tags and thumbnails and to restore the complete image header after resizing.
+
 ## Setup
 Include the (minified) JavaScript Load Image script in your HTML markup:
 
 ```html
-<script src="load-image.min.js"></script>
+<script src="js/load-image.min.js"></script>
 ```
 
 Or alternatively, choose which components you want to include:
 
 ```html
-<script src="load-image.js"></script>
-<script src="load-image-ios.js"></script>
-<script src="load-image-meta.js"></script>
-<script src="load-image-exif.js"></script>
-<script src="load-image-exif-map.js"></script>
+<script src="js/load-image.js"></script>
+<script src="js/load-image-ios.js"></script>
+<script src="js/load-image-meta.js"></script>
+<script src="js/load-image-exif.js"></script>
+<script src="js/load-image-exif-map.js"></script>
 ```
 
 ## Usage

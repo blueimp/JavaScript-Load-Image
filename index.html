@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <!--
 /*
- * JavaScript Load Image Demo 1.7
+ * JavaScript Load Image Demo 1.7.3
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -13,157 +13,49 @@
 -->
 <html lang="en">
 <head>
-<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
+<!--[if IE]>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<![endif]-->
 <meta charset="utf-8">
 <title>JavaScript Load Image</title>
 <meta name="description" content="JavaScript Load Image is a library to load images provided as File or Blob objects or via URL. It returns an optionally scaled and/or cropped HTML img or canvas element. It also provides a method to parse image meta data to extract Exif tags and thumbnails and to restore the complete image header after resizing.">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap.min.css">
-<style>body{padding-top:60px;}</style>
-<link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-responsive.min.css">
-<!--[if lt IE 7]><link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css"><![endif]-->
+<link rel="stylesheet" href="css/demo.css">
 </head>
 <body>
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <a class="brand" href="https://github.com/blueimp/JavaScript-Load-Image">JavaScript Load Image</a>
-            <div class="nav-collapse">
-                <ul class="nav">
-                    <li class="active"><a href="http://blueimp.github.io/JavaScript-Load-Image/">Demo</a></li>
-                    <li><a href="https://github.com/blueimp/JavaScript-Load-Image/tags">Downloads</a></li>
-                    <li><a href="https://github.com/blueimp/JavaScript-Load-Image">Source Code</a></li>
-                    <li><a href="https://github.com/blueimp/JavaScript-Load-Image/blob/master/README.md">Documentation</a></li>
-                    <li><a href="https://github.com/blueimp/JavaScript-Load-Image/issues">Issues</a></li>
-                    <li><a href="test/">Test</a></li>
-                    <li><a href="https://blueimp.net">&copy; Sebastian Tschan</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+<h1>JavaScript Load Image Demo</h1>
+<p><a href="https://github.com/blueimp/JavaScript-Load-Image">JavaScript Load Image</a> is a library to load images provided as <a href="https://developer.mozilla.org/en/DOM/File">File</a> or <a href="https://developer.mozilla.org/en/DOM/Blob">Blob</a> objects or via URL.<br>
+It returns an optionally <strong>scaled</strong> and/or <strong>cropped</strong> HTML <a href="https://developer.mozilla.org/en/docs/HTML/Element/Img">img</a> or <a href="https://developer.mozilla.org/en/docs/HTML/Canvas">canvas</a> element.<br>
+It also provides a method to parse image meta data to extract <a href="http://en.wikipedia.org/wiki/Exif">Exif</a> tags and thumbnails and to restore the complete image header after resizing.</p>
+<ul class="navigation">
+    <li><a href="https://github.com/blueimp/JavaScript-Load-Image/tags">Download</a></li>
+    <li><a href="https://github.com/blueimp/JavaScript-Load-Image">Source Code</a></li>
+    <li><a href="https://github.com/blueimp/JavaScript-Load-Image/blob/master/README.md">Documentation</a></li>
+    <li><a href="test/">Test</a></li>
+    <li><a href="https://blueimp.net">&copy; Sebastian Tschan</a></li>
+</ul>
+<h2>Select an image file</h2>
+<p><input type="file" id="file-input"></p>
+<p>Or <strong>drag &amp; drop</strong> an image file onto this webpage.</p>
+<br>
+<h2>Result</h2>
+<div id="result" class="result">
+    <p>This demo works only in browsers with support for the <a href="https://developer.mozilla.org/en/DOM/window.URL">URL</a> or <a href="https://developer.mozilla.org/en/DOM/FileReader">FileReader</a> API.</p>
 </div>
-<div class="container">
-    <div class="page-header">
-        <h1>JavaScript Load Image Demo</h1>
-    </div>
-    <blockquote>
-        <p><a href="https://developer.mozilla.org/en/JavaScript/">JavaScript</a> Load Image is a library to load images provided as <a href="https://developer.mozilla.org/en/DOM/File">File</a> or <a href="https://developer.mozilla.org/en/DOM/Blob">Blob</a> objects or via URL.<br>
-            It returns an optionally <strong>scaled</strong> and/or <strong>cropped</strong> HTML <a href="https://developer.mozilla.org/en/docs/HTML/Element/Img">img</a> or <a href="https://developer.mozilla.org/en/docs/HTML/Canvas">canvas</a> element.<br>
-            It also provides a method to parse image meta data to extract <a href="http://en.wikipedia.org/wiki/Exif">Exif</a> tags and thumbnails and to restore the complete image header after resizing.</p>
-    </blockquote>
-    <br>
-    <div class="row">
-        <div class="span5">
-            <h2>Select an image file</h2>
-            <p><input type="file" id="file-input"></p>
-            <p><span class="label label-info">Notice</span> Or <strong>drag &amp; drop</strong> an image file onto this webpage.</p>
-            <br>
-            <div id="exif" style="display:none;">
-                <h2>Exif meta data</h2>
-                <div class="well" id="thumbnail" style="display:none;"></div>
-                <table class="table table-striped" style="width:100%; word-wrap:break-word;
-              table-layout:fixed;"></table>
-            </div>
-        </div>
-        <div class="span7">
-            <h2>Result</h2>
-            <div class="well" id="result"><p><span class="label label-warning">Notice</span> This demo works only in browsers with support for the <a href="https://developer.mozilla.org/en/DOM/window.URL">URL</a> or <a href="https://developer.mozilla.org/en/DOM/FileReader">FileReader</a> API.</p></div>
-        </div>
-    </div>
+<br>
+<div id="exif" class="exif" style="display:none;">
+    <h2>Exif meta data</h2>
+    <p id="thumbnail" class="thumbnail" style="display:none;"></p>
+    <table></table>
 </div>
-<script src="load-image.js"></script>
-<script src="load-image-ios.js"></script>
-<script src="load-image-meta.js"></script>
-<script src="load-image-exif.js"></script>
-<script src="load-image-exif-map.js"></script>
-<!-- jQuery and Bootstrap are not required, but included for the demo -->
+<br>
+<script src="js/load-image.js"></script>
+<script src="js/load-image-ios.js"></script>
+<script src="js/load-image-meta.js"></script>
+<script src="js/load-image-exif.js"></script>
+<script src="js/load-image-exif-map.js"></script>
+<!-- jQuery is not required by JavaScript Load Image, but included for the demo -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-<script src="http://blueimp.github.com/cdn/js/bootstrap.min.js"></script>
-<script>
-/*global jQuery, window, document, HTMLCanvasElement */
-(function ($) {
-    'use strict';
-    var result = $('#result'),
-        exifNode = $('#exif'),
-        thumbNode = $('#thumbnail'),
-        displayImage = function (file, options) {
-            if (!window.loadImage(
-                    file,
-                    function (img) {
-                        if (!(img.src || img instanceof HTMLCanvasElement)) {
-                            img = $('<div><span class="label label-important">Error</span>' +
-                                    ' <span>Loading image file failed</span></div>');
-                        }
-                        result.children().replaceWith(img);
-                    },
-                    options
-                )) {
-                result.children().replaceWith(
-                    $('<div><span class="label label-important">Error</span>' +
-                        ' <span>Your browser does not support the URL or FileReader API.</span></div>')
-                );
-            }
-        },
-        displayExifData = function (exif) {
-            var thumbnail = exif.get('Thumbnail'),
-                tags = exif.getAll(),
-                table = exifNode.find('table').empty(),
-                row = $('<tr></tr>'),
-                cell = $('<td></td>'),
-                prop;
-            if (thumbnail) {
-                thumbNode.empty();
-                window.loadImage(thumbnail, function (img) {
-                    thumbNode.append(img).show();
-                }, {orientation: exif.get('Orientation')});
-            }
-            for (prop in tags) {
-                if (tags.hasOwnProperty(prop)) {
-                    table.append(
-                        row.clone()
-                            .append(cell.clone().text(prop))
-                            .append(cell.clone().text(tags[prop]))
-                    );
-                }
-            }
-            exifNode.show();
-        },
-        dropChangeHandler = function (e) {
-            e = e.originalEvent;
-            e.preventDefault();
-            var target = e.dataTransfer || e.target,
-                file = target && target.files && target.files[0],
-                options = {
-                    maxWidth: result.children().outerWidth(),
-                    canvas: true
-                };
-            if (!file) {
-                return;
-            }
-            exifNode.hide();
-            thumbNode.hide();
-            window.loadImage.parseMetaData(file, function (data) {
-                if (data.exif) {
-                    options.orientation = data.exif.get('Orientation');
-                    displayExifData(data.exif);
-                }
-                displayImage(file, options);
-            });
-        };
-    $(document)
-        .on('dragover', function (e) {
-            e = e.originalEvent;
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'copy';
-        })
-        .on('drop', dropChangeHandler);
-    $('#file-input').on('change', dropChangeHandler);
-}(jQuery));
-</script>
+<script src="js/demo.js"></script>
 </body> 
 </html>
