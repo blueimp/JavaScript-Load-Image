@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Test 1.7
+ * JavaScript Load Image Test 1.8.0
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -78,7 +78,7 @@
             })).to.be.ok();
         });
 
-        it('Keep object URL if options.noRevoke is true', function (done) {
+        it('Keep object URL if noRevoke is true', function (done) {
             expect(loadImage(blobGIF, function (img) {
                 loadImage(img.src, function (img2) {
                     done();
@@ -88,7 +88,7 @@
             }, {noRevoke: true})).to.be.ok();
         });
 
-        it('Discard object URL if options.noRevoke is undefined or false', function (done) {
+        it('Discard object URL if noRevoke is undefined or false', function (done) {
             expect(loadImage(blobGIF, function (img) {
                 loadImage(img.src, function (img2) {
                     done();
@@ -102,92 +102,135 @@
 
     describe('Scaling', function () {
 
-        it('Scale to options.maxWidth', function (done) {
-            expect(loadImage(blobGIF, function (img) {
-                done();
-                expect(img.width).to.be(40);
-                expect(img.height).to.be(30);
-            }, {maxWidth: 40})).to.be.ok();
+        describe('max/min', function () {
+
+            it('Scale to maxWidth', function (done) {
+                expect(loadImage(blobGIF, function (img) {
+                    done();
+                    expect(img.width).to.be(40);
+                    expect(img.height).to.be(30);
+                }, {maxWidth: 40})).to.be.ok();
+            });
+
+            it('Scale to maxHeight', function (done) {
+                expect(loadImage(blobGIF, function (img) {
+                    done();
+                    expect(img.width).to.be(20);
+                    expect(img.height).to.be(15);
+                }, {maxHeight: 15})).to.be.ok();
+            });
+
+            it('Scale to minWidth', function (done) {
+                expect(loadImage(blobGIF, function (img) {
+                    done();
+                    expect(img.width).to.be(160);
+                    expect(img.height).to.be(120);
+                }, {minWidth: 160})).to.be.ok();
+            });
+
+            it('Scale to minHeight', function (done) {
+                expect(loadImage(blobGIF, function (img) {
+                    done();
+                    expect(img.width).to.be(320);
+                    expect(img.height).to.be(240);
+                }, {minHeight: 240})).to.be.ok();
+            });
+
+            it('Scale to minWidth but respect maxWidth', function (done) {
+                expect(loadImage(blobGIF, function (img) {
+                    done();
+                    expect(img.width).to.be(160);
+                    expect(img.height).to.be(120);
+                }, {minWidth: 240, maxWidth: 160})).to.be.ok();
+            });
+
+            it('Scale to minHeight but respect maxHeight', function (done) {
+                expect(loadImage(blobGIF, function (img) {
+                    done();
+                    expect(img.width).to.be(160);
+                    expect(img.height).to.be(120);
+                }, {minHeight: 180, maxHeight: 120})).to.be.ok();
+            });
+
+            it('Scale to minWidth but respect maxHeight', function (done) {
+                expect(loadImage(blobGIF, function (img) {
+                    done();
+                    expect(img.width).to.be(160);
+                    expect(img.height).to.be(120);
+                }, {minWidth: 240, maxHeight: 120})).to.be.ok();
+            });
+
+            it('Scale to minHeight but respect maxWidth', function (done) {
+                expect(loadImage(blobGIF, function (img) {
+                    done();
+                    expect(img.width).to.be(160);
+                    expect(img.height).to.be(120);
+                }, {minHeight: 180, maxWidth: 160})).to.be.ok();
+            });
+
+            it('Ignore max settings if image dimensions are smaller', function (done) {
+                expect(loadImage(blobGIF, function (img) {
+                    done();
+                    expect(img.width).to.be(80);
+                    expect(img.height).to.be(60);
+                }, {maxWidth: 160, maxHeight: 120})).to.be.ok();
+            });
+
+            it('Ignore min settings if image dimensions are larger', function (done) {
+                expect(loadImage(blobGIF, function (img) {
+                    done();
+                    expect(img.width).to.be(80);
+                    expect(img.height).to.be(60);
+                }, {minWidth: 40, minHeight: 30})).to.be.ok();
+            });
+
         });
 
-        it('Scale to options.maxHeight', function (done) {
-            expect(loadImage(blobGIF, function (img) {
-                done();
-                expect(img.width).to.be(20);
-                expect(img.height).to.be(15);
-            }, {maxHeight: 15})).to.be.ok();
+        describe('contain', function () {
+
+            it('Scale up to contain image in max dimensions', function (done) {
+                expect(loadImage(blobGIF, function (img) {
+                    done();
+                    expect(img.width).to.be(160);
+                    expect(img.height).to.be(120);
+                }, {maxWidth: 160, maxHeight: 160, contain: true})).to.be.ok();
+            });
+
+            it('Scale down to contain image in max dimensions', function (done) {
+                expect(loadImage(blobGIF, function (img) {
+                    done();
+                    expect(img.width).to.be(40);
+                    expect(img.height).to.be(30);
+                }, {maxWidth: 40, maxHeight: 40, contain: true})).to.be.ok();
+            });
+
         });
 
-        it('Scale to options.minWidth', function (done) {
-            expect(loadImage(blobGIF, function (img) {
-                done();
-                expect(img.width).to.be(160);
-                expect(img.height).to.be(120);
-            }, {minWidth: 160})).to.be.ok();
-        });
+        describe('cover', function () {
 
-        it('Scale to options.minHeight', function (done) {
-            expect(loadImage(blobGIF, function (img) {
-                done();
-                expect(img.width).to.be(320);
-                expect(img.height).to.be(240);
-            }, {minHeight: 240})).to.be.ok();
-        });
+            it('Scale up to cover max dimensions with image dimensions', function (done) {
+                expect(loadImage(blobGIF, function (img) {
+                    done();
+                    expect(img.width).to.be(160);
+                    expect(img.height).to.be(120);
+                }, {maxWidth: 120, maxHeight: 120, cover: true})).to.be.ok();
+            });
 
-        it('Scale to options.minWidth but respect options.maxWidth', function (done) {
-            expect(loadImage(blobGIF, function (img) {
-                done();
-                expect(img.width).to.be(160);
-                expect(img.height).to.be(120);
-            }, {minWidth: 240, maxWidth: 160})).to.be.ok();
-        });
+            it('Scale down to cover max dimensions with image dimensions', function (done) {
+                expect(loadImage(blobGIF, function (img) {
+                    done();
+                    expect(img.width).to.be(40);
+                    expect(img.height).to.be(30);
+                }, {maxWidth: 30, maxHeight: 30, cover: true})).to.be.ok();
+            });
 
-        it('Scale to options.minHeight but respect options.maxHeight', function (done) {
-            expect(loadImage(blobGIF, function (img) {
-                done();
-                expect(img.width).to.be(160);
-                expect(img.height).to.be(120);
-            }, {minHeight: 180, maxHeight: 120})).to.be.ok();
-        });
-
-        it('Scale to options.minWidth but respect options.maxHeight', function (done) {
-            expect(loadImage(blobGIF, function (img) {
-                done();
-                expect(img.width).to.be(160);
-                expect(img.height).to.be(120);
-            }, {minWidth: 240, maxHeight: 120})).to.be.ok();
-        });
-
-        it('Scale to options.minHeight but respect options.maxWidth', function (done) {
-            expect(loadImage(blobGIF, function (img) {
-                done();
-                expect(img.width).to.be(160);
-                expect(img.height).to.be(120);
-            }, {minHeight: 180, maxWidth: 160})).to.be.ok();
-        });
-
-        it('Do not scale to max settings without min settings', function (done) {
-            expect(loadImage(blobGIF, function (img) {
-                done();
-                expect(img.width).to.be(80);
-                expect(img.height).to.be(60);
-            }, {maxWidth: 160, maxHeight: 120})).to.be.ok();
-        });
-
-        it('Do not scale to min settings without max settings', function (done) {
-            expect(loadImage(blobGIF, function (img) {
-                done();
-                expect(img.width).to.be(80);
-                expect(img.height).to.be(60);
-            }, {minWidth: 40, minHeight: 30})).to.be.ok();
         });
 
     });
 
-
     describe('Cropping', function () {
 
-        it('Crop to same values for options.maxWidth and options.maxHeight', function (done) {
+        it('Crop to same values for maxWidth and maxHeight', function (done) {
             expect(loadImage(blobGIF, function (img) {
                 done();
                 expect(img.width).to.be(40);
@@ -195,7 +238,7 @@
             }, {maxWidth: 40, maxHeight: 40, crop: true})).to.be.ok();
         });
 
-        it('Crop to different values for options.maxWidth and options.maxHeight', function (done) {
+        it('Crop to different values for maxWidth and maxHeight', function (done) {
             expect(loadImage(blobGIF, function (img) {
                 done();
                 expect(img.width).to.be(40);
@@ -243,7 +286,7 @@
 
     describe('Canvas', function () {
 
-        it('Return img element to callback if options.canvas is not true', function (done) {
+        it('Return img element to callback if canvas is not true', function (done) {
             expect(loadImage(blobGIF, function (img) {
                 done();
                 expect(img.getContext).to.not.be.ok();
@@ -251,7 +294,7 @@
             })).to.be.ok();
         });
 
-        it('Return canvas element to callback if options.canvas is true', function (done) {
+        it('Return canvas element to callback if canvas is true', function (done) {
             expect(loadImage(blobGIF, function (img) {
                 done();
                 expect(img.getContext).to.be.ok();

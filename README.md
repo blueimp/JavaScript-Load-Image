@@ -117,9 +117,15 @@ The optional third argument to **loadImage()** is a map of options:
 * **maxHeight**: Defines the maximum height of the img/canvas element.
 * **minWidth**: Defines the minimum width of the img/canvas element.
 * **minHeight**: Defines the minimum height of the img/canvas element.
-* **crop**: Defines if the canvas element should be cropped to the maxWidth/maxHeight constraints.
-* **orientation**: Allows to transform the canvas coordinates according to the EXIF orientation specification.
-* **canvas**: Defines if the returned element should be a [canvas](https://developer.mozilla.org/en/HTML/Canvas) element.
+* **contain**: Scales the image up/down to contain it in the max dimensions if set to *true*.  
+This emulates the CSS feature [background-image: contain](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Scaling_background_images#contain).
+* **cover**: Scales the image up/down to cover the max dimensions with the image dimensions if set to *true*.  
+This emulates the CSS feature [background-image: cover](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Scaling_background_images#cover).
+* **crop**: Crops the image to the maxWidth/maxHeight constraints if set to *true*.  
+This feature assumes *canvas: true*.
+* **orientation**: Allows to transform the canvas coordinates according to the EXIF orientation specification.  
+This feature assumes *canvas: true*.
+* **canvas**: Returns the image as [canvas](https://developer.mozilla.org/en/HTML/Canvas) element if set to *true*.
 * **crossOrigin**: Sets the crossOrigin property on the img element for loading [CORS enabled images](https://developer.mozilla.org/en-US/docs/HTML/CORS_Enabled_Image).
 * **noRevoke**: By default, the [created object URL](https://developer.mozilla.org/en/DOM/window.URL.createObjectURL) is revoked after the image has been loaded, except when this option is set to *true*.
 
@@ -136,8 +142,7 @@ loadImage(
         maxHeight: 300,
         minWidth: 100,
         minHeight: 50,
-        canvas: true,
-        noRevoke: true
+        canvas: true
     }
 );
 ```

@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.7
+ * JavaScript Load Image 1.8.0
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -174,7 +174,26 @@
             minHeight,
             destWidth,
             destHeight,
-            scale;
+            scaleUp = function () {
+                var scale = Math.max(
+                    (minWidth || destWidth) / destWidth,
+                    (minHeight || destHeight) / destHeight
+                );
+                if (scale > 1) {
+                    destWidth = Math.ceil(destWidth * scale);
+                    destHeight = Math.ceil(destHeight * scale);
+                }
+            },
+            scaleDown = function () {
+                var scale = Math.min(
+                    (maxWidth || destWidth) / destWidth,
+                    (maxHeight || destHeight) / destHeight
+                );
+                if (scale < 1) {
+                    destWidth = Math.ceil(destWidth * scale);
+                    destHeight = Math.ceil(destHeight * scale);
+                }
+            };
         if (useCanvas && options.orientation > 4) {
             maxWidth = options.maxHeight;
             maxHeight = options.maxWidth;
@@ -197,23 +216,18 @@
                 sourceX = (width - sourceWidth) / 2;
             }
         } else {
+            if (options.contain || options.cover) {
+                minWidth = maxWidth = maxWidth || minWidth;
+                minHeight = maxHeight = maxHeight || minHeight;
+            }
             destWidth = width;
             destHeight = height;
-            scale = Math.max(
-                (minWidth || destWidth) / destWidth,
-                (minHeight || destHeight) / destHeight
-            );
-            if (scale > 1) {
-                destWidth = Math.ceil(destWidth * scale);
-                destHeight = Math.ceil(destHeight * scale);
-            }
-            scale = Math.min(
-                (maxWidth || destWidth) / destWidth,
-                (maxHeight || destHeight) / destHeight
-            );
-            if (scale < 1) {
-                destWidth = Math.ceil(destWidth * scale);
-                destHeight = Math.ceil(destHeight * scale);
+            if (options.cover) {
+                scaleDown();
+                scaleUp();
+            } else {
+                scaleUp();
+                scaleDown();
             }
         }
         if (useCanvas) {

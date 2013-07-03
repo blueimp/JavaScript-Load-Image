@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Demo JS 1.7.3
+ * JavaScript Load Image Demo JS 1.8.0
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan

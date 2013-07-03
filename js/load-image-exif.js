@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Exif Parser 1.0
+ * JavaScript Load Image Exif Parser 1.0.0
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan
