@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image iOS scaling fixes 1.0.0
+ * JavaScript Load Image iOS scaling fixes 1.0.1
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan
@@ -53,22 +53,26 @@
     };
 
     // Detects vertical squash in JPEG images:
-    loadImage.detectVerticalSquash = function (img, correctedHeight) {
-        var canvas = document.createElement('canvas'),
+    loadImage.detectVerticalSquash = function (img, subsampled) {
+        var naturalHeight = img.naturalHeight || img.height,
+            canvas = document.createElement('canvas'),
             context = canvas.getContext('2d'),
             data,
             sy,
             ey,
             py,
             alpha;
+        if (subsampled) {
+            naturalHeight /= 2;
+        }
         canvas.width = 1;
-        canvas.height = correctedHeight;
+        canvas.height = naturalHeight;
         context.drawImage(img, 0, 0);
-        data = context.getImageData(0, 0, 1, correctedHeight).data;
+        data = context.getImageData(0, 0, 1, naturalHeight).data;
         // search image edge pixel position in case it is squashed vertically:
         sy = 0;
-        ey = correctedHeight;
-        py = correctedHeight;
+        ey = naturalHeight;
+        py = naturalHeight;
         while (py > sy) {
             alpha = data[(py - 1) * 4 + 3];
             if (alpha === 0) {
@@ -78,7 +82,7 @@
             }
             py = (ey + sy) >> 1;
         }
-        return (py / correctedHeight) || 1;
+        return (py / naturalHeight) || 1;
     };
 
     // Renders image to canvas while working around iOS image scaling bugs:
@@ -100,20 +104,22 @@
                 tmpCanvas = document.createElement('canvas'),
                 tileSize = 1024,
                 tmpContext = tmpCanvas.getContext('2d'),
-                subSampled,
+                subsampled,
                 vertSquashRatio,
                 tileX,
                 tileY;
             tmpCanvas.width = tileSize;
             tmpCanvas.height = tileSize;
             context.save();
-            subSampled = loadImage.detectSubsampling(img);
-            if (subSampled) {
+            subsampled = loadImage.detectSubsampling(img);
+            if (subsampled) {
+                sourceX /= 2;
+                sourceY /= 2;
                 sourceWidth /= 2;
                 sourceHeight /= 2;
             }
-            vertSquashRatio = loadImage.detectVerticalSquash(img, sourceHeight);
-            if (subSampled && vertSquashRatio !== 1) {
+            vertSquashRatio = loadImage.detectVerticalSquash(img, subsampled);
+            if (subsampled && vertSquashRatio !== 1) {
                 destWidth = Math.ceil(tileSize * destWidth / sourceWidth);
                 destHeight = Math.ceil(
                     tileSize * destHeight / sourceHeight / vertSquashRatio
