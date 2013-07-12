@@ -20,6 +20,7 @@ Or alternatively, choose which components you want to include:
 ```html
 <script src="js/load-image.js"></script>
 <script src="js/load-image-ios.js"></script>
+<script src="js/load-image-orientation.js"></script>
 <script src="js/load-image-meta.js"></script>
 <script src="js/load-image-exif.js"></script>
 <script src="js/load-image-exif-map.js"></script>
@@ -117,6 +118,18 @@ The optional third argument to **loadImage()** is a map of options:
 * **maxHeight**: Defines the maximum height of the img/canvas element.
 * **minWidth**: Defines the minimum width of the img/canvas element.
 * **minHeight**: Defines the minimum height of the img/canvas element.
+* **sourceWidth**: The width of the sub-rectangle of the source image to draw into the destination canvas.  
+Defaults to the source image width and requires *canvas: true*.
+* **sourceHeight**: The height of the sub-rectangle of the source image to draw into the destination canvas.  
+Defaults to the source image height and requires *canvas: true*.
+* **top**: The top margin of the sub-rectangle of the source image.  
+Defaults to *0* and requires *canvas: true*.
+* **right**: The right margin of the sub-rectangle of the source image.  
+Defaults to *0* and requires *canvas: true*.
+* **bottom**: The bottom margin of the sub-rectangle of the source image.  
+Defaults to *0* and requires *canvas: true*.
+* **left**: The left margin of the sub-rectangle of the source image.  
+Defaults to *0* and requires *canvas: true*.
 * **contain**: Scales the image up/down to contain it in the max dimensions if set to *true*.  
 This emulates the CSS feature [background-image: contain](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Scaling_background_images#contain).
 * **cover**: Scales the image up/down to cover the max dimensions with the image dimensions if set to *true*.  

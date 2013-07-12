@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Demo JS 1.8.0
+ * JavaScript Load Image Demo JS 1.9.0
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan
@@ -9,7 +9,7 @@
  * http://www.opensource.org/licenses/MIT
  */
 
-/*global window, document, HTMLCanvasElement, $ */
+/*global document, loadImage, HTMLCanvasElement, $ */
 
 $(function () {
     'use strict';
@@ -17,15 +17,27 @@ $(function () {
     var result = $('#result'),
         exifNode = $('#exif'),
         thumbNode = $('#thumbnail'),
+        actionsNode = $('#actions'),
+        currentFile,
+        replaceResults = function (img) {
+            var content;
+            if (!(img.src || img instanceof HTMLCanvasElement)) {
+                content = $('<span>Loading image file failed</span>');
+            } else {
+                content = $('<a target="_blank">').append(img)
+                    .attr('download', currentFile.name)
+                    .attr('href', img.src || img.toDataURL());
+            }
+            result.children().replaceWith(content);
+            if (img.getContext) {
+                actionsNode.show();
+            }
+        },
         displayImage = function (file, options) {
-            if (!window.loadImage(
+            currentFile = file;
+            if (!loadImage(
                     file,
-                    function (img) {
-                        if (!(img.src || img instanceof HTMLCanvasElement)) {
-                            img = $('<span>Loading image file failed</span>');
-                        }
-                        result.children().replaceWith(img);
-                    },
+                    replaceResults,
                     options
                 )) {
                 result.children().replaceWith(
@@ -42,7 +54,7 @@ $(function () {
                 prop;
             if (thumbnail) {
                 thumbNode.empty();
-                window.loadImage(thumbnail, function (img) {
+                loadImage(thumbnail, function (img) {
                     thumbNode.append(img).show();
                 }, {orientation: exif.get('Orientation')});
             }
@@ -63,7 +75,7 @@ $(function () {
             var target = e.dataTransfer || e.target,
                 file = target && target.files && target.files[0],
                 options = {
-                    maxWidth: result.children().outerWidth(),
+                    maxWidth: result.width(),
                     canvas: true
                 };
             if (!file) {
@@ -71,14 +83,15 @@ $(function () {
             }
             exifNode.hide();
             thumbNode.hide();
-            window.loadImage.parseMetaData(file, function (data) {
+            loadImage.parseMetaData(file, function (data) {
                 if (data.exif) {
                     options.orientation = data.exif.get('Orientation');
                     displayExifData(data.exif);
                 }
                 displayImage(file, options);
             });
-        };
+        },
+        coordinates;
     $(document)
         .on('dragover', function (e) {
             e.preventDefault();
@@ -87,5 +100,35 @@ $(function () {
         })
         .on('drop', dropChangeHandler);
     $('#file-input').on('change', dropChangeHandler);
+    $('#edit').on('click', function (event) {
+        event.preventDefault();
+        var imgNode = result.find('img, canvas'),
+            img = imgNode[0];
+        imgNode.Jcrop({
+            setSelect: [40, 40, img.width - 40, img.height - 40],
+            onSelect: function (coords) {
+                coordinates = coords;
+            },
+            onRelease: function () {
+                coordinates = null;
+            }
+        }).parent().on('click', function (event) {
+            event.preventDefault();
+        });
+    });
+    $('#crop').on('click', function (event) {
+        event.preventDefault();
+        var img = result.find('img, canvas')[0];
+        if (img && coordinates) {
+            replaceResults(loadImage.scale(img, {
+                left: coordinates.x,
+                top: coordinates.y,
+                sourceWidth: coordinates.w,
+                sourceHeight: coordinates.h,
+                minWidth: result.width()
+            }));
+            coordinates = null;
+        }
+    });
 
 });

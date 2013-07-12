@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.8.0
+ * JavaScript Load Image 1.9.0
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -72,53 +72,17 @@
         return Object.prototype.toString.call(obj) === '[object ' + type + ']';
     };
 
-    // Transform image orientation based on the given EXIF orientation data:
-    loadImage.transformCoordinates = function (canvas, orientation) {
-        var ctx = canvas.getContext('2d'),
-            width = canvas.width,
-            height = canvas.height;
-        if (orientation > 4) {
-            canvas.width = height;
-            canvas.height = width;
-        }
-        switch (orientation) {
-        case 2:
-            // horizontal flip
-            ctx.translate(width, 0);
-            ctx.scale(-1, 1);
-            break;
-        case 3:
-            // 180 rotate left
-            ctx.translate(width, height);
-            ctx.rotate(Math.PI);
-            break;
-        case 4:
-            // vertical flip
-            ctx.translate(0, height);
-            ctx.scale(1, -1);
-            break;
-        case 5:
-            // vertical flip + 90 rotate right
-            ctx.rotate(0.5 * Math.PI);
-            ctx.scale(1, -1);
-            break;
-        case 6:
-            // 90 rotate right
-            ctx.rotate(0.5 * Math.PI);
-            ctx.translate(0, -height);
-            break;
-        case 7:
-            // horizontal flip + 90 rotate right
-            ctx.rotate(0.5 * Math.PI);
-            ctx.translate(width, -height);
-            ctx.scale(-1, 1);
-            break;
-        case 8:
-            // 90 rotate left
-            ctx.rotate(-0.5 * Math.PI);
-            ctx.translate(-width, 0);
-            break;
-        }
+    // Transform image coordinates, allows to override e.g.
+    // the canvas orientation based on the orientation option,
+    // gets canvas, options passed as arguments:
+    loadImage.transformCoordinates = function () {
+        return;
+    };
+
+    // Returns transformed options, allows to override e.g.
+    // coordinate and dimension options based on the orientation:
+    loadImage.getTransformedOptions = function (options) {
+        return options;
     };
 
     // Canvas render method, allows to override the
@@ -149,31 +113,35 @@
         return canvas;
     };
 
-    // Scales the given image (img or canvas HTML element)
+    // This method is used to determine if the target image
+    // should be a canvas element:
+    loadImage.hasCanvasOption = function (options) {
+        return options.canvas || options.crop;
+    };
+
+    // Scales and/or crops the given image (img or canvas HTML element)
     // using the given options.
     // Returns a canvas object if the browser supports canvas
-    // and the canvas or crop option is true or a canvas object
-    // is passed as image, else the scaled image:
+    // and the hasCanvasOption method returns true or a canvas
+    // object is passed as image, else the scaled image:
     loadImage.scale = function (img, options) {
         options = options || {};
         var canvas = document.createElement('canvas'),
             useCanvas = img.getContext ||
-                ((options.canvas || options.crop || options.orientation) &&
-                    canvas.getContext),
-            width = img.width,
-            height = img.height,
-            sourceWidth = width,
-            sourceHeight = height,
-            sourceX = 0,
-            sourceY = 0,
-            destX = 0,
-            destY = 0,
+                (loadImage.hasCanvasOption(options) && canvas.getContext),
+            width = img.naturalWidth || img.width,
+            height = img.naturalHeight || img.height,
+            destWidth = width,
+            destHeight = height,
             maxWidth,
             maxHeight,
             minWidth,
             minHeight,
-            destWidth,
-            destHeight,
+            sourceWidth,
+            sourceHeight,
+            sourceX,
+            sourceY,
+            tmp,
             scaleUp = function () {
                 var scale = Math.max(
                     (minWidth || destWidth) / destWidth,
@@ -194,34 +162,53 @@
                     destHeight = Math.ceil(destHeight * scale);
                 }
             };
-        if (useCanvas && options.orientation > 4) {
-            maxWidth = options.maxHeight;
-            maxHeight = options.maxWidth;
-            minWidth = options.minHeight;
-            minHeight = options.minWidth;
-        } else {
-            maxWidth = options.maxWidth;
-            maxHeight = options.maxHeight;
-            minWidth = options.minWidth;
-            minHeight = options.minHeight;
+        if (useCanvas) {
+            options = loadImage.getTransformedOptions(options);
+            sourceX = options.left || 0;
+            sourceY = options.top || 0;
+            if (options.sourceWidth) {
+                sourceWidth = options.sourceWidth;
+                if (options.right !== undefined && options.left === undefined) {
+                    sourceX = width - sourceWidth - options.right;
+                }
+            } else {
+                sourceWidth = width - sourceX - (options.right || 0);
+            }
+            if (options.sourceHeight) {
+                sourceHeight = options.sourceHeight;
+                if (options.bottom !== undefined && options.top === undefined) {
+                    sourceY = height - sourceHeight - options.bottom;
+                }
+            } else {
+                sourceHeight = height - sourceY - (options.bottom || 0);
+            }
+            destWidth = sourceWidth;
+            destHeight = sourceHeight;
         }
+        maxWidth = options.maxWidth;
+        maxHeight = options.maxHeight;
+        minWidth = options.minWidth;
+        minHeight = options.minHeight;
         if (useCanvas && maxWidth && maxHeight && options.crop) {
             destWidth = maxWidth;
             destHeight = maxHeight;
-            if (width / height < maxWidth / maxHeight) {
-                sourceHeight = maxHeight * width / maxWidth;
-                sourceY = (height - sourceHeight) / 2;
-            } else {
-                sourceWidth = maxWidth * height / maxHeight;
-                sourceX = (width - sourceWidth) / 2;
+            tmp = sourceWidth / sourceHeight - maxWidth / maxHeight;
+            if (tmp < 0) {
+                sourceHeight = maxHeight * sourceWidth / maxWidth;
+                if (options.top === undefined && options.bottom === undefined) {
+                    sourceY = (height - sourceHeight) / 2;
+                }
+            } else if (tmp > 0) {
+                sourceWidth = maxWidth * sourceHeight / maxHeight;
+                if (options.left === undefined && options.right === undefined) {
+                    sourceX = (width - sourceWidth) / 2;
+                }
             }
         } else {
             if (options.contain || options.cover) {
                 minWidth = maxWidth = maxWidth || minWidth;
                 minHeight = maxHeight = maxHeight || minHeight;
             }
-            destWidth = width;
-            destHeight = height;
             if (options.cover) {
                 scaleDown();
                 scaleUp();
@@ -235,7 +222,7 @@
             canvas.height = destHeight;
             loadImage.transformCoordinates(
                 canvas,
-                options.orientation
+                options
             );
             return loadImage.renderImageToCanvas(
                 canvas,
@@ -244,8 +231,8 @@
                 sourceY,
                 sourceWidth,
                 sourceHeight,
-                destX,
-                destY,
+                0,
+                0,
                 destWidth,
                 destHeight
             );

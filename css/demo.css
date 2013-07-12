@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Demo CSS 1.8.0
+ * JavaScript Load Image Demo CSS 1.9.0
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan
@@ -55,6 +55,9 @@ td {
   background: #fff;
   color: #222;
   text-align: center;
+}
+.jcrop-holder {
+  margin: 0 auto;
 }
 
 @media (min-width: 481px) {

@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Test 1.8.0
+ * JavaScript Load Image Test 1.9.0
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -246,6 +246,30 @@
             }, {maxWidth: 40, maxHeight: 60, crop: true})).to.be.ok();
         });
 
+        it('Crop using the given sourceWidth and sourceHeight dimensions', function (done) {
+            expect(loadImage(blobGIF, function (img) {
+                done();
+                expect(img.width).to.be(40);
+                expect(img.height).to.be(40);
+            }, {sourceWidth: 40, sourceHeight: 40, crop: true})).to.be.ok();
+        });
+
+        it('Crop using the given left and top coordinates', function (done) {
+            expect(loadImage(blobGIF, function (img) {
+                done();
+                expect(img.width).to.be(40);
+                expect(img.height).to.be(20);
+            }, {left: 40, top: 40, crop: true})).to.be.ok();
+        });
+
+        it('Crop using the given right and bottom coordinates', function (done) {
+            expect(loadImage(blobGIF, function (img) {
+                done();
+                expect(img.width).to.be(40);
+                expect(img.height).to.be(20);
+            }, {right: 40, bottom: 40, crop: true})).to.be.ok();
+        });
+
     });
 
     describe('Orientation', function () {
@@ -258,14 +282,6 @@
             }, {orientation: 1})).to.be.ok();
         });
 
-        it('Should rotate right', function (done) {
-            expect(loadImage(blobGIF, function (img) {
-                done();
-                expect(img.width).to.be(60);
-                expect(img.height).to.be(80);
-            }, {orientation: 6})).to.be.ok();
-        });
-
         it('Should rotate left', function (done) {
             expect(loadImage(blobGIF, function (img) {
                 done();
@@ -274,12 +290,52 @@
             }, {orientation: 8})).to.be.ok();
         });
 
+        it('Should rotate right', function (done) {
+            expect(loadImage(blobGIF, function (img) {
+                done();
+                expect(img.width).to.be(60);
+                expect(img.height).to.be(80);
+            }, {orientation: 6})).to.be.ok();
+        });
+
         it('Should adjust constraints to new coordinates', function (done) {
             expect(loadImage(blobGIF, function (img) {
                 done();
                 expect(img.width).to.be(60);
                 expect(img.height).to.be(80);
             }, {orientation: 6, maxWidth: 60, maxHeight: 80})).to.be.ok();
+        });
+
+        it('Should adjust left and top to new coordinates', function (done) {
+            expect(loadImage(blobGIF, function (img) {
+                done();
+                expect(img.width).to.be(30);
+                expect(img.height).to.be(60);
+            }, {orientation: 5, left: 30, top: 20})).to.be.ok();
+        });
+
+        it('Should adjust right and bottom to new coordinates', function (done) {
+            expect(loadImage(blobGIF, function (img) {
+                done();
+                expect(img.width).to.be(30);
+                expect(img.height).to.be(60);
+            }, {orientation: 5, right: 30, bottom: 20})).to.be.ok();
+        });
+
+        it('Should adjust left and bottom to new coordinates', function (done) {
+            expect(loadImage(blobGIF, function (img) {
+                done();
+                expect(img.width).to.be(30);
+                expect(img.height).to.be(60);
+            }, {orientation: 7, left: 30, bottom: 20})).to.be.ok();
+        });
+
+        it('Should adjust right and top to new coordinates', function (done) {
+            expect(loadImage(blobGIF, function (img) {
+                done();
+                expect(img.width).to.be(30);
+                expect(img.height).to.be(60);
+            }, {orientation: 7, right: 30, top: 20})).to.be.ok();
         });
 
     });
