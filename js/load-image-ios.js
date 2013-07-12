@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image iOS scaling fixes 1.0.1
+ * JavaScript Load Image iOS scaling fixes 1.0.2
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan
@@ -120,6 +120,7 @@
             }
             vertSquashRatio = loadImage.detectVerticalSquash(img, subsampled);
             if (subsampled && vertSquashRatio !== 1) {
+                sourceY *= vertSquashRatio;
                 destWidth = Math.ceil(tileSize * destWidth / sourceWidth);
                 destHeight = Math.ceil(
                     tileSize * destHeight / sourceHeight / vertSquashRatio
