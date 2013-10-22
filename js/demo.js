@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Demo JS 1.9.0
+ * JavaScript Load Image Demo JS 1.9.1
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan
@@ -9,7 +9,7 @@
  * http://www.opensource.org/licenses/MIT
  */
 
-/*global document, loadImage, HTMLCanvasElement, $ */
+/*global window, document, loadImage, HTMLCanvasElement, $ */
 
 $(function () {
     'use strict';
@@ -92,6 +92,10 @@ $(function () {
             });
         },
         coordinates;
+    // Hide URL/FileReader API requirement message in capable browsers:
+    if (window.createObjectURL || window.URL || window.webkitURL || window.FileReader) {
+        result.children().hide();
+    }
     $(document)
         .on('dragover', function (e) {
             e.preventDefault();
