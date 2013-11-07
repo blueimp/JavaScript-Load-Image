@@ -11,7 +11,7 @@ MINIFY+= js/load-image-exif-map.js
 js:
 	node_modules/.bin/uglifyjs ${MINIFY} -c -m -o js/load-image.min.js
 
-SRC = $(wildcard lib/*.js)
+SRC = $(wildcard js/*.js)
 
 build: $(SRC)
 	@component build --dev
