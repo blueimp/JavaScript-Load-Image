@@ -265,8 +265,10 @@
         }
         return false;
     };
-
-    if (typeof define === 'function' && define.amd) {
+    
+    if (typeof module !== 'undefined' && module.exports && typeof require !== 'undefined') {
+        module.exports = loadImage;
+    } else if (typeof define === 'function' && define.amd) {
         define(function () {
             return loadImage;
         });
