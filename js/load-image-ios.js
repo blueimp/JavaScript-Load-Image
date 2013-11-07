@@ -17,7 +17,11 @@
 
 (function (factory) {
     'use strict';
-    if (typeof define === 'function' && define.amd) {
+    if (typeof module !== 'undefined' && module.exports && typeof require !== 'undefined') {
+        var loadImage = require('./load-image');
+        module.exports = factory(loadImage);
+    }
+    else if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
         define(['load-image'], factory);
     } else {
