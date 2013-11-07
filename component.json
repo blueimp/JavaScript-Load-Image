@@ -1,5 +1,5 @@
 {
-    "name": "blueimp-load-image",
+    "name": "load-image",
     "version": "1.9.1",
     "title": "JavaScript Load Image",
     "description": "JavaScript Load Image is a library to load images provided as File or Blob objects or via URL. It returns an optionally scaled and/or cropped HTML img or canvas element. It also provides a method to parse image meta data to extract Exif tags and thumbnails and to restore the complete image header after resizing.",
@@ -46,13 +46,13 @@
         }
     ],
     "scripts": [
-        "./js/index.js",
-        "./js/load-image.js",
-        "./js/load-image-ios.js",
-        "./js/load-image-orientation.js",
-        "./js/load-image-meta.js",
-        "./js/load-image-exif.js",
-        "./js/load-image-exif-map.js"
+        "js/index.js",
+        "js/load-image.js",
+        "js/load-image-ios.js",
+        "js/load-image-orientation.js",
+        "js/load-image-meta.js",
+        "js/load-image-exif.js",
+        "js/load-image-exif-map.js"
     ],
-    "main": "./js/index.js"
+    "main": "js/index.js"
 }
