@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Test 1.9.0
+ * JavaScript Load Image Test 1.11.0
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -41,7 +41,18 @@
             'srO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8v' +
             'P09fb3+Pn6/9oADAMBAAIRAxEAPwD+/iiiigD/2Q==',
         imageUrlJPEG = 'data:image/jpeg;base64,' + b64DataJPEG,
-        blobJPEG = canCreateBlob && window.dataURLtoBlob(imageUrlJPEG);
+        blobJPEG = canCreateBlob && window.dataURLtoBlob(imageUrlJPEG),
+        createBlob = function (data, type) {
+            try {
+                return new Blob([data], {type: type});
+            } catch (e) {
+                var BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder ||
+                    window.MozBlobBuilder || window.MSBlobBuilder,
+                    builder = new BlobBuilder();
+                builder.append(data.buffer || data);
+                return builder.getBlob(type);
+            }
+        };
 
     describe('Loading', function () {
 
@@ -92,8 +103,11 @@
             expect(loadImage(blobGIF, function (img) {
                 loadImage(img.src, function (img2) {
                     done();
-                    expect(img2).to.be.a(window.Event);
-                    expect(img2.type).to.be('error');
+                    if (!window.PHANTOMJS) {
+                        // revokeObjectUrl doesn't seem to have an effect in PhantomJS
+                        expect(img2).to.be.a(window.Event);
+                        expect(img2.type).to.be('error');
+                    }
                 });
             })).to.be.ok();
         });
@@ -397,7 +411,7 @@
             loadImage.parseMetaData(blobJPEG, function (data) {
                 expect(data.imageHead).to.be.ok();
                 loadImage.parseMetaData(
-                    new Blob([data.imageHead], {type: 'image/jpeg'}),
+                    createBlob(data.imageHead, 'image/jpeg'),
                     function (data) {
                         done();
                         expect(data.exif).to.be.ok();

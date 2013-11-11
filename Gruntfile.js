@@ -24,8 +24,23 @@ module.exports = function (grunt) {
                 'js/load-image-meta.js',
                 'js/load-image-exif.js',
                 'js/load-image-exif-map.js',
-                'js/demo.js'
+                'js/demo.js',
+                'test/test.js'
             ]
+        },
+        mocha: {
+            all: {
+                src: ['test/index.html'],
+                options: {
+                    run: true,
+                    bail: true,
+                    log: true,
+                    reporter: 'Spec'
+                },
+                mocha: {
+                    ignoreLeaks: false
+                }
+            }
         },
         uglify: {
             production: {
@@ -43,10 +58,11 @@ module.exports = function (grunt) {
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-mocha');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-bump-build-git');
 
-    grunt.registerTask('test', ['jshint']);
+    grunt.registerTask('test', ['jshint', 'mocha']);
     grunt.registerTask('default', ['test', 'uglify']);
 
 };
