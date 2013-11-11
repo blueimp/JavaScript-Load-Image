@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Exif Map 1.0.1
+ * JavaScript Load Image Exif Map 1.0.2
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan
@@ -25,10 +25,6 @@
     }
 }(function (loadImage) {
     'use strict';
-
-    var tags,
-        map,
-        prop;
 
     loadImage.ExifMap.prototype.tags = {
         // =================
@@ -347,25 +343,28 @@
         case 'FlashpixVersion':
             return String.fromCharCode(value[0], value[1], value[2], value[3]);
         case 'ComponentsConfiguration':
-            return this.stringValues[id][value[0]]
-                + this.stringValues[id][value[1]]
-                + this.stringValues[id][value[2]]
-                + this.stringValues[id][value[3]];
+            return this.stringValues[id][value[0]] +
+                this.stringValues[id][value[1]] +
+                this.stringValues[id][value[2]] +
+                this.stringValues[id][value[3]];
         case 'GPSVersionID':
             return value[0] + '.' + value[1]  + '.' + value[2]  + '.' + value[3];
         }
         return String(value);
     };
 
-    tags = loadImage.ExifMap.prototype.tags;
-    map = loadImage.ExifMap.prototype.map;
+    (function (exifMapPrototype) {
+        var tags = exifMapPrototype.tags,
+            map = exifMapPrototype.map,
+            prop;
 
-    // Map the tag names to tags:
-    for (prop in tags) {
-        if (tags.hasOwnProperty(prop)) {
-            map[tags[prop]] = prop;
+        // Map the tag names to tags:
+        for (prop in tags) {
+            if (tags.hasOwnProperty(prop)) {
+                map[tags[prop]] = prop;
+            }
         }
-    }
+    }(loadImage.ExifMap.prototype));
 
     loadImage.ExifMap.prototype.getAll = function () {
         var map = {},
@@ -373,7 +372,7 @@
             id;
         for (prop in this) {
             if (this.hasOwnProperty(prop)) {
-                id = tags[prop];
+                id = this.tags[prop];
                 if (id) {
                     map[id] = this.getText(id);
                 }
