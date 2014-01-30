@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Meta 1.0.1
+ * JavaScript Load Image Meta 1.0.2
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan
@@ -59,6 +59,12 @@
         if (noMetaData || !loadImage.readFile(
                 loadImage.blobSlice.call(file, 0, maxMetaDataSize),
                 function (e) {
+                    if (e.target.error) {
+                        // FileReader error
+                        console.log(e.target.error);
+                        callback(data);
+                        return;
+                    }
                     // Note on endianness:
                     // Since the marker and length bytes in JPEG files are always
                     // stored in big endian order, we can leave the endian parameter
