@@ -1,5 +1,18 @@
 # JavaScript Load Image
 
+##Browserify usage
+var loadImage = require('blueimp-load-image-browserify/js/load-image');
+
+loadImage(file, function(canvas) {
+    //See the main repo for more instructions
+});
+
+//If you need to use any of the extra files, e.g. the iOS fix, just include them after the main require:
+
+var loadImage = require('blueimp-load-image-browserify/js/load-image');
+require('blueimp-load-image-browserify/js/load-image-ios');
+    
+
 ## Demo
 [JavaScript Load Image Demo](http://blueimp.github.io/JavaScript-Load-Image/)
 
