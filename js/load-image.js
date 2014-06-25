@@ -270,6 +270,8 @@
         define(function () {
             return loadImage;
         });
+    } else if (typeof module !== 'undefined' && module.exports) {
+        module.exports = loadImage;
     } else {
         $.loadImage = loadImage;
     }
