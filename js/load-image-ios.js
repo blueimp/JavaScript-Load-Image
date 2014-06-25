@@ -20,6 +20,8 @@
     if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
         define(['load-image'], factory);
+    } else if (typeof module !== 'undefined' && module.exports) {
+        factory(require('./load-image'));
     } else {
         // Browser globals:
         factory(window.loadImage);

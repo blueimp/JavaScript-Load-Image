@@ -19,6 +19,8 @@
     if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
         define(['load-image', 'load-image-exif'], factory);
+    } else if (typeof module !== 'undefined' && module.exports) {
+        factory(require('./load-image'), require('./load-image-exif'));
     } else {
         // Browser globals:
         factory(window.loadImage);
