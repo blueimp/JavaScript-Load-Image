@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image 1.9.0
+ * JavaScript Load Image 1.9.1
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -148,8 +148,8 @@
                     (minHeight || destHeight) / destHeight
                 );
                 if (scale > 1) {
-                    destWidth = Math.ceil(destWidth * scale);
-                    destHeight = Math.ceil(destHeight * scale);
+                    destWidth = destWidth * scale;
+                    destHeight = destHeight * scale;
                 }
             },
             scaleDown = function () {
@@ -158,8 +158,8 @@
                     (maxHeight || destHeight) / destHeight
                 );
                 if (scale < 1) {
-                    destWidth = Math.ceil(destWidth * scale);
-                    destHeight = Math.ceil(destHeight * scale);
+                    destWidth = destWidth * scale;
+                    destHeight = destHeight * scale;
                 }
             };
         if (useCanvas) {
