@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Test 1.11.0
+ * JavaScript Load Image Test 1.11.1
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -350,6 +350,22 @@
                 expect(img.width).to.be(30);
                 expect(img.height).to.be(60);
             }, {orientation: 7, right: 30, top: 20})).to.be.ok();
+        });
+
+        it('Should ignore too small orientation value', function (done) {
+            expect(loadImage(blobGIF, function (img) {
+                done();
+                expect(img.width).to.be(80);
+                expect(img.height).to.be(60);
+            }, {orientation: -1})).to.be.ok();
+        });
+
+        it('Should ignore too large orientation value', function (done) {
+            expect(loadImage(blobGIF, function (img) {
+                done();
+                expect(img.width).to.be(80);
+                expect(img.height).to.be(60);
+            }, {orientation: 9})).to.be.ok();
         });
 
     });

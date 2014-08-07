@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Orientation 1.0.0
+ * JavaScript Load Image Orientation 1.0.1
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan
@@ -38,7 +38,7 @@
             width = canvas.width,
             height = canvas.height,
             orientation = options.orientation;
-        if (!orientation) {
+        if (!orientation || orientation > 8) {
             return;
         }
         if (orientation > 4) {
@@ -88,11 +88,13 @@
     // Transforms coordinate and dimension options
     // based on the given orientation option:
     loadImage.getTransformedOptions = function (options) {
-        if (!options.orientation || options.orientation === 1) {
+        var orientation = options.orientation,
+            newOptions,
+            i;
+        if (!orientation || orientation > 8 || orientation === 1) {
             return options;
         }
-        var newOptions = {},
-            i;
+        newOptions = {};
         for (i in options) {
             if (options.hasOwnProperty(i)) {
                 newOptions[i] = options[i];
