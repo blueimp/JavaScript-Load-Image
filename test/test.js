@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Test 1.11.1
+ * JavaScript Load Image Test 1.12.0
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2011, Sebastian Tschan
@@ -282,6 +282,22 @@
                 expect(img.width).to.be(40);
                 expect(img.height).to.be(20);
             }, {right: 40, bottom: 40, crop: true})).to.be.ok();
+        });
+
+        it('Crop using the given 2:1 aspectRatio', function (done) {
+            expect(loadImage(blobGIF, function (img) {
+                done();
+                expect(img.width).to.be(80);
+                expect(img.height).to.be(40);
+            }, {aspectRatio: 2})).to.be.ok();
+        });
+
+        it('Crop using the given 2:3 aspectRatio', function (done) {
+            expect(loadImage(blobGIF, function (img) {
+                done();
+                expect(img.width).to.be(40);
+                expect(img.height).to.be(60);
+            }, {aspectRatio: 2/3})).to.be.ok();
         });
 
     });

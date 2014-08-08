@@ -1,11 +1,30 @@
 # JavaScript Load Image
 
+> A JavaScript library to load and transform image files.
+
+## Table of contents
+
+- [Demo](#demo)
+- [Description](#description)
+- [Setup](#setup)
+- [Usage](#usage)
+- [Image loading](#image-loading)
+- [Image scaling](#image-scaling)
+- [Requirements](#requirements)
+- [API](#api)
+- [Options](#options)
+- [Meta data parsing](#meta-data-parsing)
+- [Exif parser](#exif-parser)
+- [iOS scaling fixes](#ios-scaling-fixes)
+- [License](#license)
+- [Credits](#credits)
+
 ## Demo
 [JavaScript Load Image Demo](http://blueimp.github.io/JavaScript-Load-Image/)
 
 ## Description
 JavaScript Load Image is a library to load images provided as File or Blob objects or via URL.  
-It returns an optionally scaled and/or cropped HTML img or canvas element.  
+It returns an optionally scaled and/or cropped HTML img or canvas element via an asynchronous callback.  
 It also provides a method to parse image meta data to extract Exif tags and thumbnails and to restore the complete image header after resizing.
 
 ## Setup
@@ -59,7 +78,7 @@ The JavaScript Load Image library has zero dependencies.
 However, JavaScript Load Image is a very suitable complement to the [Canvas to Blob](https://github.com/blueimp/JavaScript-Canvas-to-Blob) library.
 
 ## API
-The **loadImage()** function accepts a [File](https://developer.mozilla.org/en/DOM/File) or [Blob](https://developer.mozilla.org/en/DOM/Blob) object or a simple image URL (e.g. "http://example.org/image.png") as first argument.
+The **loadImage()** function accepts a [File](https://developer.mozilla.org/en/DOM/File) or [Blob](https://developer.mozilla.org/en/DOM/Blob) object or a simple image URL (e.g. `'http://example.org/image.png'`) as first argument.
 
 If a [File](https://developer.mozilla.org/en/DOM/File) or [Blob](https://developer.mozilla.org/en/DOM/Blob) is passed as parameter, it returns a HTML **img** element if the browser supports the [URL](https://developer.mozilla.org/en/DOM/window.URL) API or a [FileReader](https://developer.mozilla.org/en/DOM/FileReader) object if supported, or **false**.  
 It always returns a HTML [img](https://developer.mozilla.org/en/docs/HTML/Element/Img) element when passing an image URL:
@@ -134,6 +153,8 @@ Defaults to *0* and requires *canvas: true*.
 This emulates the CSS feature [background-image: contain](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Scaling_background_images#contain).
 * **cover**: Scales the image up/down to cover the max dimensions with the image dimensions if set to *true*.  
 This emulates the CSS feature [background-image: cover](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Scaling_background_images#cover).
+* **aspectRatio**: Crops the image to the given aspect ratio (e.g. `16/9`).  
+This feature assumes *crop: true*.
 * **crop**: Crops the image to the maxWidth/maxHeight constraints if set to *true*.  
 This feature assumes *canvas: true*.
 * **orientation**: Allows to transform the canvas coordinates according to the EXIF orientation specification.  

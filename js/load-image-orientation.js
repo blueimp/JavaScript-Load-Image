@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Orientation 1.0.1
+ * JavaScript Load Image Orientation 1.1.0
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan
@@ -23,17 +23,21 @@
 }(function (loadImage) {
     'use strict';
 
-    var originalHasCanvasOptionMethod = loadImage.hasCanvasOption;
+    var originalHasCanvasOption = loadImage.hasCanvasOption,
+        originalTransformCoordinates = loadImage.transformCoordinates,
+        originalGetTransformedOptions = loadImage.getTransformedOptions;
 
     // This method is used to determine if the target image
     // should be a canvas element:
     loadImage.hasCanvasOption = function (options) {
-        return originalHasCanvasOptionMethod(options) || options.orientation;
+        return originalHasCanvasOption.call(loadImage, options) ||
+            options.orientation;
     };
 
     // Transform image orientation based on
     // the given EXIF orientation option:
     loadImage.transformCoordinates = function (canvas, options) {
+        originalTransformCoordinates.call(loadImage, canvas, options);
         var ctx = canvas.getContext('2d'),
             width = canvas.width,
             height = canvas.height,
@@ -87,8 +91,9 @@
 
     // Transforms coordinate and dimension options
     // based on the given orientation option:
-    loadImage.getTransformedOptions = function (options) {
-        var orientation = options.orientation,
+    loadImage.getTransformedOptions = function (img, opts) {
+        var options = originalGetTransformedOptions.call(loadImage, img, opts),
+            orientation = options.orientation,
             newOptions,
             i;
         if (!orientation || orientation > 8 || orientation === 1) {
