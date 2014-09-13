@@ -20,7 +20,7 @@
 - [Credits](#credits)
 
 ## Demo
-[JavaScript Load Image Demo](http://blueimp.github.io/JavaScript-Load-Image/)
+[JavaScript Load Image Demo](https://blueimp.github.io/JavaScript-Load-Image/)
 
 ## Description
 JavaScript Load Image is a library to load images provided as File or Blob objects or via URL.  
@@ -78,7 +78,7 @@ The JavaScript Load Image library has zero dependencies.
 However, JavaScript Load Image is a very suitable complement to the [Canvas to Blob](https://github.com/blueimp/JavaScript-Canvas-to-Blob) library.
 
 ## API
-The **loadImage()** function accepts a [File](https://developer.mozilla.org/en/DOM/File) or [Blob](https://developer.mozilla.org/en/DOM/Blob) object or a simple image URL (e.g. `'http://example.org/image.png'`) as first argument.
+The **loadImage()** function accepts a [File](https://developer.mozilla.org/en/DOM/File) or [Blob](https://developer.mozilla.org/en/DOM/Blob) object or a simple image URL (e.g. `'https://example.org/image.png'`) as first argument.
 
 If a [File](https://developer.mozilla.org/en/DOM/File) or [Blob](https://developer.mozilla.org/en/DOM/Blob) is passed as parameter, it returns a HTML **img** element if the browser supports the [URL](https://developer.mozilla.org/en/DOM/window.URL) API or a [FileReader](https://developer.mozilla.org/en/DOM/FileReader) object if supported, or **false**.  
 It always returns a HTML [img](https://developer.mozilla.org/en/docs/HTML/Element/Img) element when passing an image URL:
@@ -116,7 +116,7 @@ document.getElementById('file-input').onchange = function (e) {
 The second argument must be a **callback** function, which is called when the image has been loaded or an error occurred while loading the image. The callback function is passed one argument, which is either a HTML **img** element, a [canvas](https://developer.mozilla.org/en/HTML/Canvas) element, or an [Event](https://developer.mozilla.org/en/DOM/event) object of type **error**:
 
 ```js
-var imageUrl = "http://example.org/image.png";
+var imageUrl = "https://example.org/image.png";
 loadImage(
     imageUrl,
     function (img) {
