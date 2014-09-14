@@ -28,10 +28,10 @@ It returns an optionally scaled and/or cropped HTML img or canvas element via an
 It also provides a method to parse image meta data to extract Exif tags and thumbnails and to restore the complete image header after resizing.
 
 ## Setup
-Include the (minified) JavaScript Load Image script in your HTML markup:
+Include the (combined and minified) JavaScript Load Image script in your HTML markup:
 
 ```html
-<script src="js/load-image.min.js"></script>
+<script src="js/load-image.all.min.js"></script>
 ```
 
 Or alternatively, choose which components you want to include:

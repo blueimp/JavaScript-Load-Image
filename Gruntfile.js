@@ -52,7 +52,7 @@ module.exports = function (grunt) {
                     'js/load-image-exif.js',
                     'js/load-image-exif-map.js'
                 ],
-                dest: 'js/load-image.min.js'
+                dest: 'js/load-image.all.min.js'
             }
         }
     });
