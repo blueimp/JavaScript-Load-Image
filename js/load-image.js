@@ -122,9 +122,14 @@
         destX,
         destY,
         destWidth,
-        destHeight
+        destHeight,
+        alpha
     ) {
-        canvas.getContext('2d').drawImage(
+        var ctx = canvas.getContext('2d');
+        if (!!alpha)
+            ctx.globalAlpha = alpha;
+
+        ctx.drawImage(
             img,
             sourceX,
             sourceY,
@@ -259,7 +264,8 @@
                 0,
                 0,
                 destWidth,
-                destHeight
+                destHeight,
+                options.alpha
             );
         }
         img.width = destWidth;
