@@ -157,7 +157,8 @@ This emulates the CSS feature [background-image: cover](https://developer.mozill
 This feature assumes *crop: true*.
 * **crop**: Crops the image to the maxWidth/maxHeight constraints if set to *true*.  
 This feature assumes *canvas: true*.
-* **orientation**: Allows to transform the canvas coordinates according to the EXIF orientation specification.  
+* **orientation**: Transform the canvas coordinates according to the EXIF orientation specification.  
+Note that you must provide an orientation value (1-8), as setting this option to *true* will not work. See [Exif parser](#exif-parser).  
 This feature assumes *canvas: true*.
 * **canvas**: Returns the image as [canvas](https://developer.mozilla.org/en/HTML/Canvas) element if set to *true*.
 * **crossOrigin**: Sets the crossOrigin property on the img element for loading [CORS enabled images](https://developer.mozilla.org/en-US/docs/HTML/CORS_Enabled_Image).
