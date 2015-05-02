@@ -18,8 +18,8 @@
 (function (factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
-        // Register as an anonymous AMD module:
-        define(['load-image'], factory);
+        // Register as a named AMD module:
+        define('load-image-ios', ['load-image'], factory);
     } else {
         // Browser globals:
         factory(window.loadImage);

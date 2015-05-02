@@ -292,7 +292,7 @@
     };
 
     if (typeof define === 'function' && define.amd) {
-        define(function () {
+        define('load-image', function () {
             return loadImage;
         });
     } else {

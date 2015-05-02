@@ -45,6 +45,22 @@ Or alternatively, choose which components you want to include:
 <script src="js/load-image-exif-map.js"></script>
 ```
 
+### AMD
+The different modules support AMD, so you can load them with require.js either individually or from the minified bundle. The modules are named to support loading the bundle, so you need to use the actual module names in your `requirejs.config` (modules are named like their filenames without the file extension, so `load-image-orientation.js` becomes `load-image-orientation`).
+
+If you want to load multiple modules from the minified bundle, use the [bundles options](http://requirejs.org/docs/api.html#config-bundles) in your `requirejs.config` call, like this:
+
+```js
+requirejs.config({
+    paths: {
+        'load-image-all': 'vendor/load-image.all.min'
+    },
+    bundles: {
+        'load-image-all': ['load-image', 'load-image-orientation', 'load-image-ios', 'load-image-meta', 'load-image-exif']
+    }
+});
+```
+
 ## Usage
 
 ### Image loading
