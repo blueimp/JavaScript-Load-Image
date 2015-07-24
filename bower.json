@@ -36,12 +36,7 @@
     "url": "git://github.com/blueimp/JavaScript-Load-Image.git"
   },
   "bugs": "https://github.com/blueimp/JavaScript-Load-Image/issues",
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://www.opensource.org/licenses/MIT"
-    }
-  ],
+  "license": "MIT",
   "main": [
     "js/load-image.js",
     "js/load-image-ios.js",
