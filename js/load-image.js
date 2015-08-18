@@ -298,4 +298,4 @@
     } else {
         $.loadImage = loadImage;
     }
-}(this));
+}(window));
