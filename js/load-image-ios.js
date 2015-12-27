@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image iOS scaling fixes 1.0.3
+ * JavaScript Load Image iOS scaling fixes
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan

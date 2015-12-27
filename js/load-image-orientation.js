@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Orientation 1.1.0
+ * JavaScript Load Image Orientation
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan

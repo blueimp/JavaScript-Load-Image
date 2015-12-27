@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Exif Map 1.0.2
+ * JavaScript Load Image Exif Map
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan
