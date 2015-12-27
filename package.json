@@ -25,22 +25,39 @@
     "name": "Sebastian Tschan",
     "url": "https://blueimp.net"
   },
-  "maintainers": [
-    {
-      "name": "Sebastian Tschan",
-      "url": "https://blueimp.net"
-    }
-  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/blueimp/JavaScript-Load-Image.git"
   },
-  "bugs": "https://github.com/blueimp/JavaScript-Load-Image/issues",
-  "license": "MIT",
   "devDependencies": {
-    "grunt": "~0.4.5",
-    "grunt-contrib-uglify": "~0.5.1",
-    "grunt-contrib-jshint": "~0.10.0",
-    "grunt-bump-build-git": "~1.1.1"
+    "jshint": "2.8.0",
+    "mocha-phantomjs": "4.0.1",
+    "uglify-js": "2.6.1"
+  },
+  "scripts": {
+    "test": "jshint js test && mocha-phantomjs --ssl-protocol=any test/index.html",
+    "build": "uglifyjs js/load-image.js js/load-image-ios.js js/load-image-orientation.js js/load-image-meta.js js/load-image-exif.js js/load-image-exif-map.js -c -m > js/load-image.all.min.js",
+    "preversion": "npm test",
+    "version": "npm run build && git add -A js",
+    "postversion": "git push origin master --tags && npm publish"
+  },
+  "license": "MIT",
+  "jshintConfig": {
+    "bitwise": true,
+    "curly": true,
+    "eqeqeq": true,
+    "forin": true,
+    "freeze": true,
+    "immed": true,
+    "latedef": true,
+    "newcap": true,
+    "noarg": true,
+    "noempty": true,
+    "nonbsp": true,
+    "nonew": true,
+    "quotmark": true,
+    "undef": true,
+    "unused": true,
+    "strict": true
   }
 }

@@ -10,7 +10,7 @@
  */
 
 /*jslint nomen: true */
-/*global define, window, document, URL, webkitURL, Blob, File, FileReader */
+/*global define, window, document, URL, webkitURL, FileReader */
 
 (function ($) {
     'use strict';
