@@ -12,13 +12,15 @@
  * http://www.opensource.org/licenses/MIT
  */
 
-/*global define, window */
+/*global define, module, require, window */
 
 (function (factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
         define(['load-image', 'load-image-exif'], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        factory(require('./load-image'), require('./load-image-exif'));
     } else {
         // Browser globals:
         factory(window.loadImage);

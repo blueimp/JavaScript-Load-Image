@@ -12,14 +12,16 @@
  * http://www.opensource.org/licenses/MIT
  */
 
-/*jslint nomen: true, bitwise: true */
-/*global define, window, document */
+/*jslint bitwise: true */
+/*global define, module, require, window, document */
 
 (function (factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
         define(['load-image'], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        factory(require('./load-image'));
     } else {
         // Browser globals:
         factory(window.loadImage);

@@ -9,8 +9,7 @@
  * http://www.opensource.org/licenses/MIT
  */
 
-/*jslint nomen: true */
-/*global define, window, document, URL, webkitURL, FileReader */
+/*global define, module, window, document, URL, webkitURL, FileReader */
 
 (function ($) {
     'use strict';
@@ -295,6 +294,8 @@
         define(function () {
             return loadImage;
         });
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = loadImage;
     } else {
         $.loadImage = loadImage;
     }
