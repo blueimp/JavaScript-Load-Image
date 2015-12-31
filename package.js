@@ -1,5 +1,5 @@
 Package.describe({
-  name: 'marvin:javascript-load-image',
+  name: 'blueimp:javascript-load-image',
   version: '2.1.0',
   summary: 'A JavaScript library to load and transform image files.',
   git: 'https://github.com/blueimp/JavaScript-Load-Image',
@@ -19,6 +19,6 @@ Package.onTest(function(api) {
     'tinytest',
   ]);
 
-  api.use('marvin:javascript-load-image');
+  api.use('blueimp:javascript-load-image');
   api.addFiles('test/meteor-tests.js', 'client');
 });
