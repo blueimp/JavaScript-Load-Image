@@ -151,8 +151,16 @@
     loadImage.scale = function (img, options) {
         options = options || {};
         var canvas = document.createElement('canvas'),
+            context = canvas.getContext('2d'),
             useCanvas = img.getContext ||
                 (loadImage.hasCanvasOption(options) && canvas.getContext),
+            devicePixelRatio = window.devicePixelRatio || 1,
+            backingStoreRatio = context.webkitBackingStorePixelRatio ||
+                                context.mozBackingStorePixelRatio ||
+                                context.msBackingStorePixelRatio ||
+                                context.oBackingStorePixelRatio ||
+                                context.backingStorePixelRatio || 1,
+            ratio = devicePixelRatio / backingStoreRatio,
             width = img.naturalWidth || img.width,
             height = img.naturalHeight || img.height,
             destWidth = width,
@@ -241,7 +249,25 @@
                 scaleDown();
             }
         }
+
         if (useCanvas) {
+            // upscale the canvas if the two ratios don't match
+            if (devicePixelRatio !== backingStoreRatio) {
+                var oldWidth = destWidth;
+                var oldHeight = destHeight;
+
+                destWidth = oldWidth * ratio;
+                destHeight = oldHeight * ratio;
+
+                canvas.style.width = oldWidth + 'px';
+                canvas.style.height = oldHeight + 'px';
+
+                // now scale the context to counter
+                // the fact that we've manually scaled
+                // our canvas element
+                context.scale(ratio, ratio);
+            }
+
             canvas.width = destWidth;
             canvas.height = destHeight;
             loadImage.transformCoordinates(
