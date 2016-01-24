@@ -242,24 +242,60 @@
             }
         }
         if (useCanvas) {
-            canvas.width = destWidth;
-            canvas.height = destHeight;
-            loadImage.transformCoordinates(
-                canvas,
-                options
-            );
-            return loadImage.renderImageToCanvas(
-                canvas,
-                img,
-                sourceX,
-                sourceY,
-                sourceWidth,
-                sourceHeight,
-                0,
-                0,
-                destWidth,
-                destHeight
-            );
+            if (destWidth < sourceWidth && destHeight < sourceHeight) {
+                var stepScale = 0.5;
+                canvas.width = sourceWidth;
+                canvas.height = sourceHeight;
+
+                while (canvas.width > destWidth) {
+                    if (canvas.width * stepScale > destWidth) {
+                        canvas.width = canvas.width * stepScale;
+                        canvas.height = canvas.height * stepScale;
+                    } else {
+                        canvas.width = destWidth;
+                        canvas.height = destHeight;
+                    }
+                    loadImage.transformCoordinates(
+                        canvas,
+                        options
+                    );
+                    canvas = loadImage.renderImageToCanvas(
+                        canvas,
+                        img,
+                        sourceX,
+                        sourceY,
+                        sourceWidth,
+                        sourceHeight,
+                        0,
+                        0,
+                        canvas.width,
+                        canvas.height
+                    );
+                    img = new Image();
+                    img.src = canvas.toDataURL();
+                    sourceWidth = canvas.width;
+                    sourceHeight = canvas.height;
+                }
+            } else {
+                canvas.width = destWidth;
+                canvas.height = destHeight;
+                loadImage.transformCoordinates(
+                    canvas,
+                    options
+                );
+                return loadImage.renderImageToCanvas(
+                    canvas,
+                    img,
+                    sourceX,
+                    sourceY,
+                    sourceWidth,
+                    sourceHeight,
+                    0,
+                    0,
+                    destWidth,
+                    destHeight
+                );
+            }
         }
         img.width = destWidth;
         img.height = destHeight;
