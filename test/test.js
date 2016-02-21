@@ -42,6 +42,7 @@
                     'P09fb3+Pn6/9oADAMBAAIRAxEAPwD+/iiiigD/2Q=='
   var imageUrlJPEG = 'data:image/jpeg;base64,' + b64DataJPEG
   var blobJPEG = canCreateBlob && window.dataURLtoBlob(imageUrlJPEG)
+  var devicePixelRatio = window.devicePixelRatio || 1
   function createBlob (data, type) {
     try {
       return new Blob([data], {type: type})
@@ -66,34 +67,34 @@
 
     it('Load image url', function (done) {
       expect(loadImage(imageUrlGIF, function (img) {
-        done()
         expect(img.width).to.be(80)
         expect(img.height).to.be(60)
+        done()
       })).to.be.ok()
     })
 
     it('Load image blob', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        done()
         expect(img.width).to.be(80)
         expect(img.height).to.be(60)
+        done()
       })).to.be.ok()
     })
 
     it('Return image loading error to callback', function (done) {
       expect(loadImage('404', function (img) {
-        done()
         expect(img).to.be.a(window.Event)
         expect(img.type).to.be('error')
+        done()
       })).to.be.ok()
     })
 
     it('Keep object URL if noRevoke is true', function (done) {
       expect(loadImage(blobGIF, function (img) {
         loadImage(img.src, function (img2) {
-          done()
           expect(img.width).to.be(img2.width)
           expect(img.height).to.be(img2.height)
+          done()
         })
       }, {noRevoke: true})).to.be.ok()
     })
@@ -101,12 +102,12 @@
     it('Discard object URL if noRevoke is undefined or false', function (done) {
       expect(loadImage(blobGIF, function (img) {
         loadImage(img.src, function (img2) {
-          done()
-          if (!window.PHANTOMJS) {
+          if (!window.callPhantom) {
             // revokeObjectUrl doesn't seem to have an effect in PhantomJS
             expect(img2).to.be.a(window.Event)
             expect(img2.type).to.be('error')
           }
+          done()
         })
       })).to.be.ok()
     })
@@ -116,81 +117,81 @@
     describe('max/min', function () {
       it('Scale to maxWidth', function (done) {
         expect(loadImage(blobGIF, function (img) {
-          done()
           expect(img.width).to.be(40)
           expect(img.height).to.be(30)
+          done()
         }, {maxWidth: 40})).to.be.ok()
       })
 
       it('Scale to maxHeight', function (done) {
         expect(loadImage(blobGIF, function (img) {
-          done()
           expect(img.width).to.be(20)
           expect(img.height).to.be(15)
+          done()
         }, {maxHeight: 15})).to.be.ok()
       })
 
       it('Scale to minWidth', function (done) {
         expect(loadImage(blobGIF, function (img) {
-          done()
           expect(img.width).to.be(160)
           expect(img.height).to.be(120)
+          done()
         }, {minWidth: 160})).to.be.ok()
       })
 
       it('Scale to minHeight', function (done) {
         expect(loadImage(blobGIF, function (img) {
-          done()
           expect(img.width).to.be(320)
           expect(img.height).to.be(240)
+          done()
         }, {minHeight: 240})).to.be.ok()
       })
 
       it('Scale to minWidth but respect maxWidth', function (done) {
         expect(loadImage(blobGIF, function (img) {
-          done()
           expect(img.width).to.be(160)
           expect(img.height).to.be(120)
+          done()
         }, {minWidth: 240, maxWidth: 160})).to.be.ok()
       })
 
       it('Scale to minHeight but respect maxHeight', function (done) {
         expect(loadImage(blobGIF, function (img) {
-          done()
           expect(img.width).to.be(160)
           expect(img.height).to.be(120)
+          done()
         }, {minHeight: 180, maxHeight: 120})).to.be.ok()
       })
 
       it('Scale to minWidth but respect maxHeight', function (done) {
         expect(loadImage(blobGIF, function (img) {
-          done()
           expect(img.width).to.be(160)
           expect(img.height).to.be(120)
+          done()
         }, {minWidth: 240, maxHeight: 120})).to.be.ok()
       })
 
       it('Scale to minHeight but respect maxWidth', function (done) {
         expect(loadImage(blobGIF, function (img) {
-          done()
           expect(img.width).to.be(160)
           expect(img.height).to.be(120)
+          done()
         }, {minHeight: 180, maxWidth: 160})).to.be.ok()
       })
 
       it('Ignore max settings if image dimensions are smaller', function (done) {
         expect(loadImage(blobGIF, function (img) {
-          done()
           expect(img.width).to.be(80)
           expect(img.height).to.be(60)
+          done()
         }, {maxWidth: 160, maxHeight: 120})).to.be.ok()
       })
 
       it('Ignore min settings if image dimensions are larger', function (done) {
         expect(loadImage(blobGIF, function (img) {
-          done()
           expect(img.width).to.be(80)
           expect(img.height).to.be(60)
+          done()
         }, {minWidth: 40, minHeight: 30})).to.be.ok()
       })
     })
@@ -198,17 +199,17 @@
     describe('contain', function () {
       it('Scale up to contain image in max dimensions', function (done) {
         expect(loadImage(blobGIF, function (img) {
-          done()
           expect(img.width).to.be(160)
           expect(img.height).to.be(120)
+          done()
         }, {maxWidth: 160, maxHeight: 160, contain: true})).to.be.ok()
       })
 
       it('Scale down to contain image in max dimensions', function (done) {
         expect(loadImage(blobGIF, function (img) {
-          done()
           expect(img.width).to.be(40)
           expect(img.height).to.be(30)
+          done()
         }, {maxWidth: 40, maxHeight: 40, contain: true})).to.be.ok()
       })
     })
@@ -216,17 +217,17 @@
     describe('cover', function () {
       it('Scale up to cover max dimensions with image dimensions', function (done) {
         expect(loadImage(blobGIF, function (img) {
-          done()
           expect(img.width).to.be(160)
           expect(img.height).to.be(120)
+          done()
         }, {maxWidth: 120, maxHeight: 120, cover: true})).to.be.ok()
       })
 
       it('Scale down to cover max dimensions with image dimensions', function (done) {
         expect(loadImage(blobGIF, function (img) {
-          done()
           expect(img.width).to.be(40)
           expect(img.height).to.be(30)
+          done()
         }, {maxWidth: 30, maxHeight: 30, cover: true})).to.be.ok()
       })
     })
@@ -235,57 +236,57 @@
   describe('Cropping', function () {
     it('Crop to same values for maxWidth and maxHeight', function (done) {
       expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(40 * devicePixelRatio)
+        expect(img.height).to.be(40 * devicePixelRatio)
         done()
-        expect(img.width).to.be(40)
-        expect(img.height).to.be(40)
       }, {maxWidth: 40, maxHeight: 40, crop: true})).to.be.ok()
     })
 
     it('Crop to different values for maxWidth and maxHeight', function (done) {
       expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(40 * devicePixelRatio)
+        expect(img.height).to.be(60 * devicePixelRatio)
         done()
-        expect(img.width).to.be(40)
-        expect(img.height).to.be(60)
       }, {maxWidth: 40, maxHeight: 60, crop: true})).to.be.ok()
     })
 
     it('Crop using the given sourceWidth and sourceHeight dimensions', function (done) {
       expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(40 * devicePixelRatio)
+        expect(img.height).to.be(40 * devicePixelRatio)
         done()
-        expect(img.width).to.be(40)
-        expect(img.height).to.be(40)
       }, {sourceWidth: 40, sourceHeight: 40, crop: true})).to.be.ok()
     })
 
     it('Crop using the given left and top coordinates', function (done) {
       expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(40 * devicePixelRatio)
+        expect(img.height).to.be(20 * devicePixelRatio)
         done()
-        expect(img.width).to.be(40)
-        expect(img.height).to.be(20)
       }, {left: 40, top: 40, crop: true})).to.be.ok()
     })
 
     it('Crop using the given right and bottom coordinates', function (done) {
       expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(40 * devicePixelRatio)
+        expect(img.height).to.be(20 * devicePixelRatio)
         done()
-        expect(img.width).to.be(40)
-        expect(img.height).to.be(20)
       }, {right: 40, bottom: 40, crop: true})).to.be.ok()
     })
 
     it('Crop using the given 2:1 aspectRatio', function (done) {
       expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(80 * devicePixelRatio)
+        expect(img.height).to.be(40 * devicePixelRatio)
         done()
-        expect(img.width).to.be(80)
-        expect(img.height).to.be(40)
       }, {aspectRatio: 2})).to.be.ok()
     })
 
     it('Crop using the given 2:3 aspectRatio', function (done) {
       expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(40 * devicePixelRatio)
+        expect(img.height).to.be(60 * devicePixelRatio)
         done()
-        expect(img.width).to.be(40)
-        expect(img.height).to.be(60)
       }, {aspectRatio: 2 / 3})).to.be.ok()
     })
   })
@@ -293,81 +294,81 @@
   describe('Orientation', function () {
     it('Should keep the orientation', function (done) {
       expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(80 * devicePixelRatio)
+        expect(img.height).to.be(60 * devicePixelRatio)
         done()
-        expect(img.width).to.be(80)
-        expect(img.height).to.be(60)
       }, {orientation: 1})).to.be.ok()
     })
 
     it('Should rotate left', function (done) {
       expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(60 * devicePixelRatio)
+        expect(img.height).to.be(80 * devicePixelRatio)
         done()
-        expect(img.width).to.be(60)
-        expect(img.height).to.be(80)
       }, {orientation: 8})).to.be.ok()
     })
 
     it('Should rotate right', function (done) {
       expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(60 * devicePixelRatio)
+        expect(img.height).to.be(80 * devicePixelRatio)
         done()
-        expect(img.width).to.be(60)
-        expect(img.height).to.be(80)
       }, {orientation: 6})).to.be.ok()
     })
 
     it('Should adjust constraints to new coordinates', function (done) {
       expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(60 * devicePixelRatio)
+        expect(img.height).to.be(80 * devicePixelRatio)
         done()
-        expect(img.width).to.be(60)
-        expect(img.height).to.be(80)
       }, {orientation: 6, maxWidth: 60, maxHeight: 80})).to.be.ok()
     })
 
     it('Should adjust left and top to new coordinates', function (done) {
       expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(30 * devicePixelRatio)
+        expect(img.height).to.be(60 * devicePixelRatio)
         done()
-        expect(img.width).to.be(30)
-        expect(img.height).to.be(60)
       }, {orientation: 5, left: 30, top: 20})).to.be.ok()
     })
 
     it('Should adjust right and bottom to new coordinates', function (done) {
       expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(30 * devicePixelRatio)
+        expect(img.height).to.be(60 * devicePixelRatio)
         done()
-        expect(img.width).to.be(30)
-        expect(img.height).to.be(60)
       }, {orientation: 5, right: 30, bottom: 20})).to.be.ok()
     })
 
     it('Should adjust left and bottom to new coordinates', function (done) {
       expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(30 * devicePixelRatio)
+        expect(img.height).to.be(60 * devicePixelRatio)
         done()
-        expect(img.width).to.be(30)
-        expect(img.height).to.be(60)
       }, {orientation: 7, left: 30, bottom: 20})).to.be.ok()
     })
 
     it('Should adjust right and top to new coordinates', function (done) {
       expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(30 * devicePixelRatio)
+        expect(img.height).to.be(60 * devicePixelRatio)
         done()
-        expect(img.width).to.be(30)
-        expect(img.height).to.be(60)
       }, {orientation: 7, right: 30, top: 20})).to.be.ok()
     })
 
     it('Should ignore too small orientation value', function (done) {
       expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(80 * devicePixelRatio)
+        expect(img.height).to.be(60 * devicePixelRatio)
         done()
-        expect(img.width).to.be(80)
-        expect(img.height).to.be(60)
       }, {orientation: -1})).to.be.ok()
     })
 
     it('Should ignore too large orientation value', function (done) {
       expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(80 * devicePixelRatio)
+        expect(img.height).to.be(60 * devicePixelRatio)
         done()
-        expect(img.width).to.be(80)
-        expect(img.height).to.be(60)
       }, {orientation: 9})).to.be.ok()
     })
   })
@@ -375,40 +376,40 @@
   describe('Canvas', function () {
     it('Return img element to callback if canvas is not true', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        done()
         expect(img.getContext).to.not.be.ok()
         expect(img.nodeName.toLowerCase()).to.be('img')
+        done()
       })).to.be.ok()
     })
 
     it('Return canvas element to callback if canvas is true', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        done()
         expect(img.getContext).to.be.ok()
         expect(img.nodeName.toLowerCase()).to.be('canvas')
+        done()
       }, {canvas: true})).to.be.ok()
     })
 
     it('Return scaled canvas element to callback', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        done()
         expect(img.getContext).to.be.ok()
         expect(img.nodeName.toLowerCase()).to.be('canvas')
-        expect(img.width).to.be(40)
-        expect(img.height).to.be(30)
+        expect(img.width).to.be(40 * devicePixelRatio)
+        expect(img.height).to.be(30 * devicePixelRatio)
+        done()
       }, {canvas: true, maxWidth: 40})).to.be.ok()
     })
 
     it('Accept a canvas element as parameter for loadImage.scale', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        done()
         img = loadImage.scale(img, {
           maxWidth: 40
         })
         expect(img.getContext).to.be.ok()
         expect(img.nodeName.toLowerCase()).to.be('canvas')
-        expect(img.width).to.be(40)
-        expect(img.height).to.be(30)
+        expect(img.width).to.be(40 * devicePixelRatio)
+        expect(img.height).to.be(30 * devicePixelRatio)
+        done()
       }, {canvas: true})).to.be.ok()
     })
   })
@@ -416,9 +417,9 @@
   describe('Metadata', function () {
     it('Should parse Exif information', function (done) {
       loadImage.parseMetaData(blobJPEG, function (data) {
-        done()
         expect(data.exif).to.be.ok()
         expect(data.exif.get('Orientation')).to.be(6)
+        done()
       })
     })
 
@@ -428,9 +429,9 @@
         loadImage.parseMetaData(
           createBlob(data.imageHead, 'image/jpeg'),
           function (data) {
-            done()
             expect(data.exif).to.be.ok()
             expect(data.exif.get('Orientation')).to.be(6)
+            done()
           }
         )
       })

@@ -165,6 +165,7 @@
     var sourceHeight
     var sourceX
     var sourceY
+    var devicePixelRatio
     var tmp
     function scaleUp () {
       var scale = Math.max(
@@ -172,8 +173,8 @@
         (minHeight || destHeight) / destHeight
       )
       if (scale > 1) {
-        destWidth = destWidth * scale
-        destHeight = destHeight * scale
+        destWidth *= scale
+        destHeight *= scale
       }
     }
     function scaleDown () {
@@ -182,8 +183,8 @@
         (maxHeight || destHeight) / destHeight
       )
       if (scale < 1) {
-        destWidth = destWidth * scale
-        destHeight = destHeight * scale
+        destWidth *= scale
+        destHeight *= scale
       }
     }
     if (useCanvas) {
@@ -242,6 +243,14 @@
       }
     }
     if (useCanvas) {
+      devicePixelRatio = window.devicePixelRatio || 1
+      if (devicePixelRatio > 1) {
+        canvas.style.width = destWidth + 'px'
+        canvas.style.height = destHeight + 'px'
+        destWidth *= devicePixelRatio
+        destHeight *= devicePixelRatio
+        canvas.getContext('2d').scale(devicePixelRatio, devicePixelRatio)
+      }
       canvas.width = destWidth
       canvas.height = destHeight
       loadImage.transformCoordinates(
