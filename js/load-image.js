@@ -109,8 +109,7 @@
     return newOptions
   }
 
-  // Canvas render method, allows to override the
-  // rendering e.g. to work around issues on iOS:
+  // Canvas render method, allows to implement a different rendering algorithm:
   loadImage.renderImageToCanvas = function (
     canvas,
     img,

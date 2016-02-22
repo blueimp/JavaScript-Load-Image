@@ -15,7 +15,6 @@
 - [Options](#options)
 - [Meta data parsing](#meta-data-parsing)
 - [Exif parser](#exif-parser)
-- [iOS scaling fixes](#ios-scaling-fixes)
 - [License](#license)
 - [Credits](#credits)
 
@@ -42,7 +41,6 @@ Or alternatively, choose which components you want to include:
 
 ```html
 <script src="js/load-image.js"></script>
-<script src="js/load-image-ios.js"></script>
 <script src="js/load-image-orientation.js"></script>
 <script src="js/load-image-meta.js"></script>
 <script src="js/load-image-exif.js"></script>
@@ -305,11 +303,6 @@ disable certain aspects of the parser:
 * **disableExifSub**: Disables parsing of the Exif Sub IFD.
 * **disableExifGps**: Disables parsing of the Exif GPS Info IFD.
 
-## iOS scaling fixes
-Scaling megapixel images in iOS (iPhone, iPad, iPod) can result in distorted
-(squashed) images.  
-The Load Image iOS scaling fixes extension resolves these issues.
-
 ## License
 The JavaScript Load Image script is released under the
 [MIT license](http://www.opensource.org/licenses/MIT).
@@ -320,5 +313,3 @@ The JavaScript Load Image script is released under the
 Achim Stöhr.
 * Exif tags mapping based on Jacob Seidelin's
 [exif-js](https://github.com/jseidelin/exif-js).
-* iOS image scaling fixes based on Shinichi Tomita's
-[ios-imagefile-megapixel](https://github.com/stomita/ios-imagefile-megapixel).
