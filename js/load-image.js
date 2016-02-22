@@ -140,7 +140,7 @@
   // This method is used to determine if the target image
   // should be a canvas element:
   loadImage.hasCanvasOption = function (options) {
-    return options.canvas || options.crop || options.aspectRatio
+    return options.canvas || options.crop || !!options.aspectRatio
   }
 
   // Scales and/or crops the given image (img or canvas HTML element)
@@ -165,7 +165,7 @@
     var sourceHeight
     var sourceX
     var sourceY
-    var devicePixelRatio
+    var pixelRatio
     var tmp
     function scaleUp () {
       var scale = Math.max(
@@ -243,13 +243,13 @@
       }
     }
     if (useCanvas) {
-      devicePixelRatio = window.devicePixelRatio || 1
-      if (devicePixelRatio > 1) {
+      pixelRatio = options.pixelRatio
+      if (pixelRatio > 1) {
         canvas.style.width = destWidth + 'px'
         canvas.style.height = destHeight + 'px'
-        destWidth *= devicePixelRatio
-        destHeight *= devicePixelRatio
-        canvas.getContext('2d').scale(devicePixelRatio, devicePixelRatio)
+        destWidth *= pixelRatio
+        destHeight *= pixelRatio
+        canvas.getContext('2d').scale(pixelRatio, pixelRatio)
       }
       canvas.width = destWidth
       canvas.height = destHeight

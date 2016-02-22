@@ -32,8 +32,8 @@
   // This method is used to determine if the target image
   // should be a canvas element:
   loadImage.hasCanvasOption = function (options) {
-    return originalHasCanvasOption.call(loadImage, options) ||
-    options.orientation
+    return !!options.orientation ||
+      originalHasCanvasOption.call(loadImage, options)
   }
 
   // Transform image orientation based on
@@ -43,6 +43,8 @@
     var ctx = canvas.getContext('2d')
     var width = canvas.width
     var height = canvas.height
+    var styleWidth = canvas.style.width
+    var styleHeight = canvas.style.height
     var orientation = options.orientation
     if (!orientation || orientation > 8) {
       return
@@ -50,6 +52,8 @@
     if (orientation > 4) {
       canvas.width = height
       canvas.height = width
+      canvas.style.width = styleHeight
+      canvas.style.height = styleWidth
     }
     switch (orientation) {
       case 2:

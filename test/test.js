@@ -42,7 +42,6 @@
                     'P09fb3+Pn6/9oADAMBAAIRAxEAPwD+/iiiigD/2Q=='
   var imageUrlJPEG = 'data:image/jpeg;base64,' + b64DataJPEG
   var blobJPEG = canCreateBlob && window.dataURLtoBlob(imageUrlJPEG)
-  var devicePixelRatio = window.devicePixelRatio || 1
   function createBlob (data, type) {
     try {
       return new Blob([data], {type: type})
@@ -179,6 +178,26 @@
         }, {minHeight: 180, maxWidth: 160})).to.be.ok()
       })
 
+      it('Scale up with the given pixelRatio', function (done) {
+        expect(loadImage(blobGIF, function (img) {
+          expect(img.width).to.be(320)
+          expect(img.height).to.be(240)
+          expect(img.style.width).to.be('160px')
+          expect(img.style.height).to.be('120px')
+          done()
+        }, {minWidth: 160, canvas: true, pixelRatio: 2})).to.be.ok()
+      })
+
+      it('Scale down with the given pixelRatio', function (done) {
+        expect(loadImage(blobGIF, function (img) {
+          expect(img.width).to.be(80)
+          expect(img.height).to.be(60)
+          expect(img.style.width).to.be('40px')
+          expect(img.style.height).to.be('30px')
+          done()
+        }, {maxWidth: 40, canvas: true, pixelRatio: 2})).to.be.ok()
+      })
+
       it('Ignore max settings if image dimensions are smaller', function (done) {
         expect(loadImage(blobGIF, function (img) {
           expect(img.width).to.be(80)
@@ -236,138 +255,178 @@
   describe('Cropping', function () {
     it('Crop to same values for maxWidth and maxHeight', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.be(40 * devicePixelRatio)
-        expect(img.height).to.be(40 * devicePixelRatio)
+        expect(img.width).to.be(40)
+        expect(img.height).to.be(40)
         done()
       }, {maxWidth: 40, maxHeight: 40, crop: true})).to.be.ok()
     })
 
     it('Crop to different values for maxWidth and maxHeight', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.be(40 * devicePixelRatio)
-        expect(img.height).to.be(60 * devicePixelRatio)
+        expect(img.width).to.be(40)
+        expect(img.height).to.be(60)
         done()
       }, {maxWidth: 40, maxHeight: 60, crop: true})).to.be.ok()
     })
 
     it('Crop using the given sourceWidth and sourceHeight dimensions', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.be(40 * devicePixelRatio)
-        expect(img.height).to.be(40 * devicePixelRatio)
+        expect(img.width).to.be(40)
+        expect(img.height).to.be(40)
         done()
       }, {sourceWidth: 40, sourceHeight: 40, crop: true})).to.be.ok()
     })
 
     it('Crop using the given left and top coordinates', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.be(40 * devicePixelRatio)
-        expect(img.height).to.be(20 * devicePixelRatio)
+        expect(img.width).to.be(40)
+        expect(img.height).to.be(20)
         done()
       }, {left: 40, top: 40, crop: true})).to.be.ok()
     })
 
     it('Crop using the given right and bottom coordinates', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.be(40 * devicePixelRatio)
-        expect(img.height).to.be(20 * devicePixelRatio)
+        expect(img.width).to.be(40)
+        expect(img.height).to.be(20)
         done()
       }, {right: 40, bottom: 40, crop: true})).to.be.ok()
     })
 
     it('Crop using the given 2:1 aspectRatio', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.be(80 * devicePixelRatio)
-        expect(img.height).to.be(40 * devicePixelRatio)
+        expect(img.width).to.be(80)
+        expect(img.height).to.be(40)
         done()
       }, {aspectRatio: 2})).to.be.ok()
     })
 
     it('Crop using the given 2:3 aspectRatio', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.be(40 * devicePixelRatio)
-        expect(img.height).to.be(60 * devicePixelRatio)
+        expect(img.width).to.be(40)
+        expect(img.height).to.be(60)
         done()
       }, {aspectRatio: 2 / 3})).to.be.ok()
+    })
+
+    it('Crop using maxWidth/maxHeight with the given pixelRatio', function (done) {
+      expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(80)
+        expect(img.height).to.be(80)
+        expect(img.style.width).to.be('40px')
+        expect(img.style.height).to.be('40px')
+        done()
+      }, {maxWidth: 40, maxHeight: 40, crop: true, pixelRatio: 2})).to.be.ok()
+    })
+
+    it('Crop using sourceWidth/sourceHeight with the given pixelRatio', function (done) {
+      expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(80)
+        expect(img.height).to.be(80)
+        expect(img.style.width).to.be('40px')
+        expect(img.style.height).to.be('40px')
+        done()
+      }, {sourceWidth: 40, sourceHeight: 40, crop: true, pixelRatio: 2})).to.be.ok()
     })
   })
 
   describe('Orientation', function () {
     it('Should keep the orientation', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.be(80 * devicePixelRatio)
-        expect(img.height).to.be(60 * devicePixelRatio)
+        expect(img.width).to.be(80)
+        expect(img.height).to.be(60)
         done()
       }, {orientation: 1})).to.be.ok()
     })
 
     it('Should rotate left', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.be(60 * devicePixelRatio)
-        expect(img.height).to.be(80 * devicePixelRatio)
+        expect(img.width).to.be(60)
+        expect(img.height).to.be(80)
         done()
       }, {orientation: 8})).to.be.ok()
     })
 
     it('Should rotate right', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.be(60 * devicePixelRatio)
-        expect(img.height).to.be(80 * devicePixelRatio)
+        expect(img.width).to.be(60)
+        expect(img.height).to.be(80)
         done()
       }, {orientation: 6})).to.be.ok()
     })
 
     it('Should adjust constraints to new coordinates', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.be(60 * devicePixelRatio)
-        expect(img.height).to.be(80 * devicePixelRatio)
+        expect(img.width).to.be(60)
+        expect(img.height).to.be(80)
         done()
       }, {orientation: 6, maxWidth: 60, maxHeight: 80})).to.be.ok()
     })
 
     it('Should adjust left and top to new coordinates', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.be(30 * devicePixelRatio)
-        expect(img.height).to.be(60 * devicePixelRatio)
+        expect(img.width).to.be(30)
+        expect(img.height).to.be(60)
         done()
       }, {orientation: 5, left: 30, top: 20})).to.be.ok()
     })
 
     it('Should adjust right and bottom to new coordinates', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.be(30 * devicePixelRatio)
-        expect(img.height).to.be(60 * devicePixelRatio)
+        expect(img.width).to.be(30)
+        expect(img.height).to.be(60)
         done()
       }, {orientation: 5, right: 30, bottom: 20})).to.be.ok()
     })
 
     it('Should adjust left and bottom to new coordinates', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.be(30 * devicePixelRatio)
-        expect(img.height).to.be(60 * devicePixelRatio)
+        expect(img.width).to.be(30)
+        expect(img.height).to.be(60)
         done()
       }, {orientation: 7, left: 30, bottom: 20})).to.be.ok()
     })
 
     it('Should adjust right and top to new coordinates', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.be(30 * devicePixelRatio)
-        expect(img.height).to.be(60 * devicePixelRatio)
+        expect(img.width).to.be(30)
+        expect(img.height).to.be(60)
         done()
       }, {orientation: 7, right: 30, top: 20})).to.be.ok()
     })
 
+    it('Should rotate left with the given pixelRatio', function (done) {
+      expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(120)
+        expect(img.height).to.be(160)
+        expect(img.style.width).to.be('60px')
+        expect(img.style.height).to.be('80px')
+        done()
+      }, {orientation: 8, pixelRatio: 2})).to.be.ok()
+    })
+
+    it('Should rotate right with the given pixelRatio', function (done) {
+      expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.be(120)
+        expect(img.height).to.be(160)
+        expect(img.style.width).to.be('60px')
+        expect(img.style.height).to.be('80px')
+        done()
+      }, {orientation: 6, pixelRatio: 2})).to.be.ok()
+    })
+
     it('Should ignore too small orientation value', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.be(80 * devicePixelRatio)
-        expect(img.height).to.be(60 * devicePixelRatio)
+        expect(img.width).to.be(80)
+        expect(img.height).to.be(60)
         done()
       }, {orientation: -1})).to.be.ok()
     })
 
     it('Should ignore too large orientation value', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.be(80 * devicePixelRatio)
-        expect(img.height).to.be(60 * devicePixelRatio)
+        expect(img.width).to.be(80)
+        expect(img.height).to.be(60)
         done()
       }, {orientation: 9})).to.be.ok()
     })
@@ -394,8 +453,8 @@
       expect(loadImage(blobGIF, function (img) {
         expect(img.getContext).to.be.ok()
         expect(img.nodeName.toLowerCase()).to.be('canvas')
-        expect(img.width).to.be(40 * devicePixelRatio)
-        expect(img.height).to.be(30 * devicePixelRatio)
+        expect(img.width).to.be(40)
+        expect(img.height).to.be(30)
         done()
       }, {canvas: true, maxWidth: 40})).to.be.ok()
     })
@@ -407,8 +466,8 @@
         })
         expect(img.getContext).to.be.ok()
         expect(img.nodeName.toLowerCase()).to.be('canvas')
-        expect(img.width).to.be(40 * devicePixelRatio)
-        expect(img.height).to.be(30 * devicePixelRatio)
+        expect(img.width).to.be(40)
+        expect(img.height).to.be(30)
         done()
       }, {canvas: true})).to.be.ok()
     })

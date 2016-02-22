@@ -162,41 +162,47 @@ The optional third argument to **loadImage()** is a map of options:
 * **minHeight**: Defines the minimum height of the img/canvas element.
 * **sourceWidth**: The width of the sub-rectangle of the source image to draw
 into the destination canvas.  
-Defaults to the source image width and requires *canvas: true*.
+Defaults to the source image width and requires `canvas: true`.
 * **sourceHeight**: The height of the sub-rectangle of the source image to draw
 into the destination canvas.  
-Defaults to the source image height and requires *canvas: true*.
+Defaults to the source image height and requires `canvas: true`.
 * **top**: The top margin of the sub-rectangle of the source image.  
-Defaults to *0* and requires *canvas: true*.
+Defaults to `0` and requires `canvas: true`.
 * **right**: The right margin of the sub-rectangle of the source image.  
-Defaults to *0* and requires *canvas: true*.
+Defaults to `0` and requires `canvas: true`.
 * **bottom**: The bottom margin of the sub-rectangle of the source image.  
-Defaults to *0* and requires *canvas: true*.
+Defaults to `0` and requires `canvas: true`.
 * **left**: The left margin of the sub-rectangle of the source image.  
-Defaults to *0* and requires *canvas: true*.
+Defaults to `0` and requires `canvas: true`.
 * **contain**: Scales the image up/down to contain it in the max dimensions if
-set to *true*.  
+set to `true`.  
 This emulates the CSS feature
 [background-image: contain](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Scaling_background_images#contain).
-* **cover**: Scales the image up/down to cover the max dimensions with the image dimensions if set to *true*.  
+* **cover**: Scales the image up/down to cover the max dimensions with the image
+dimensions if set to `true`.  
 This emulates the CSS feature
 [background-image: cover](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Scaling_background_images#cover).
 * **aspectRatio**: Crops the image to the given aspect ratio (e.g. `16/9`).  
-This feature assumes *crop: true*.
+Setting the `aspectRatio` also enables the `crop` option.
+* **pixelRatio**: Defines the ratio of the canvas pixels to the physical image
+pixels on the screen.  
+Should be set to `window.devicePixelRatio` unless the scaled image is not
+rendered on screen.  
+Requires `canvas: true`.
 * **crop**: Crops the image to the maxWidth/maxHeight constraints if set to
-*true*.  
-This feature assumes *canvas: true*.
+`true`.  
+Enabling the `crop` option also enables the `canvas` option.
 * **orientation**: Allows to transform the canvas coordinates according to the
 EXIF orientation specification.  
-This feature assumes *canvas: true*.
+Setting the `orientation` also enables the `canvas` option.
 * **canvas**: Returns the image as
-[canvas](https://developer.mozilla.org/en/HTML/Canvas) element if set to *true*.
+[canvas](https://developer.mozilla.org/en/HTML/Canvas) element if set to `true`.
 * **crossOrigin**: Sets the crossOrigin property on the img element for loading
 [CORS enabled images](https://developer.mozilla.org/en-US/docs/HTML/CORS_Enabled_Image).
 * **noRevoke**: By default, the
 [created object URL](https://developer.mozilla.org/en/DOM/window.URL.createObjectURL)
 is revoked after the image has been loaded, except when this option is set to
-*true*.
+`true`.
 
 They can be used the following way:
 

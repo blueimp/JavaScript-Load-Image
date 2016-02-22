@@ -77,7 +77,8 @@ $(function () {
     var file = target && target.files && target.files[0]
     var options = {
       maxWidth: result.width(),
-      canvas: true
+      canvas: true,
+      pixelRatio: window.devicePixelRatio
     }
     if (!file) {
       return
@@ -108,8 +109,14 @@ $(function () {
     event.preventDefault()
     var imgNode = result.find('img, canvas')
     var img = imgNode[0]
+    var pixelRatio = window.devicePixelRatio || 1
     imgNode.Jcrop({
-      setSelect: [40, 40, img.width - 40, img.height - 40],
+      setSelect: [
+        40,
+        40,
+        (img.width / pixelRatio) - 40,
+        (img.height / pixelRatio) - 40
+      ],
       onSelect: function (coords) {
         coordinates = coords
       },
@@ -123,13 +130,16 @@ $(function () {
   $('#crop').on('click', function (event) {
     event.preventDefault()
     var img = result.find('img, canvas')[0]
+    var pixelRatio = window.devicePixelRatio || 1
     if (img && coordinates) {
       replaceResults(loadImage.scale(img, {
-        left: coordinates.x,
-        top: coordinates.y,
-        sourceWidth: coordinates.w,
-        sourceHeight: coordinates.h,
-        minWidth: result.width()
+        left: coordinates.x * pixelRatio,
+        top: coordinates.y * pixelRatio,
+        sourceWidth: coordinates.w * pixelRatio,
+        sourceHeight: coordinates.h * pixelRatio,
+        minWidth: result.width(),
+        maxWidth: result.width(),
+        pixelRatio: pixelRatio
       }))
       coordinates = null
     }
