@@ -198,6 +198,14 @@
         }, {maxWidth: 40, canvas: true, pixelRatio: 2})).to.be.ok()
       })
 
+      it('Scale down with the given downsamplingRatio', function (done) {
+        expect(loadImage(blobGIF, function (img) {
+          expect(img.width).to.be(20)
+          expect(img.height).to.be(15)
+          done()
+        }, {maxWidth: 20, canvas: true, downsamplingRatio: 0.5})).to.be.ok()
+      })
+
       it('Ignore max settings if image dimensions are smaller', function (done) {
         expect(loadImage(blobGIF, function (img) {
           expect(img.width).to.be(80)

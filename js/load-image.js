@@ -166,6 +166,7 @@
     var sourceX
     var sourceY
     var pixelRatio
+    var downsamplingRatio
     var tmp
     function scaleUp () {
       var scale = Math.max(
@@ -250,6 +251,43 @@
         destWidth *= pixelRatio
         destHeight *= pixelRatio
         canvas.getContext('2d').scale(pixelRatio, pixelRatio)
+      }
+      downsamplingRatio = options.downsamplingRatio
+      if (downsamplingRatio > 0 && downsamplingRatio < 1 &&
+            destWidth < sourceWidth && destHeight < sourceHeight) {
+        while (sourceWidth * downsamplingRatio > destWidth) {
+          canvas.width = sourceWidth * downsamplingRatio
+          canvas.height = sourceHeight * downsamplingRatio
+          loadImage.renderImageToCanvas(
+            canvas,
+            img,
+            sourceX,
+            sourceY,
+            sourceWidth,
+            sourceHeight,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+          )
+          sourceWidth = canvas.width
+          sourceHeight = canvas.height
+          img = document.createElement('canvas')
+          img.width = sourceWidth
+          img.height = sourceHeight
+          loadImage.renderImageToCanvas(
+            img,
+            canvas,
+            0,
+            0,
+            sourceWidth,
+            sourceHeight,
+            0,
+            0,
+            sourceWidth,
+            sourceHeight
+          )
+        }
       }
       canvas.width = destWidth
       canvas.height = destHeight

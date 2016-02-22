@@ -78,7 +78,8 @@ $(function () {
     var options = {
       maxWidth: result.width(),
       canvas: true,
-      pixelRatio: window.devicePixelRatio
+      pixelRatio: window.devicePixelRatio,
+      downsamplingRatio: 0.5
     }
     if (!file) {
       return
@@ -139,7 +140,8 @@ $(function () {
         sourceHeight: coordinates.h * pixelRatio,
         minWidth: result.width(),
         maxWidth: result.width(),
-        pixelRatio: pixelRatio
+        pixelRatio: pixelRatio,
+        downsamplingRatio: 0.5
       }))
       coordinates = null
     }
