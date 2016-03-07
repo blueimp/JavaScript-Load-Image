@@ -19,7 +19,7 @@
   'use strict'
   if (typeof define === 'function' && define.amd) {
     // Register as an anonymous AMD module:
-    define(['load-image'], factory)
+    define(['./load-image'], factory)
   } else if (typeof module === 'object' && module.exports) {
     factory(require('./load-image'))
   } else {
