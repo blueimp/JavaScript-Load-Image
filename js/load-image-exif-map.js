@@ -343,13 +343,16 @@
         return this.stringValues[id][value]
       case 'ExifVersion':
       case 'FlashpixVersion':
+        if (!value) return
         return String.fromCharCode(value[0], value[1], value[2], value[3])
       case 'ComponentsConfiguration':
+        if (!value) return
         return this.stringValues[id][value[0]] +
         this.stringValues[id][value[1]] +
         this.stringValues[id][value[2]] +
         this.stringValues[id][value[3]]
       case 'GPSVersionID':
+        if (!value) return
         return value[0] + '.' + value[1] + '.' + value[2] + '.' + value[3]
     }
     return String(value)
