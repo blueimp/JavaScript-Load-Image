@@ -194,9 +194,11 @@ Requires `canvas: true`.
 * **crop**: Crops the image to the maxWidth/maxHeight constraints if set to
 `true`.  
 Enabling the `crop` option also enables the `canvas` option.
-* **orientation**: Allows to transform the canvas coordinates according to the
-EXIF orientation specification.  
-Setting the `orientation` also enables the `canvas` option.
+* **orientation**: Transform the canvas according to the
+specified Exif orientation (number in range 1 to 8). See 
+[loadImage.parseMetaData](https://github.com/blueimp/JavaScript-Load-Image#meta-data-parsing)
+for parsing EXIF data. Setting the `orientation` also enables the `canvas` 
+option.
 * **canvas**: Returns the image as
 [canvas](https://developer.mozilla.org/en/HTML/Canvas) element if set to `true`.
 * **crossOrigin**: Sets the crossOrigin property on the img element for loading
@@ -266,9 +268,9 @@ Blob objects of resized images can be created via
 [canvas.toBlob()](https://github.com/blueimp/JavaScript-Canvas-to-Blob).
 
 ### Exif parser
-If you include the Load Image Exif Parser extension, the **parseMetaData**
-callback **data** contains the additional property **exif** if Exif data could
-be found in the given image.  
+If you include the Load Image Exif Parser extension, the argument passed to the 
+callback for **parseMetaData** will contain the additional property **exif** if 
+Exif data could be found in the given image.  
 The **exif** object stores the parsed Exif tags:
 
 ```js
@@ -313,3 +315,4 @@ The JavaScript Load Image script is released under the
 Achim Stöhr.
 * Exif tags mapping based on Jacob Seidelin's
 [exif-js](https://github.com/jseidelin/exif-js).
+
