@@ -503,6 +503,16 @@
         )
       })
     })
+
+    it('Should parse meta data automatically', function (done) {
+      expect(loadImage(blobJPEG, function (img, data) {
+        expect(data).to.be.ok()
+        expect(data.imageHead).to.be.ok()
+        expect(data.exif).to.be.ok()
+        expect(data.exif.get('Orientation')).to.be(6)
+        done()
+      }, {meta: true})).to.be.ok()
+    })
   })
 }(
   this.expect,

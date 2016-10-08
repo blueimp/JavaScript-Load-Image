@@ -49,12 +49,12 @@
   // The options arguments accepts an object and supports the following properties:
   // * maxMetaDataSize: Defines the maximum number of bytes to parse.
   // * disableImageHead: Disables creating the imageHead property.
-  loadImage.parseMetaData = function (file, callback, options) {
+  loadImage.parseMetaData = function (file, callback, options, data) {
     options = options || {}
+    data = data || {}
     var that = this
     // 256 KiB should contain all EXIF/ICC/IPTC segments:
     var maxMetaDataSize = options.maxMetaDataSize || 262144
-    var data = {}
     var noMetaData = !(window.DataView && file && file.size >= 12 &&
                       file.type === 'image/jpeg' && loadImage.blobSlice)
     if (noMetaData || !loadImage.readFile(
@@ -138,6 +138,22 @@
         'readAsArrayBuffer'
       )) {
       callback(data)
+    }
+  }
+
+  // Determines if meta data should be loaded automatically:
+  loadImage.hasMetaOption = function (options) {
+    return options.meta
+  }
+
+  var originalTransform = loadImage.transform
+  loadImage.transform = function (img, options, callback, file, data) {
+    if (loadImage.hasMetaOption(options || {})) {
+      loadImage.parseMetaData(file, function (data) {
+        originalTransform.call(loadImage, img, options, callback, file, data)
+      }, options, data)
+    } else {
+      originalTransform.apply(loadImage, arguments)
     }
   }
 }))

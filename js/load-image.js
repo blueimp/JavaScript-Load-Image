@@ -70,6 +70,10 @@
     return Object.prototype.toString.call(obj) === '[object ' + type + ']'
   }
 
+  loadImage.transform = function (img, options, callback, file, data) {
+    callback(loadImage.scale(img, options, data), data)
+  }
+
   loadImage.onerror = function (img, event, file, callback, options) {
     revokeHelper(img, options)
     if (callback) {
@@ -80,7 +84,7 @@
   loadImage.onload = function (img, event, file, callback, options) {
     revokeHelper(img, options)
     if (callback) {
-      callback(loadImage.scale(img, options))
+      loadImage.transform(img, options, callback, file, {})
     }
   }
 
@@ -149,8 +153,7 @@
     return canvas
   }
 
-  // This method is used to determine if the target image
-  // should be a canvas element:
+  // Determines if the target image should be a canvas element:
   loadImage.hasCanvasOption = function (options) {
     return options.canvas || options.crop || !!options.aspectRatio
   }
@@ -160,7 +163,7 @@
   // Returns a canvas object if the browser supports canvas
   // and the hasCanvasOption method returns true or a canvas
   // object is passed as image, else the scaled image:
-  loadImage.scale = function (img, options) {
+  loadImage.scale = function (img, options, data) {
     options = options || {}
     var canvas = document.createElement('canvas')
     var useCanvas = img.getContext ||
@@ -201,7 +204,7 @@
       }
     }
     if (useCanvas) {
-      options = loadImage.getTransformedOptions(img, options)
+      options = loadImage.getTransformedOptions(img, options, data)
       sourceX = options.left || 0
       sourceY = options.top || 0
       if (options.sourceWidth) {
