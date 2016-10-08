@@ -26,14 +26,20 @@
   'use strict'
 
   var originalHasCanvasOption = loadImage.hasCanvasOption
+  var originalHasMetaOption = loadImage.hasMetaOption
   var originalTransformCoordinates = loadImage.transformCoordinates
   var originalGetTransformedOptions = loadImage.getTransformedOptions
 
-  // This method is used to determine if the target image
-  // should be a canvas element:
+  // Determines if the target image should be a canvas element:
   loadImage.hasCanvasOption = function (options) {
     return !!options.orientation ||
       originalHasCanvasOption.call(loadImage, options)
+  }
+
+  // Determines if meta data should be loaded automatically:
+  loadImage.hasMetaOption = function (options) {
+    return options.orientation === true ||
+      originalHasMetaOption.call(loadImage, options)
   }
 
   // Transform image orientation based on
@@ -97,11 +103,14 @@
 
   // Transforms coordinate and dimension options
   // based on the given orientation option:
-  loadImage.getTransformedOptions = function (img, opts) {
+  loadImage.getTransformedOptions = function (img, opts, data) {
     var options = originalGetTransformedOptions.call(loadImage, img, opts)
     var orientation = options.orientation
     var newOptions
     var i
+    if (orientation === true && data && data.exif) {
+      orientation = data.exif.get('Orientation')
+    }
     if (!orientation || orientation > 8 || orientation === 1) {
       return options
     }
@@ -111,7 +120,8 @@
         newOptions[i] = options[i]
       }
     }
-    switch (options.orientation) {
+    newOptions.orientation = orientation
+    switch (orientation) {
       case 2:
         // horizontal flip
         newOptions.left = options.right

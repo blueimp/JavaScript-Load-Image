@@ -40,7 +40,7 @@
     "lint": "standard *.js js/*.js test/*.js",
     "unit": "phantomjs node_modules/mocha-phantomjs-core/mocha-phantomjs-core.js test/index.html",
     "test": "npm run lint && npm run unit",
-    "build": "cd js && uglifyjs load-image.js load-image-orientation.js load-image-meta.js load-image-exif.js load-image-exif-map.js -c -m -o load-image.all.min.js --source-map load-image.all.min.js.map",
+    "build": "cd js && uglifyjs load-image.js load-image-meta.js load-image-exif.js load-image-exif-map.js load-image-orientation.js -c -m -o load-image.all.min.js --source-map load-image.all.min.js.map",
     "preversion": "npm test",
     "version": "npm run build && git add -A js",
     "postversion": "git push --tags origin master master:gh-pages && npm publish"

@@ -20,32 +20,7 @@ $(function () {
   var actionsNode = $('#actions')
   var currentFile
   var coordinates
-  function replaceResults (img) {
-    var content
-    if (!(img.src || img instanceof HTMLCanvasElement)) {
-      content = $('<span>Loading image file failed</span>')
-    } else {
-      content = $('<a target="_blank">').append(img)
-        .attr('download', currentFile.name)
-        .attr('href', img.src || img.toDataURL())
-    }
-    result.children().replaceWith(content)
-    if (img.getContext) {
-      actionsNode.show()
-    }
-  }
-  function displayImage (file, options) {
-    currentFile = file
-    if (!loadImage(
-        file,
-        replaceResults,
-        options
-      )) {
-      result.children().replaceWith(
-        $('<span>Your browser does not support the URL or FileReader API.</span>')
-      )
-    }
-  }
+
   function displayExifData (exif) {
     var thumbnail = exif.get('Thumbnail')
     var tags = exif.getAll()
@@ -70,6 +45,40 @@ $(function () {
     }
     exifNode.show()
   }
+
+  function updateResults (img, data) {
+    var content
+    if (!(img.src || img instanceof HTMLCanvasElement)) {
+      content = $('<span>Loading image file failed</span>')
+    } else {
+      content = $('<a target="_blank">').append(img)
+        .attr('download', currentFile.name)
+        .attr('href', img.src || img.toDataURL())
+    }
+    result.children().replaceWith(content)
+    if (img.getContext) {
+      actionsNode.show()
+    }
+    if (data && data.exif) {
+      displayExifData(data.exif)
+    }
+  }
+
+  function displayImage (file, options) {
+    currentFile = file
+    if (!loadImage(
+        file,
+        updateResults,
+        options
+      )) {
+      result.children().replaceWith(
+        $('<span>' +
+          'Your browser does not support the URL or FileReader API.' +
+          '</span>')
+      )
+    }
+  }
+
   function dropChangeHandler (e) {
     e.preventDefault()
     e = e.originalEvent
@@ -79,25 +88,23 @@ $(function () {
       maxWidth: result.width(),
       canvas: true,
       pixelRatio: window.devicePixelRatio,
-      downsamplingRatio: 0.5
+      downsamplingRatio: 0.5,
+      orientation: true
     }
     if (!file) {
       return
     }
     exifNode.hide()
     thumbNode.hide()
-    loadImage.parseMetaData(file, function (data) {
-      if (data.exif) {
-        options.orientation = data.exif.get('Orientation')
-        displayExifData(data.exif)
-      }
-      displayImage(file, options)
-    })
+    displayImage(file, options)
   }
+
   // Hide URL/FileReader API requirement message in capable browsers:
-  if (window.createObjectURL || window.URL || window.webkitURL || window.FileReader) {
+  if (window.createObjectURL || window.URL || window.webkitURL ||
+      window.FileReader) {
     result.children().hide()
   }
+
   $(document)
     .on('dragover', function (e) {
       e.preventDefault()
@@ -105,45 +112,51 @@ $(function () {
       e.dataTransfer.dropEffect = 'copy'
     })
     .on('drop', dropChangeHandler)
-  $('#file-input').on('change', dropChangeHandler)
-  $('#edit').on('click', function (event) {
-    event.preventDefault()
-    var imgNode = result.find('img, canvas')
-    var img = imgNode[0]
-    var pixelRatio = window.devicePixelRatio || 1
-    imgNode.Jcrop({
-      setSelect: [
-        40,
-        40,
-        (img.width / pixelRatio) - 40,
-        (img.height / pixelRatio) - 40
-      ],
-      onSelect: function (coords) {
-        coordinates = coords
-      },
-      onRelease: function () {
+
+  $('#file-input')
+    .on('change', dropChangeHandler)
+
+  $('#edit')
+    .on('click', function (event) {
+      event.preventDefault()
+      var imgNode = result.find('img, canvas')
+      var img = imgNode[0]
+      var pixelRatio = window.devicePixelRatio || 1
+      imgNode.Jcrop({
+        setSelect: [
+          40,
+          40,
+          (img.width / pixelRatio) - 40,
+          (img.height / pixelRatio) - 40
+        ],
+        onSelect: function (coords) {
+          coordinates = coords
+        },
+        onRelease: function () {
+          coordinates = null
+        }
+      }).parent().on('click', function (event) {
+        event.preventDefault()
+      })
+    })
+
+  $('#crop')
+    .on('click', function (event) {
+      event.preventDefault()
+      var img = result.find('img, canvas')[0]
+      var pixelRatio = window.devicePixelRatio || 1
+      if (img && coordinates) {
+        updateResults(loadImage.scale(img, {
+          left: coordinates.x * pixelRatio,
+          top: coordinates.y * pixelRatio,
+          sourceWidth: coordinates.w * pixelRatio,
+          sourceHeight: coordinates.h * pixelRatio,
+          minWidth: result.width(),
+          maxWidth: result.width(),
+          pixelRatio: pixelRatio,
+          downsamplingRatio: 0.5
+        }))
         coordinates = null
       }
-    }).parent().on('click', function (event) {
-      event.preventDefault()
     })
-  })
-  $('#crop').on('click', function (event) {
-    event.preventDefault()
-    var img = result.find('img, canvas')[0]
-    var pixelRatio = window.devicePixelRatio || 1
-    if (img && coordinates) {
-      replaceResults(loadImage.scale(img, {
-        left: coordinates.x * pixelRatio,
-        top: coordinates.y * pixelRatio,
-        sourceWidth: coordinates.w * pixelRatio,
-        sourceHeight: coordinates.h * pixelRatio,
-        minWidth: result.width(),
-        maxWidth: result.width(),
-        pixelRatio: pixelRatio,
-        downsamplingRatio: 0.5
-      }))
-      coordinates = null
-    }
-  })
 })

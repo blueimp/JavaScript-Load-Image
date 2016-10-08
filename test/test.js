@@ -21,7 +21,7 @@
                     'ovGITCqXzKbzCY1Kp9Sq9YrNarfcrvcLDovH5PKsAAA7'
   var imageUrlGIF = 'data:image/gif;base64,' + b64DataGIF
   var blobGIF = canCreateBlob && window.dataURLtoBlob(imageUrlGIF)
-  // 1x2px JPEG (color white, with the Exif orientation flag set to 6):
+  // 2x1px JPEG (color white, with the Exif orientation flag set to 6):
   var b64DataJPEG = '/9j/4AAQSkZJRgABAQEAYABgAAD/4QAiRXhpZgAASUkqAAgAAA' +
                     'ABABIBAwABAAAABgASAAAAAAD/2wBDAAEBAQEBAQEBAQEBAQEB' +
                     'AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQ' +
@@ -437,6 +437,17 @@
         expect(img.height).to.be(60)
         done()
       }, {orientation: 9})).to.be.ok()
+    })
+
+    it('Should rotate right based on the exif orientation value', function (done) {
+      expect(loadImage(blobJPEG, function (img, data) {
+        expect(data).to.be.ok()
+        expect(data.exif).to.be.ok()
+        expect(data.exif.get('Orientation')).to.be(6)
+        expect(img.width).to.be(1)
+        expect(img.height).to.be(2)
+        done()
+      }, {orientation: true})).to.be.ok()
     })
   })
 
