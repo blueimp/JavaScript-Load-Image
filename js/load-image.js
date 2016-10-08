@@ -17,24 +17,20 @@
   // Loads an image for a given File object.
   // Invokes the callback with an img or optional canvas
   // element (if supported by the browser) as parameter:
-  var loadImage = function (file, callback, options) {
+  function loadImage (file, callback, options) {
     var img = document.createElement('img')
     var url
-    var oUrl
-    img.onerror = callback
-    img.onload = function () {
-      if (oUrl && !(options && options.noRevoke)) {
-        loadImage.revokeObjectURL(oUrl)
-      }
-      if (callback) {
-        callback(loadImage.scale(img, options))
-      }
+    img.onerror = function (event) {
+      return loadImage.onerror(img, event, file, callback, options)
+    }
+    img.onload = function (event) {
+      return loadImage.onload(img, event, file, callback, options)
     }
     if (loadImage.isInstanceOf('Blob', file) ||
       // Files are also Blob instances, but some browsers
       // (Firefox 3.6) support the File API but not Blobs:
       loadImage.isInstanceOf('File', file)) {
-      url = oUrl = loadImage.createObjectURL(file)
+      url = img._objectURL = loadImage.createObjectURL(file)
       // Store the file type for resize processing:
       img._type = file.type
     } else if (typeof file === 'string') {
@@ -53,10 +49,8 @@
       var target = e.target
       if (target && target.result) {
         img.src = target.result
-      } else {
-        if (callback) {
-          callback(e)
-        }
+      } else if (callback) {
+        callback(e)
       }
     })
   }
@@ -69,6 +63,21 @@
   loadImage.isInstanceOf = function (type, obj) {
     // Cross-frame instanceof check
     return Object.prototype.toString.call(obj) === '[object ' + type + ']'
+  }
+
+  loadImage.onerror = function (img, event, file, callback, options) {
+    if (callback) {
+      callback.call(img, event)
+    }
+  }
+
+  loadImage.onload = function (img, event, file, callback, options) {
+    if (img._objectURL && !(options && options.noRevoke)) {
+      loadImage.revokeObjectURL(img._objectURL)
+    }
+    if (callback) {
+      callback(loadImage.scale(img, options))
+    }
   }
 
   // Transform image coordinates, allows to override e.g.
