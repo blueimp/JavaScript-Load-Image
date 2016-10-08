@@ -31,8 +31,6 @@
       // (Firefox 3.6) support the File API but not Blobs:
       loadImage.isInstanceOf('File', file)) {
       url = img._objectURL = loadImage.createObjectURL(file)
-      // Store the file type for resize processing:
-      img._type = file.type
     } else if (typeof file === 'string') {
       url = file
       if (options && options.crossOrigin) {
