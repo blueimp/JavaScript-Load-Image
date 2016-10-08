@@ -68,6 +68,7 @@
   loadImage.onerror = function (img, event, file, callback, options) {
     if (img._objectURL && !(options && options.noRevoke)) {
       loadImage.revokeObjectURL(img._objectURL)
+      delete img._objectURL
     }
     if (callback) {
       callback.call(img, event)
@@ -77,6 +78,7 @@
   loadImage.onload = function (img, event, file, callback, options) {
     if (img._objectURL && !(options && options.noRevoke)) {
       loadImage.revokeObjectURL(img._objectURL)
+      delete img._objectURL
     }
     if (callback) {
       callback(loadImage.scale(img, options))
