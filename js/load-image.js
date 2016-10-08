@@ -58,26 +58,27 @@
                 (window.URL && URL.revokeObjectURL && URL) ||
                 (window.webkitURL && webkitURL)
 
+  function revokeHelper (img, options) {
+    if (img._objectURL && !(options && options.noRevoke)) {
+      loadImage.revokeObjectURL(img._objectURL)
+      delete img._objectURL
+    }
+  }
+
   loadImage.isInstanceOf = function (type, obj) {
     // Cross-frame instanceof check
     return Object.prototype.toString.call(obj) === '[object ' + type + ']'
   }
 
   loadImage.onerror = function (img, event, file, callback, options) {
-    if (img._objectURL && !(options && options.noRevoke)) {
-      loadImage.revokeObjectURL(img._objectURL)
-      delete img._objectURL
-    }
+    revokeHelper(img, options)
     if (callback) {
       callback.call(img, event)
     }
   }
 
   loadImage.onload = function (img, event, file, callback, options) {
-    if (img._objectURL && !(options && options.noRevoke)) {
-      loadImage.revokeObjectURL(img._objectURL)
-      delete img._objectURL
-    }
+    revokeHelper(img, options)
     if (callback) {
       callback(loadImage.scale(img, options))
     }
