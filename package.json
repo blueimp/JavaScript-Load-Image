@@ -31,12 +31,15 @@
     "url": "git://github.com/blueimp/JavaScript-Load-Image.git"
   },
   "devDependencies": {
-    "mocha-phantomjs": "4.0.1",
-    "standard": "6.0.7",
-    "uglify-js": "2.6.1"
+    "phantomjs-prebuilt": "2.1.13",
+    "mocha-phantomjs-core": "1.3.1",
+    "standard": "8.3.0",
+    "uglify-js": "2.7.3"
   },
   "scripts": {
-    "test": "standard *.js js/*.js test/*.js && mocha-phantomjs test/index.html",
+    "lint": "standard *.js js/*.js test/*.js",
+    "unit": "phantomjs node_modules/mocha-phantomjs-core/mocha-phantomjs-core.js test/index.html",
+    "test": "npm run lint && npm run unit",
     "build": "cd js && uglifyjs load-image.js load-image-orientation.js load-image-meta.js load-image-exif.js load-image-exif-map.js -c -m -o load-image.all.min.js --source-map load-image.all.min.js.map",
     "preversion": "npm test",
     "version": "npm run build && git add -A js",
