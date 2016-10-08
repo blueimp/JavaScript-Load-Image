@@ -9,7 +9,7 @@
  * http://www.opensource.org/licenses/MIT
  */
 
-/*global window, document, loadImage, HTMLCanvasElement, $ */
+/* global loadImage, HTMLCanvasElement, $ */
 
 $(function () {
   'use strict'

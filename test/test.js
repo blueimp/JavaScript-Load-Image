@@ -9,7 +9,7 @@
  * http://www.opensource.org/licenses/MIT
  */
 
-/*global window, describe, it, Blob */
+/* global describe, it, Blob */
 
 ;(function (expect, loadImage) {
   'use strict'

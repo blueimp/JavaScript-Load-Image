@@ -9,7 +9,7 @@
  * http://www.opensource.org/licenses/MIT
  */
 
-/*global define, module, window, document, URL, webkitURL, FileReader */
+/* global define, URL, webkitURL, FileReader */
 
 ;(function ($) {
   'use strict'

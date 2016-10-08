@@ -13,7 +13,7 @@
  * http://www.opensource.org/licenses/MIT
  */
 
-/*global define, module, require, window, DataView, Blob, Uint8Array, console */
+/* global define, Blob */
 
 ;(function (factory) {
   'use strict'

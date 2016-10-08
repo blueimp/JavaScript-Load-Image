@@ -12,7 +12,7 @@
  * http://www.opensource.org/licenses/MIT
  */
 
-/*global define, module, require, window */
+/* global define */
 
 ;(function (factory) {
   'use strict'
