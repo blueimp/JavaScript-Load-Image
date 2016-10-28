@@ -365,10 +365,10 @@
 
     it('Should adjust constraints to new coordinates', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.width).to.equal(60)
-        expect(img.height).to.equal(80)
+        expect(img.width).to.equal(30)
+        expect(img.height).to.equal(40)
         done()
-      }, {orientation: 6, maxWidth: 60, maxHeight: 80})).to.be.ok
+      }, {orientation: 6, maxWidth: 30, maxHeight: 40})).to.be.ok
     })
 
     it('Should adjust left and top to new coordinates', function (done) {
@@ -448,6 +448,14 @@
         expect(img.height).to.equal(2)
         done()
       }, {orientation: true})).to.be.ok
+    })
+
+    it('Should adjust constraints based on the exif orientation value', function (done) {
+      expect(loadImage(blobJPEG, function (img) {
+        expect(img.width).to.equal(10)
+        expect(img.height).to.equal(20)
+        done()
+      }, {orientation: true, minWidth: 10, minHeight: 20})).to.be.ok
     })
   })
 
