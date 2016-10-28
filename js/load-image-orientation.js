@@ -168,7 +168,7 @@
         newOptions.bottom = options.right
         break
     }
-    if (options.orientation > 4) {
+    if (newOptions.orientation > 4) {
       newOptions.maxWidth = options.maxHeight
       newOptions.maxHeight = options.maxWidth
       newOptions.minWidth = options.minHeight
