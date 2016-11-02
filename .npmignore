@@ -1,0 +1,7 @@
+*
+!js/index.js
+!js/load-image.js
+!js/load-image-meta.js
+!js/load-image-exif.js
+!js/load-image-exif-map.js
+!js/load-image-orientation.js
