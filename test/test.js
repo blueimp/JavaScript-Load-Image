@@ -336,6 +336,23 @@
         done()
       }, {sourceWidth: 40, sourceHeight: 40, crop: true, pixelRatio: 2})).to.be.ok
     })
+
+    it('Crop using maxWidth/maxHeight with the given downsamplingRatio', function (done) {
+      expect(loadImage(blobGIF, function (img) {
+        expect(img.width).to.equal(10)
+        expect(img.height).to.equal(10)
+
+        var data = img.getContext('2d').getImageData(0, 0, 10, 10).data
+        for (var i = 0; i < data.length / 4; i += 4) {
+          expect(data[i]).to.equal(0)
+          expect(data[i + 1]).to.equal(0)
+          expect(data[i + 2]).to.equal(0)
+          expect(data[i + 3]).to.equal(255)
+        }
+
+        done()
+      }, {maxWidth: 10, maxHeight: 10, crop: true, downsamplingRatio: 0.5})).to.be.ok
+    })
   })
 
   describe('Orientation', function () {
