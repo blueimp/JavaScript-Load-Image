@@ -285,6 +285,8 @@
             canvas.width,
             canvas.height
           )
+          sourceX = 0
+          sourceY = 0
           sourceWidth = canvas.width
           sourceHeight = canvas.height
           img = document.createElement('canvas')
