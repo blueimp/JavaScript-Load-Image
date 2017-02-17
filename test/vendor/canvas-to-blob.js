@@ -6,7 +6,7 @@
  * https://blueimp.net
  *
  * Licensed under the MIT license:
- * http://www.opensource.org/licenses/MIT
+ * https://opensource.org/licenses/MIT
  *
  * Based on stackoverflow user Stoive's code snippet:
  * http://stackoverflow.com/q/4998908

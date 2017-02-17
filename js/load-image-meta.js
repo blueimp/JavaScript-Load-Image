@@ -10,7 +10,7 @@
  * Achim Stöhr.
  *
  * Licensed under the MIT license:
- * http://www.opensource.org/licenses/MIT
+ * https://opensource.org/licenses/MIT
  */
 
 /* global define, Blob */

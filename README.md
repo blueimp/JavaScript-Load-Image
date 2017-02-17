@@ -311,7 +311,7 @@ disable certain aspects of the parser:
 
 ## License
 The JavaScript Load Image script is released under the
-[MIT license](http://www.opensource.org/licenses/MIT).
+[MIT license](https://opensource.org/licenses/MIT).
 
 ## Credits
 
