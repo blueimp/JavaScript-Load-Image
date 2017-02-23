@@ -42,7 +42,7 @@
 
   // Determines if meta data should be loaded automatically:
   loadImage.hasMetaOption = function (options) {
-    return options.orientation === true ||
+    return options && options.orientation === true ||
       originalHasMetaOption.call(loadImage, options)
   }
 

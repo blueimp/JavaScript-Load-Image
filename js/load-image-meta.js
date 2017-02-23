@@ -143,12 +143,12 @@
 
   // Determines if meta data should be loaded automatically:
   loadImage.hasMetaOption = function (options) {
-    return options.meta
+    return options && options.meta
   }
 
   var originalTransform = loadImage.transform
   loadImage.transform = function (img, options, callback, file, data) {
-    if (loadImage.hasMetaOption(options || {})) {
+    if (loadImage.hasMetaOption(options)) {
       loadImage.parseMetaData(file, function (data) {
         originalTransform.call(loadImage, img, options, callback, file, data)
       }, options, data)
