@@ -41,10 +41,11 @@ Or alternatively, choose which components you want to include:
 
 ```html
 <script src="js/load-image.js"></script>
-<script src="js/load-image-orientation.js"></script>
+<script src="js/load-image-scale.js"></script>
 <script src="js/load-image-meta.js"></script>
 <script src="js/load-image-exif.js"></script>
 <script src="js/load-image-exif-map.js"></script>
+<script src="js/load-image-orientation.js"></script>
 ```
 
 ## Usage
@@ -200,7 +201,7 @@ value `true`.
 When set to `true`, it will set the orientation value based on the EXIF data of
 the image, which will be parsed automatically if the exif library is available.  
 Setting the `orientation` also enables the `canvas` option.  
-Setting `orientation` to `true` alsoe enables the `meta` option.
+Setting `orientation` to `true` also enables the `meta` option.
 * **meta**: Automatically parses the image meta data if set to `true`.  
 The meta data is passed to the callback as second argument.
 * **canvas**: Returns the image as
