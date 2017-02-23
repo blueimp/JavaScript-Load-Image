@@ -479,7 +479,7 @@
   describe('Canvas', function () {
     it('Return img element to callback if canvas is not true', function (done) {
       expect(loadImage(blobGIF, function (img) {
-        expect(img.getContext).to.not.be.ok
+        expect(img.getContext).to.be.falsy
         expect(img.nodeName.toLowerCase()).to.equal('img')
         done()
       })).to.be.ok
@@ -550,6 +550,30 @@
       }, {meta: true})).to.be.ok
     })
   })
+
+  if ('fetch' in window && 'Request' in window) {
+    describe('Fetch', function () {
+      it('Should fetch blob from URL if meta is true', function (done) {
+        expect(loadImage(imageUrlJPEG, function (img, data) {
+          expect(data).to.be.ok
+          expect(data.imageHead).to.be.ok
+          expect(data.exif).to.be.ok
+          expect(data.exif.get('Orientation')).to.equal(6)
+          done()
+        }, {meta: true})).to.be.ok
+      })
+
+      it('Should not fetch blob from URL if meta is false', function (done) {
+        expect(loadImage(imageUrlJPEG, function (img, data) {
+          expect(data.imageHead).to.be.falsy
+          expect(data.exif).to.be.falsy
+          expect(img.width).to.equal(2)
+          expect(img.height).to.equal(1)
+          done()
+        })).to.be.ok
+      })
+    })
+  }
 }(
   this.chai.expect,
   this.loadImage

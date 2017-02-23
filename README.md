@@ -43,6 +43,7 @@ Or alternatively, choose which components you want to include:
 <script src="js/load-image.js"></script>
 <script src="js/load-image-scale.js"></script>
 <script src="js/load-image-meta.js"></script>
+<script src="js/load-image-fetch.js"></script>
 <script src="js/load-image-exif.js"></script>
 <script src="js/load-image-exif-map.js"></script>
 <script src="js/load-image-orientation.js"></script>
@@ -203,7 +204,10 @@ the image, which will be parsed automatically if the exif library is available.
 Setting the `orientation` also enables the `canvas` option.  
 Setting `orientation` to `true` also enables the `meta` option.
 * **meta**: Automatically parses the image meta data if set to `true`.  
-The meta data is passed to the callback as second argument.
+The meta data is passed to the callback as second argument.  
+If the file is given as URL and the browser supports the
+[fetch API](https://developer.mozilla.org/en/docs/Web/API/Fetch_API), fetches
+the file as Blob to be able to parse the meta data.
 * **canvas**: Returns the image as
 [canvas](https://developer.mozilla.org/en/HTML/Canvas) element if set to `true`.
 * **crossOrigin**: Sets the crossOrigin property on the img element for loading

@@ -26,31 +26,38 @@
     img.onload = function (event) {
       return loadImage.onload(img, event, file, callback, options)
     }
-    if (loadImage.isInstanceOf('Blob', file) ||
-      // Files are also Blob instances, but some browsers
-      // (Firefox 3.6) support the File API but not Blobs:
-      loadImage.isInstanceOf('File', file)) {
-      url = img._objectURL = loadImage.createObjectURL(file)
-    } else if (typeof file === 'string') {
-      url = file
-      if (options && options.crossOrigin) {
-        img.crossOrigin = options.crossOrigin
-      }
-    } else {
-      return false
-    }
-    if (url) {
-      img.src = url
+    if (typeof file === 'string') {
+      loadImage.fetchBlob(file, function (blob) {
+        if (blob) {
+          file = blob
+          url = loadImage.createObjectURL(file)
+        } else {
+          url = file
+          if (options && options.crossOrigin) {
+            img.crossOrigin = options.crossOrigin
+          }
+        }
+        img.src = url
+      }, options)
       return img
-    }
-    return loadImage.readFile(file, function (e) {
-      var target = e.target
-      if (target && target.result) {
-        img.src = target.result
-      } else if (callback) {
-        callback(e)
+    } else if (loadImage.isInstanceOf('Blob', file) ||
+        // Files are also Blob instances, but some browsers
+        // (Firefox 3.6) support the File API but not Blobs:
+        loadImage.isInstanceOf('File', file)) {
+      url = img._objectURL = loadImage.createObjectURL(file)
+      if (url) {
+        img.src = url
+        return img
       }
-    })
+      return loadImage.readFile(file, function (e) {
+        var target = e.target
+        if (target && target.result) {
+          img.src = target.result
+        } else if (callback) {
+          callback(e)
+        }
+      })
+    }
   }
   // The check for URL.revokeObjectURL fixes an issue with Opera 12,
   // which provides URL.createObjectURL but doesn't properly implement it:
@@ -63,6 +70,13 @@
       loadImage.revokeObjectURL(img._objectURL)
       delete img._objectURL
     }
+  }
+
+  // If the callback given to this function returns a blob, it is used as image
+  // source instead of the original url and overrides the file argument used in
+  // the onload and onerror event callbacks:
+  loadImage.fetchBlob = function (url, callback, options) {
+    callback()
   }
 
   loadImage.isInstanceOf = function (type, obj) {
