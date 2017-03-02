@@ -13,10 +13,10 @@ body {
   max-width: 750px;
   margin: 0 auto;
   padding: 1em;
-  font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: 1em;
   line-height: 1.4em;
-  background: #222;
+  background: #4D5275;
   color: #fff;
   -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
@@ -31,6 +31,11 @@ img {
 }
 h1 {
   line-height: 1em;
+}
+p {
+    line-height: 1.9em;
+    letter-spacing: 1px;
+    word-spacing: 4px;
 }
 table {
   width: 100%;
