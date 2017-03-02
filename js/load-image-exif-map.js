@@ -323,6 +323,11 @@
 
   loadImage.ExifMap.prototype.getText = function (id) {
     var value = this.get(id)
+    
+    if (value==undefined) {
+      return ""
+    }
+    
     switch (id) {
       case 'LightSource':
       case 'Flash':
