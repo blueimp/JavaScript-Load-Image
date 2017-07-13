@@ -61,9 +61,9 @@
   }
   // The check for URL.revokeObjectURL fixes an issue with Opera 12,
   // which provides URL.createObjectURL but doesn't properly implement it:
-  var urlAPI = (window.createObjectURL && window) ||
-                (window.URL && URL.revokeObjectURL && URL) ||
-                (window.webkitURL && webkitURL)
+  var urlAPI = ($.createObjectURL && $) ||
+                ($.URL && URL.revokeObjectURL && URL) ||
+                ($.webkitURL && webkitURL)
 
   function revokeHelper (img, options) {
     if (img._objectURL && !(options && options.noRevoke)) {
@@ -135,4 +135,4 @@
   } else {
     $.loadImage = loadImage
   }
-}(window))
+}(this))

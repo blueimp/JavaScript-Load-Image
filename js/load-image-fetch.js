@@ -25,7 +25,7 @@
 }(function (loadImage) {
   'use strict'
 
-  if ('fetch' in window && 'Request' in window) {
+  if (typeof fetch !== 'undefined' && typeof Request !== 'undefined') {
     loadImage.fetchBlob = function (url, callback, options) {
       if (loadImage.hasMetaOption(options)) {
         return fetch(new Request(url, options)).then(function (response) {
