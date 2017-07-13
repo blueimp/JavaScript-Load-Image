@@ -114,7 +114,7 @@
   // invokes the callback with the event object (load or error).
   // The result can be read via event.target.result:
   loadImage.readFile = function (file, callback, method) {
-    if (window.FileReader) {
+    if ($.FileReader) {
       var fileReader = new FileReader()
       fileReader.onload = fileReader.onerror = callback
       method = method || 'readAsDataURL'
