@@ -29,7 +29,7 @@
 }(function (loadImage) {
   'use strict'
 
-  var hasblobSlice = window.Blob && (Blob.prototype.slice ||
+  var hasblobSlice = typeof Blob !== 'undefined' && (Blob.prototype.slice ||
   Blob.prototype.webkitSlice || Blob.prototype.mozSlice)
 
   loadImage.blobSlice = hasblobSlice && function () {
@@ -55,7 +55,7 @@
     var that = this
     // 256 KiB should contain all EXIF/ICC/IPTC segments:
     var maxMetaDataSize = options.maxMetaDataSize || 262144
-    var noMetaData = !(window.DataView && file && file.size >= 12 &&
+    var noMetaData = !(typeof DataView !== 'undefined' && file && file.size >= 12 &&
                       file.type === 'image/jpeg' && loadImage.blobSlice)
     if (noMetaData || !loadImage.readFile(
         loadImage.blobSlice.call(file, 0, maxMetaDataSize),
