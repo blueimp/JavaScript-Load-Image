@@ -135,4 +135,4 @@
   } else {
     $.loadImage = loadImage
   }
-}(this))
+}(typeof window !== 'undefined' && window || this))
