@@ -12,7 +12,7 @@
  * http://stackoverflow.com/q/4998908
  */
 
-/*global window, atob, Blob, ArrayBuffer, Uint8Array, define, module */
+/* global atob, Blob, define */
 
 ;(function (window) {
   'use strict'
