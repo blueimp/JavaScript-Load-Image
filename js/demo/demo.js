@@ -67,10 +67,10 @@ $(function () {
   function displayImage (file, options) {
     currentFile = file
     if (!loadImage(
-        file,
-        updateResults,
-        options
-      )) {
+      file,
+      updateResults,
+      options
+    )) {
       result.children().replaceWith(
         $('<span>' +
           'Your browser does not support the URL or FileReader API.' +

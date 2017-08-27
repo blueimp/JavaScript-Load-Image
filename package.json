@@ -31,16 +31,25 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "phantomjs-prebuilt": "2.1.13",
-    "mocha-phantomjs-core": "1.3.1",
-    "standard": "8.3.0",
-    "uglify-js": "2.7.3"
+    "concurrently": "^3.5.0",
+    "eslint": "^4.5.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "get-port-cli": "^1.1.0",
+    "http-server": "^0.10.0",
+    "mocha-chrome": "^0.1.1",
+    "uglify-js": "^3.0.28"
   },
   "scripts": {
-    "lint": "standard *.js js/*.js test/*.js",
-    "unit": "phantomjs node_modules/mocha-phantomjs-core/mocha-phantomjs-core.js test/index.html",
+    "lint": "eslint .",
+    "serve": "http-server . -a 127.0.0.1 -p $PORT -s",
+    "mocha": "mocha-chrome http://127.0.0.1:$PORT/test",
+    "unit": "PORT=$(get-port) concurrently -k -s first 'npm run serve' 'npm run mocha'",
     "test": "npm run lint && npm run unit",
-    "build": "cd js && uglifyjs load-image.js load-image-scale.js load-image-meta.js load-image-fetch.js load-image-exif.js load-image-exif-map.js load-image-orientation.js -c -m -o load-image.all.min.js --source-map load-image.all.min.js.map",
+    "build": "cd js && uglifyjs load-image.js load-image-scale.js load-image-meta.js load-image-fetch.js load-image-exif.js load-image-exif-map.js load-image-orientation.js -c -m -o load-image.all.min.js --source-map url=load-image.all.min.js.map",
     "preversion": "npm test",
     "version": "npm run build && git add -A js",
     "postversion": "git push --tags origin master master:gh-pages && npm publish"

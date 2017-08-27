@@ -41,9 +41,7 @@
   // Transform image coordinates, allows to override e.g.
   // the canvas orientation based on the orientation option,
   // gets canvas, options passed as arguments:
-  loadImage.transformCoordinates = function () {
-    return
-  }
+  loadImage.transformCoordinates = function () {}
 
   // Returns transformed options, allows to override e.g.
   // maxWidth, maxHeight and crop options based on the aspectRatio.

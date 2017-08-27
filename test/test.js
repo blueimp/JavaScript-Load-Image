@@ -10,6 +10,7 @@
  */
 
 /* global describe, it, Blob */
+/* eslint-disable no-unused-expressions */
 
 ;(function (expect, loadImage) {
   'use strict'
@@ -56,9 +57,7 @@
 
   describe('Loading', function () {
     it('Return the img element or FileReader object to allow aborting the image load', function () {
-      var img = loadImage(blobGIF, function () {
-        return
-      })
+      var img = loadImage(blobGIF, function () {})
       expect(img).to.be.an.instanceOf(Object)
       expect(img.onload).to.be.a('function')
       expect(img.onerror).to.be.a('function')
