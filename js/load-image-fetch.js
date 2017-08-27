@@ -22,21 +22,24 @@
     // Browser globals:
     factory(window.loadImage)
   }
-}(function (loadImage) {
+})(function (loadImage) {
   'use strict'
 
   if (typeof fetch !== 'undefined' && typeof Request !== 'undefined') {
     loadImage.fetchBlob = function (url, callback, options) {
       if (loadImage.hasMetaOption(options)) {
-        return fetch(new Request(url, options)).then(function (response) {
-          return response.blob()
-        }).then(callback).catch(function (err) {
-          console.log(err)
-          callback()
-        })
+        return fetch(new Request(url, options))
+          .then(function (response) {
+            return response.blob()
+          })
+          .then(callback)
+          .catch(function (err) {
+            console.log(err)
+            callback()
+          })
       } else {
         callback()
       }
     }
   }
-}))
+})

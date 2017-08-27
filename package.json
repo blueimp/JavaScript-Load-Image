@@ -41,9 +41,11 @@
     "get-port-cli": "^1.1.0",
     "http-server": "^0.10.0",
     "mocha-chrome": "^0.1.1",
+    "prettier-eslint-cli": "^4.2.1",
     "uglify-js": "^3.0.28"
   },
   "scripts": {
+    "format": "prettier-eslint --no-semi --single-quote --write **/*.js",
     "lint": "eslint .",
     "serve": "http-server . -a 127.0.0.1 -p $PORT -s",
     "mocha": "mocha-chrome http://127.0.0.1:$PORT/test",

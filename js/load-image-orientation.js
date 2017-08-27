@@ -26,7 +26,7 @@
     // Browser globals:
     factory(window.loadImage)
   }
-}(function (loadImage) {
+})(function (loadImage) {
   'use strict'
 
   var originalHasCanvasOption = loadImage.hasCanvasOption
@@ -36,14 +36,17 @@
 
   // Determines if the target image should be a canvas element:
   loadImage.hasCanvasOption = function (options) {
-    return !!options.orientation ||
-      originalHasCanvasOption.call(loadImage, options)
+    return (
+      !!options.orientation || originalHasCanvasOption.call(loadImage, options)
+    )
   }
 
   // Determines if meta data should be loaded automatically:
   loadImage.hasMetaOption = function (options) {
-    return (options && options.orientation === true) ||
+    return (
+      (options && options.orientation === true) ||
       originalHasMetaOption.call(loadImage, options)
+    )
   }
 
   // Transform image orientation based on
@@ -182,4 +185,4 @@
     }
     return newOptions
   }
-}))
+})

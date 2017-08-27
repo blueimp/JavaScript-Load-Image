@@ -22,7 +22,7 @@
     // Browser globals:
     factory(window.loadImage)
   }
-}(function (loadImage) {
+})(function (loadImage) {
   'use strict'
 
   loadImage.ExifMap = function () {
@@ -30,7 +30,7 @@
   }
 
   loadImage.ExifMap.prototype.map = {
-    'Orientation': 0x0112
+    Orientation: 0x0112
   }
 
   loadImage.ExifMap.prototype.get = function (id) {
@@ -38,9 +38,7 @@
   }
 
   loadImage.getExifThumbnail = function (dataView, offset, length) {
-    var hexData,
-      i,
-      b
+    var hexData, i, b
     if (!length || offset + length > dataView.byteLength) {
       console.log('Invalid Exif data: Invalid thumbnail data.')
       return
@@ -86,8 +84,10 @@
     // rational = two long values, first is numerator, second is denominator:
     5: {
       getValue: function (dataView, dataOffset, littleEndian) {
-        return dataView.getUint32(dataOffset, littleEndian) /
-        dataView.getUint32(dataOffset + 4, littleEndian)
+        return (
+          dataView.getUint32(dataOffset, littleEndian) /
+          dataView.getUint32(dataOffset + 4, littleEndian)
+        )
       },
       size: 8
     },
@@ -101,8 +101,10 @@
     // srational, two slongs, first is numerator, second is denominator:
     10: {
       getValue: function (dataView, dataOffset, littleEndian) {
-        return dataView.getInt32(dataOffset, littleEndian) /
-        dataView.getInt32(dataOffset + 4, littleEndian)
+        return (
+          dataView.getInt32(dataOffset, littleEndian) /
+          dataView.getInt32(dataOffset + 4, littleEndian)
+        )
       },
       size: 8
     }
@@ -110,7 +112,14 @@
   // undefined, 8-bit byte, value depending on field:
   loadImage.exifTagTypes[7] = loadImage.exifTagTypes[1]
 
-  loadImage.getExifValue = function (dataView, tiffOffset, offset, type, length, littleEndian) {
+  loadImage.getExifValue = function (
+    dataView,
+    tiffOffset,
+    offset,
+    type,
+    length,
+    littleEndian
+  ) {
     var tagType = loadImage.exifTagTypes[type]
     var tagSize
     var dataOffset
@@ -125,9 +134,10 @@
     tagSize = tagType.size * length
     // Determine if the value is contained in the dataOffset bytes,
     // or if the value at the dataOffset is a pointer to the actual data:
-    dataOffset = tagSize > 4
-      ? tiffOffset + dataView.getUint32(offset + 8, littleEndian)
-      : (offset + 8)
+    dataOffset =
+      tagSize > 4
+        ? tiffOffset + dataView.getUint32(offset + 8, littleEndian)
+        : offset + 8
     if (dataOffset + tagSize > dataView.byteLength) {
       console.log('Invalid Exif data: Invalid data offset.')
       return
@@ -137,7 +147,11 @@
     }
     values = []
     for (i = 0; i < length; i += 1) {
-      values[i] = tagType.getValue(dataView, dataOffset + i * tagType.size, littleEndian)
+      values[i] = tagType.getValue(
+        dataView,
+        dataOffset + i * tagType.size,
+        littleEndian
+      )
     }
     if (tagType.ascii) {
       str = ''
@@ -155,7 +169,13 @@
     return values
   }
 
-  loadImage.parseExifTag = function (dataView, tiffOffset, offset, littleEndian, data) {
+  loadImage.parseExifTag = function (
+    dataView,
+    tiffOffset,
+    offset,
+    littleEndian,
+    data
+  ) {
     var tag = dataView.getUint16(offset, littleEndian)
     data.exif[tag] = loadImage.getExifValue(
       dataView,
@@ -167,10 +187,14 @@
     )
   }
 
-  loadImage.parseExifTags = function (dataView, tiffOffset, dirOffset, littleEndian, data) {
-    var tagsNumber,
-      dirEndOffset,
-      i
+  loadImage.parseExifTags = function (
+    dataView,
+    tiffOffset,
+    dirOffset,
+    littleEndian,
+    data
+  ) {
+    var tagsNumber, dirEndOffset, i
     if (dirOffset + 6 > dataView.byteLength) {
       console.log('Invalid Exif data: Invalid directory offset.')
       return
@@ -221,7 +245,7 @@
       case 0x4949:
         littleEndian = true
         break
-      case 0x4D4D:
+      case 0x4d4d:
         littleEndian = false
         break
       default:
@@ -229,7 +253,7 @@
         return
     }
     // Check for the TIFF tag marker (0x002A):
-    if (dataView.getUint16(tiffOffset + 2, littleEndian) !== 0x002A) {
+    if (dataView.getUint16(tiffOffset + 2, littleEndian) !== 0x002a) {
       console.log('Invalid Exif data: Missing TIFF marker.')
       return
     }
@@ -247,7 +271,7 @@
       data
     )
     if (dirOffset && !options.disableExifThumbnail) {
-      thumbnailData = {exif: {}}
+      thumbnailData = { exif: {} }
       dirOffset = loadImage.parseExifTags(
         dataView,
         tiffOffset,
@@ -297,4 +321,4 @@
   // * disableExifThumbnail: Disables parsing of the Exif Thumbnail.
   // * disableExifSub: Disables parsing of the Exif Sub IFD.
   // * disableExifGps: Disables parsing of the Exif GPS Info IFD.
-}))
+})

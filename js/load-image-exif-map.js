@@ -25,7 +25,7 @@
     // Browser globals:
     factory(window.loadImage)
   }
-}(function (loadImage) {
+})(function (loadImage) {
   'use strict'
 
   loadImage.ExifMap.prototype.tags = {
@@ -36,56 +36,56 @@
     0x0101: 'ImageHeight',
     0x8769: 'ExifIFDPointer',
     0x8825: 'GPSInfoIFDPointer',
-    0xA005: 'InteroperabilityIFDPointer',
+    0xa005: 'InteroperabilityIFDPointer',
     0x0102: 'BitsPerSample',
     0x0103: 'Compression',
     0x0106: 'PhotometricInterpretation',
     0x0112: 'Orientation',
     0x0115: 'SamplesPerPixel',
-    0x011C: 'PlanarConfiguration',
+    0x011c: 'PlanarConfiguration',
     0x0212: 'YCbCrSubSampling',
     0x0213: 'YCbCrPositioning',
-    0x011A: 'XResolution',
-    0x011B: 'YResolution',
+    0x011a: 'XResolution',
+    0x011b: 'YResolution',
     0x0128: 'ResolutionUnit',
     0x0111: 'StripOffsets',
     0x0116: 'RowsPerStrip',
     0x0117: 'StripByteCounts',
     0x0201: 'JPEGInterchangeFormat',
     0x0202: 'JPEGInterchangeFormatLength',
-    0x012D: 'TransferFunction',
-    0x013E: 'WhitePoint',
-    0x013F: 'PrimaryChromaticities',
+    0x012d: 'TransferFunction',
+    0x013e: 'WhitePoint',
+    0x013f: 'PrimaryChromaticities',
     0x0211: 'YCbCrCoefficients',
     0x0214: 'ReferenceBlackWhite',
     0x0132: 'DateTime',
-    0x010E: 'ImageDescription',
-    0x010F: 'Make',
+    0x010e: 'ImageDescription',
+    0x010f: 'Make',
     0x0110: 'Model',
     0x0131: 'Software',
-    0x013B: 'Artist',
+    0x013b: 'Artist',
     0x8298: 'Copyright',
     // ==================
     // Exif Sub IFD tags:
     // ==================
     0x9000: 'ExifVersion', // EXIF version
-    0xA000: 'FlashpixVersion', // Flashpix format version
-    0xA001: 'ColorSpace', // Color space information tag
-    0xA002: 'PixelXDimension', // Valid width of meaningful image
-    0xA003: 'PixelYDimension', // Valid height of meaningful image
-    0xA500: 'Gamma',
+    0xa000: 'FlashpixVersion', // Flashpix format version
+    0xa001: 'ColorSpace', // Color space information tag
+    0xa002: 'PixelXDimension', // Valid width of meaningful image
+    0xa003: 'PixelYDimension', // Valid height of meaningful image
+    0xa500: 'Gamma',
     0x9101: 'ComponentsConfiguration', // Information about channels
     0x9102: 'CompressedBitsPerPixel', // Compressed bits per pixel
-    0x927C: 'MakerNote', // Any desired information written by the manufacturer
+    0x927c: 'MakerNote', // Any desired information written by the manufacturer
     0x9286: 'UserComment', // Comments by user
-    0xA004: 'RelatedSoundFile', // Name of related sound file
+    0xa004: 'RelatedSoundFile', // Name of related sound file
     0x9003: 'DateTimeOriginal', // Date and time when the original image was generated
     0x9004: 'DateTimeDigitized', // Date and time when the image was stored digitally
     0x9290: 'SubSecTime', // Fractions of seconds for DateTime
     0x9291: 'SubSecTimeOriginal', // Fractions of seconds for DateTimeOriginal
     0x9292: 'SubSecTimeDigitized', // Fractions of seconds for DateTimeDigitized
-    0x829A: 'ExposureTime', // Exposure time (in seconds)
-    0x829D: 'FNumber',
+    0x829a: 'ExposureTime', // Exposure time (in seconds)
+    0x829d: 'FNumber',
     0x8822: 'ExposureProgram', // Exposure program
     0x8824: 'SpectralSensitivity', // Spectral sensitivity
     0x8827: 'PhotographicSensitivity', // EXIF 2.3, ISOSpeedRatings in EXIF 2.2
@@ -106,37 +106,37 @@
     0x9208: 'LightSource', // Kind of light source
     0x9209: 'Flash', // Flash status
     0x9214: 'SubjectArea', // Location and area of main subject
-    0x920A: 'FocalLength', // Focal length of the lens in mm
-    0xA20B: 'FlashEnergy', // Strobe energy in BCPS
-    0xA20C: 'SpatialFrequencyResponse',
-    0xA20E: 'FocalPlaneXResolution', // Number of pixels in width direction per FPRUnit
-    0xA20F: 'FocalPlaneYResolution', // Number of pixels in height direction per FPRUnit
-    0xA210: 'FocalPlaneResolutionUnit', // Unit for measuring the focal plane resolution
-    0xA214: 'SubjectLocation', // Location of subject in image
-    0xA215: 'ExposureIndex', // Exposure index selected on camera
-    0xA217: 'SensingMethod', // Image sensor type
-    0xA300: 'FileSource', // Image source (3 == DSC)
-    0xA301: 'SceneType', // Scene type (1 == directly photographed)
-    0xA302: 'CFAPattern', // Color filter array geometric pattern
-    0xA401: 'CustomRendered', // Special processing
-    0xA402: 'ExposureMode', // Exposure mode
-    0xA403: 'WhiteBalance', // 1 = auto white balance, 2 = manual
-    0xA404: 'DigitalZoomRatio', // Digital zoom ratio
-    0xA405: 'FocalLengthIn35mmFilm',
-    0xA406: 'SceneCaptureType', // Type of scene
-    0xA407: 'GainControl', // Degree of overall image gain adjustment
-    0xA408: 'Contrast', // Direction of contrast processing applied by camera
-    0xA409: 'Saturation', // Direction of saturation processing applied by camera
-    0xA40A: 'Sharpness', // Direction of sharpness processing applied by camera
-    0xA40B: 'DeviceSettingDescription',
-    0xA40C: 'SubjectDistanceRange', // Distance to subject
-    0xA420: 'ImageUniqueID', // Identifier assigned uniquely to each image
-    0xA430: 'CameraOwnerName',
-    0xA431: 'BodySerialNumber',
-    0xA432: 'LensSpecification',
-    0xA433: 'LensMake',
-    0xA434: 'LensModel',
-    0xA435: 'LensSerialNumber',
+    0x920a: 'FocalLength', // Focal length of the lens in mm
+    0xa20b: 'FlashEnergy', // Strobe energy in BCPS
+    0xa20c: 'SpatialFrequencyResponse',
+    0xa20e: 'FocalPlaneXResolution', // Number of pixels in width direction per FPRUnit
+    0xa20f: 'FocalPlaneYResolution', // Number of pixels in height direction per FPRUnit
+    0xa210: 'FocalPlaneResolutionUnit', // Unit for measuring the focal plane resolution
+    0xa214: 'SubjectLocation', // Location of subject in image
+    0xa215: 'ExposureIndex', // Exposure index selected on camera
+    0xa217: 'SensingMethod', // Image sensor type
+    0xa300: 'FileSource', // Image source (3 == DSC)
+    0xa301: 'SceneType', // Scene type (1 == directly photographed)
+    0xa302: 'CFAPattern', // Color filter array geometric pattern
+    0xa401: 'CustomRendered', // Special processing
+    0xa402: 'ExposureMode', // Exposure mode
+    0xa403: 'WhiteBalance', // 1 = auto white balance, 2 = manual
+    0xa404: 'DigitalZoomRatio', // Digital zoom ratio
+    0xa405: 'FocalLengthIn35mmFilm',
+    0xa406: 'SceneCaptureType', // Type of scene
+    0xa407: 'GainControl', // Degree of overall image gain adjustment
+    0xa408: 'Contrast', // Direction of contrast processing applied by camera
+    0xa409: 'Saturation', // Direction of saturation processing applied by camera
+    0xa40a: 'Sharpness', // Direction of sharpness processing applied by camera
+    0xa40b: 'DeviceSettingDescription',
+    0xa40c: 'SubjectDistanceRange', // Distance to subject
+    0xa420: 'ImageUniqueID', // Identifier assigned uniquely to each image
+    0xa430: 'CameraOwnerName',
+    0xa431: 'BodySerialNumber',
+    0xa432: 'LensSpecification',
+    0xa433: 'LensMake',
+    0xa434: 'LensModel',
+    0xa435: 'LensSerialNumber',
     // ==============
     // GPS Info tags:
     // ==============
@@ -150,12 +150,12 @@
     0x0007: 'GPSTimeStamp',
     0x0008: 'GPSSatellites',
     0x0009: 'GPSStatus',
-    0x000A: 'GPSMeasureMode',
-    0x000B: 'GPSDOP',
-    0x000C: 'GPSSpeedRef',
-    0x000D: 'GPSSpeed',
-    0x000E: 'GPSTrackRef',
-    0x000F: 'GPSTrack',
+    0x000a: 'GPSMeasureMode',
+    0x000b: 'GPSDOP',
+    0x000c: 'GPSSpeedRef',
+    0x000d: 'GPSSpeed',
+    0x000e: 'GPSTrackRef',
+    0x000f: 'GPSTrack',
     0x0010: 'GPSImgDirectionRef',
     0x0011: 'GPSImgDirection',
     0x0012: 'GPSMapDatum',
@@ -166,12 +166,12 @@
     0x0017: 'GPSDestBearingRef',
     0x0018: 'GPSDestBearing',
     0x0019: 'GPSDestDistanceRef',
-    0x001A: 'GPSDestDistance',
-    0x001B: 'GPSProcessingMethod',
-    0x001C: 'GPSAreaInformation',
-    0x001D: 'GPSDateStamp',
-    0x001E: 'GPSDifferential',
-    0x001F: 'GPSHPositioningError'
+    0x001a: 'GPSDestDistance',
+    0x001b: 'GPSProcessingMethod',
+    0x001c: 'GPSAreaInformation',
+    0x001d: 'GPSDateStamp',
+    0x001e: 'GPSDifferential',
+    0x001f: 'GPSHPositioningError'
   }
 
   loadImage.ExifMap.prototype.stringValues = {
@@ -225,23 +225,23 @@
       0x0005: 'Strobe return light not detected',
       0x0007: 'Strobe return light detected',
       0x0009: 'Flash fired, compulsory flash mode',
-      0x000D: 'Flash fired, compulsory flash mode, return light not detected',
-      0x000F: 'Flash fired, compulsory flash mode, return light detected',
+      0x000d: 'Flash fired, compulsory flash mode, return light not detected',
+      0x000f: 'Flash fired, compulsory flash mode, return light detected',
       0x0010: 'Flash did not fire, compulsory flash mode',
       0x0018: 'Flash did not fire, auto mode',
       0x0019: 'Flash fired, auto mode',
-      0x001D: 'Flash fired, auto mode, return light not detected',
-      0x001F: 'Flash fired, auto mode, return light detected',
+      0x001d: 'Flash fired, auto mode, return light not detected',
+      0x001f: 'Flash fired, auto mode, return light detected',
       0x0020: 'No flash function',
       0x0041: 'Flash fired, red-eye reduction mode',
       0x0045: 'Flash fired, red-eye reduction mode, return light not detected',
       0x0047: 'Flash fired, red-eye reduction mode, return light detected',
       0x0049: 'Flash fired, compulsory flash mode, red-eye reduction mode',
-      0x004D: 'Flash fired, compulsory flash mode, red-eye reduction mode, return light not detected',
-      0x004F: 'Flash fired, compulsory flash mode, red-eye reduction mode, return light detected',
+      0x004d: 'Flash fired, compulsory flash mode, red-eye reduction mode, return light not detected',
+      0x004f: 'Flash fired, compulsory flash mode, red-eye reduction mode, return light detected',
       0x0059: 'Flash fired, auto mode, red-eye reduction mode',
-      0x005D: 'Flash fired, auto mode, return light not detected, red-eye reduction mode',
-      0x005F: 'Flash fired, auto mode, return light detected, red-eye reduction mode'
+      0x005d: 'Flash fired, auto mode, return light not detected, red-eye reduction mode',
+      0x005f: 'Flash fired, auto mode, return light detected, red-eye reduction mode'
     },
     SensingMethod: {
       1: 'Undefined',
@@ -347,17 +347,18 @@
         return String.fromCharCode(value[0], value[1], value[2], value[3])
       case 'ComponentsConfiguration':
         if (!value) return
-        return this.stringValues[id][value[0]] +
-        this.stringValues[id][value[1]] +
-        this.stringValues[id][value[2]] +
-        this.stringValues[id][value[3]]
+        return (
+          this.stringValues[id][value[0]] +
+          this.stringValues[id][value[1]] +
+          this.stringValues[id][value[2]] +
+          this.stringValues[id][value[3]]
+        )
       case 'GPSVersionID':
         if (!value) return
         return value[0] + '.' + value[1] + '.' + value[2] + '.' + value[3]
     }
     return String(value)
   }
-
   ;(function (exifMapPrototype) {
     var tags = exifMapPrototype.tags
     var map = exifMapPrototype.map
@@ -368,7 +369,7 @@
         map[tags[prop]] = prop
       }
     }
-  }(loadImage.ExifMap.prototype))
+  })(loadImage.ExifMap.prototype)
 
   loadImage.ExifMap.prototype.getAll = function () {
     var map = {}
@@ -384,4 +385,4 @@
     }
     return map
   }
-}))
+})
