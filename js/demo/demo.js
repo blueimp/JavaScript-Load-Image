@@ -47,13 +47,24 @@ $(function () {
   }
 
   function updateResults (img, data) {
+    var fileName = currentFile.name
+    var href = img.src
+    var dataURLStart
     var content
     if (!(img.src || img instanceof HTMLCanvasElement)) {
       content = $('<span>Loading image file failed</span>')
     } else {
+      if (!href) {
+        href = img.toDataURL(currentFile.type + 'REMOVEME')
+        // Check if file type is supported for the dataURL export:
+        dataURLStart = 'data:' + currentFile.type
+        if (href.slice(0, dataURLStart.length) !== dataURLStart) {
+          fileName = fileName.replace(/\.\w+$/, '.png')
+        }
+      }
       content = $('<a target="_blank">').append(img)
-        .attr('download', currentFile.name)
-        .attr('href', img.src || img.toDataURL())
+        .attr('download', fileName)
+        .attr('href', href)
     }
     result.children().replaceWith(content)
     if (img.getContext) {
