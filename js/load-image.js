@@ -110,7 +110,7 @@
           naturalWidth: img.naturalWidth,
           naturalHeight: img.naturalHeight
         }
-      };
+      }
       loadImage.transform(img, options, callback, file, imageData)
     }
   }
