@@ -105,7 +105,13 @@
   loadImage.onload = function (img, event, file, callback, options) {
     revokeHelper(img, options)
     if (callback) {
-      loadImage.transform(img, options, callback, file, {})
+      var imageData = {
+        naturalSize: {
+          naturalWidth: img.naturalWidth,
+          naturalHeight: img.naturalHeight
+        }
+      };
+      loadImage.transform(img, options, callback, file, imageData)
     }
   }
 
