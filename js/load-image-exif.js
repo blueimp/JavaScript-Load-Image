@@ -43,12 +43,7 @@
       console.log('Invalid Exif data: Invalid thumbnail data.')
       return
     }
-    hexData = []
-    for (i = 0; i < length; i += 1) {
-      b = dataView.getUint8(offset + i)
-      hexData.push((b < 16 ? '0' : '') + b.toString(16))
-    }
-    return 'data:image/jpeg,%' + hexData.join('%')
+    return URL.createObjectURL(new Blob([dataView.buffer.slice(offset,offset+length)]));
   }
 
   loadImage.exifTagTypes = {
