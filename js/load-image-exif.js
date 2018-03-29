@@ -9,7 +9,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-/* global define, Blob, URL */
+/* global define, Blob */
 
 ;(function (factory) {
   'use strict'
@@ -42,7 +42,9 @@
       console.log('Invalid Exif data: Invalid thumbnail data.')
       return
     }
-    return URL.createObjectURL(new Blob([dataView.buffer.slice(offset, offset + length)]))
+    return loadImage.createObjectURL(
+      new Blob([dataView.buffer.slice(offset, offset + length)])
+    )
   }
 
   loadImage.exifTagTypes = {
