@@ -9,7 +9,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-/* global define */
+/* global define, Blob, URL */
 
 ;(function (factory) {
   'use strict'
@@ -38,12 +38,11 @@
   }
 
   loadImage.getExifThumbnail = function (dataView, offset, length) {
-    var hexData, i, b
     if (!length || offset + length > dataView.byteLength) {
       console.log('Invalid Exif data: Invalid thumbnail data.')
       return
     }
-    return URL.createObjectURL(new Blob([dataView.buffer.slice(offset,offset+length)]));
+    return URL.createObjectURL(new Blob([dataView.buffer.slice(offset, offset + length)]))
   }
 
   loadImage.exifTagTypes = {
