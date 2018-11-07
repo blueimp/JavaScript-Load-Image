@@ -52,7 +52,7 @@
       return outstr
     }
 
-    var fieldValue, fieldName, dataSize, segmentType,
+    var fieldValue, fieldName, dataSize, segmentType
     var segmentStartPos = startOffset
     while (segmentStartPos < startOffset + sectionLength) {
       // we currently handle the 2: class of iptc tag
