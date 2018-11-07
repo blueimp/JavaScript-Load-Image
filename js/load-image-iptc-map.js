@@ -34,7 +34,6 @@
     // ==========
     // Iptc tags:
     // ==========
-    // 0x00: 'RecordVersion',
     0x03: 'ObjectType',
     0x04: 'ObjectAttribute',
     0x05: 'ObjectName',
@@ -79,10 +78,14 @@
     0x76: 'Contact',
     0x78: 'Caption',
     0x7a: 'WriterEditor',
-    // 0x7d: 'RasterizedCaption',
     0x82: 'ImageType',
     0x83: 'ImageOrientation',
-    0x87: 'LanguageID',
+    0x87: 'LanguageID'
+
+    // We don't record these tags:
+    //
+    // 0x00: 'RecordVersion',
+    // 0x7d: 'RasterizedCaption',
     // 0x96: 'AudioType',
     // 0x97: 'AudioSamplingRate',
     // 0x98: 'AudioSamplingRes',
