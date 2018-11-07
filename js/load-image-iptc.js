@@ -128,7 +128,7 @@
   }
 
   // Registers this Iptc parser for the APP13 JPEG meta data segment:
-  loadImage.metaDataParsers.jpeg[0xffed]=[]
+  loadImage.metaDataParsers.jpeg[0xffed] = []
   loadImage.metaDataParsers.jpeg[0xffed].push(loadImage.parseIptcData)
 
   // Adds the following properties to the parseMetaData callback data:
