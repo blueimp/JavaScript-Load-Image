@@ -10,7 +10,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-/* global define, Blob */
+/* global define */
 
 ;(function (factory) {
   'use strict'
@@ -31,7 +31,7 @@
   }
 
   loadImage.IptcMap.prototype.map = {
-      "ObjectName": 0x5
+    'ObjectName': 0x5
   }
 
   loadImage.IptcMap.prototype.get = function (id) {
@@ -44,30 +44,28 @@
     sectionLength,
     data
   ) {
-
     function getStringFromDB(buffer, start, length) {
-      var outstr = "";
-      for (var n = start; n < start+length; n++) {
-          outstr += String.fromCharCode(buffer.getUint8(n));
+      var outstr = ""
+      for (var n = start; n < start + length; n++) {
+          outstr += String.fromCharCode(buffer.getUint8(n))
       }
-      return outstr;
+      return outstr
     }
 
-    var fieldValue, fieldName, dataSize, segmentType, segmentSize
+    var fieldValue, fieldName, dataSize, segmentType,
     var segmentStartPos = startOffset
-    while (segmentStartPos < startOffset+sectionLength) {
+    while (segmentStartPos < startOffset + sectionLength) {
       // we currently handle the 2: class of iptc tag
-      if (dataView.getUint8(segmentStartPos) === 0x1C && dataView.getUint8(segmentStartPos+1) === 0x02) {
+      if (dataView.getUint8(segmentStartPos) === 0x1C && dataView.getUint8(segmentStartPos + 1) === 0x02) {
 
-        segmentType = dataView.getUint8(segmentStartPos+2)
+        segmentType = dataView.getUint8(segmentStartPos + 2)
 
         // only store data for known tags
         if (segmentType in data.iptc.tags) {
 
-          dataSize = dataView.getInt16(segmentStartPos+3)
-          segmentSize = dataSize + 5
+          dataSize = dataView.getInt16(segmentStartPos + 3)
           fieldName = data.iptc.tags[segmentType]
-          fieldValue = getStringFromDB(dataView, segmentStartPos+5, dataSize)
+          fieldValue = getStringFromDB(dataView, segmentStartPos + 5, dataSize)
 
           // integer field IDs (same as the exif module)
           fieldName=segmentType
@@ -83,11 +81,11 @@
             }
           }
           else {
-            data.iptc[fieldName] = fieldValue;
+            data.iptc[fieldName] = fieldValue
           }
         }
       }
-      segmentStartPos++;
+      segmentStartPos++
     }
   }
 
@@ -97,10 +95,10 @@
     }
 
     // Found "8BIM<EOT><EOT>" ?
-    var isFieldSegmentStart = function(dataView, offset){
+    var isFieldSegmentStart = function (dataView, offset) {
       return (
         dataView.getUint32(offset) === 0x3842494d &&
-        dataView.getUint16(offset+4) === 0x0404
+        dataView.getUint16(offset + 4) === 0x0404
       )
     }
 
@@ -108,10 +106,8 @@
     // Reference: https://metacpan.org/pod/distribution/Image-MetaData-JPEG/lib/Image/MetaData/JPEG/Structures.pod#Structure-of-a-Photoshop-style-APP13-segment
 
     // From https://github.com/exif-js/exif-js/blob/master/exif.js ~ line 474 on
-    while (offset < offset+length) {
-
+    while (offset < offset + length) {
       if (isFieldSegmentStart(dataView, offset)) {
-
         var nameHeaderLength = dataView.getUint8(offset + 7)
         if (nameHeaderLength % 2 !== 0) nameHeaderLength += 1
         // Check for pre photoshop 6 format
@@ -133,13 +129,8 @@
           sectionLength,
           data
         )
-
-        break;
-
       }
-
       offset++
-
     }
 
     console.log('No Iptc data at this offset - could be XMP')
