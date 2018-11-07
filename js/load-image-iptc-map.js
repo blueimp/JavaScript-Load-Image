@@ -2,10 +2,13 @@
  * JavaScript Load Image Iptc Map
  * https://github.com/blueimp/JavaScript-Load-Image
  *
+ * Copyright 2013, Sebastian Tschan
  * Copyright 2018, Dave Bevan
  *
  * Iptc tags mapping based on
  * https://github.com/jseidelin/exif-js
+ * https://iptc.org/standards/photo-metadata
+ * http://www.iptc.org/std/IIM/4.1/specification/IIMV4.1.pdf
  *
  * Licensed under the MIT license:
  * https://opensource.org/licenses/MIT

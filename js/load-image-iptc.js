@@ -3,6 +3,7 @@
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan
+ * Copyright 2018, Dave Bevan
  * https://blueimp.net
  *
  * Licensed under the MIT license:
