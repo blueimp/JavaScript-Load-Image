@@ -44,8 +44,13 @@ Or alternatively, choose which components you want to include:
 <script src="js/load-image-scale.js"></script>
 <script src="js/load-image-meta.js"></script>
 <script src="js/load-image-fetch.js"></script>
+
 <script src="js/load-image-exif.js"></script>
 <script src="js/load-image-exif-map.js"></script>
+
+<script src="js/load-image-iptc.js"></script>
+<script src="js/load-image-iptc-map.js"></script>
+
 <script src="js/load-image-orientation.js"></script>
 ```
 
@@ -313,6 +318,40 @@ disable certain aspects of the parser:
 * **disableExifThumbnail**: Disables parsing of the Exif Thumbnail.
 * **disableExifSub**: Disables parsing of the Exif Sub IFD.
 * **disableExifGps**: Disables parsing of the Exif GPS Info IFD.
+
+### Iptc parser
+If you include the Load Image Iptc Parser extension, the argument passed to the
+callback for **parseMetaData** will contain the additional property **iptc** if
+Iptc data could be found in the given image.  
+The **iptc** object stores the parsed Iptc tags:
+
+```js
+var objectname = data.iptc[0x5];
+```
+
+It also provides an **iptc.get()** method to retrieve the tag value via the
+tag's mapped name:
+
+```js
+var objectname = data.iptc.get('ObjectName');
+```
+
+By default, the only available mapped names are **ObjectName**.
+If you also include the Load Image Iptc Map library, additional tag mappings
+become available, as well as two additional methods, **iptc.getText()** and
+**iptc.getAll()**:
+
+```js
+var keywords = data.iptc.getText('Keywords'); // e.g.: ['Weather','Sky']
+
+// A map of all parsed tags with their mapped names as keys and their text values:
+var allTags = data.iptc.getAll();
+```
+
+The Iptc parser also adds additional options for the parseMetaData method, to
+disable certain aspects of the parser:
+
+* **disableIptc**: Disables Iptc parsing.
 
 ## License
 The JavaScript Load Image script is released under the
