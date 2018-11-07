@@ -44,44 +44,36 @@
     sectionLength,
     data
   ) {
-    function getStringFromDB(buffer, start, length) {
-      var outstr = ""
+    function getStringFromDB (buffer, start, length) {
+      var outstr = ''
       for (var n = start; n < start + length; n++) {
-          outstr += String.fromCharCode(buffer.getUint8(n))
+        outstr += String.fromCharCode(buffer.getUint8(n))
       }
       return outstr
     }
 
-    var fieldValue, fieldName, dataSize, segmentType
+    var fieldValue, dataSize, segmentType
     var segmentStartPos = startOffset
     while (segmentStartPos < startOffset + sectionLength) {
       // we currently handle the 2: class of iptc tag
       if (dataView.getUint8(segmentStartPos) === 0x1C && dataView.getUint8(segmentStartPos + 1) === 0x02) {
-
         segmentType = dataView.getUint8(segmentStartPos + 2)
 
         // only store data for known tags
         if (segmentType in data.iptc.tags) {
-
           dataSize = dataView.getInt16(segmentStartPos + 3)
-          fieldName = data.iptc.tags[segmentType]
           fieldValue = getStringFromDB(dataView, segmentStartPos + 5, dataSize)
 
-          // integer field IDs (same as the exif module)
-          fieldName=segmentType
-
           // Check if we already stored a value with this name
-          if (data.iptc.hasOwnProperty(fieldName)) {
+          if (data.iptc.hasOwnProperty(segmentType)) {
             // Value already stored with this name, create multivalue field
-            if (data.iptc[fieldName] instanceof Array) {
-              data.iptc[fieldName].push(fieldValue)
+            if (data.iptc[segmentType] instanceof Array) {
+              data.iptc[segmentType].push(fieldValue)
+            } else {
+              data.iptc[segmentType] = [data.iptc[segmentType], fieldValue]
             }
-            else {
-              data.iptc[fieldName] = [data.iptc[fieldName], fieldValue]
-            }
-          }
-          else {
-            data.iptc[fieldName] = fieldValue
+          } else {
+            data.iptc[segmentType] = fieldValue
           }
         }
       }
@@ -94,7 +86,7 @@
       return
     }
 
-    // Found "8BIM<EOT><EOT>" ?
+    // Found '8BIM<EOT><EOT>' ?
     var isFieldSegmentStart = function (dataView, offset) {
       return (
         dataView.getUint32(offset) === 0x3842494d &&
@@ -132,9 +124,7 @@
       }
       offset++
     }
-
     console.log('No Iptc data at this offset - could be XMP')
-
   }
 
   // Registers this Iptc parser for the APP13 JPEG meta data segment:
