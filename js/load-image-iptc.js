@@ -96,43 +96,54 @@
       return
     }
 
-    // skip over leading (variable) chars, to the always-fixed "8BIM" sequence
-    offset+=18
+    // Found "8BIM<EOT><EOT>" ?
+    var isFieldSegmentStart = function(dataView, offset){
+      return (
+        dataView.getUint32(offset) === 0x3842494d &&
+        dataView.getUint16(offset+4) === 0x0404
+      )
+    }
 
-    var littleEndian
-    var dirOffset
+    // Hunt forward, looking for the correct Iptc block signature:
+    // Reference: https://metacpan.org/pod/distribution/Image-MetaData-JPEG/lib/Image/MetaData/JPEG/Structures.pod#Structure-of-a-Photoshop-style-APP13-segment
 
     // From https://github.com/exif-js/exif-js/blob/master/exif.js ~ line 474 on
+    while (offset < offset+length) {
 
-    // Check for the "Iptc" "8BIM<EOT><EOT>" ASCII sequence (0x3842494d 0x0404):
-    if (dataView.getUint32(offset) !== 0x3842494d && dataView.getUint16(offset + 4) !== 0x0404) {
-      console.log('no Iptc data at this offset')
-      // No Iptc data, might be XMP data instead
-      return
+      if (isFieldSegmentStart(dataView, offset)) {
+
+        var nameHeaderLength = dataView.getUint8(offset + 7)
+        if (nameHeaderLength % 2 !== 0) nameHeaderLength += 1
+        // Check for pre photoshop 6 format
+        if (nameHeaderLength === 0) {
+          // Always 4
+          nameHeaderLength = 4
+        }
+
+        var startOffset = offset + 8 + nameHeaderLength
+        var sectionLength = dataView.getUint16(offset + 6 + nameHeaderLength)
+
+        // Create the iptc object to store the tags:
+        data.iptc = new loadImage.IptcMap()
+
+        // Parse the tags
+        return loadImage.parseIptcTags(
+          dataView,
+          startOffset,
+          sectionLength,
+          data
+        )
+
+        break;
+
+      }
+
+      offset++
+
     }
 
-    var nameHeaderLength = dataView.getUint8(offset + 7)
-    if (nameHeaderLength % 2 !== 0) nameHeaderLength += 1
-    // Check for pre photoshop 6 format
-    if (nameHeaderLength === 0) {
-        // Always 4
-        nameHeaderLength = 4
-    }
+    console.log('No Iptc data at this offset - could be XMP')
 
-    var startOffset = offset + 8 + nameHeaderLength
-    var sectionLength = dataView.getUint16(offset + 6 + nameHeaderLength)
-
-    // Create the iptc object to store the tags:
-    data.iptc = new loadImage.IptcMap()
-    window._iptc=data
-
-    // Parse the tags
-    loadImage.parseIptcTags(
-      dataView,
-      startOffset,
-      sectionLength,
-      data
-    )
   }
 
   // Registers this Iptc parser for the APP13 JPEG meta data segment:
