@@ -823,6 +823,14 @@
       })
     })
 
+    it('Should parse Iptc information', function (done) {
+      loadImage.parseMetaData(blobJPEG, function (data) {
+        expect(data.iptc).to.be.ok
+        expect(data.iptc.get('ObjectName')).to.equal('objectname')
+        done()
+      })
+    })
+
     it('Should parse the complete image head', function (done) {
       loadImage.parseMetaData(blobJPEG, function (data) {
         expect(data.imageHead).to.be.ok
