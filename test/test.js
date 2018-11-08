@@ -845,7 +845,7 @@
       })
     })
 
-    it('Should parse meta data automatically', function (done) {
+    it('Should parse imageHead, Exif and Iptc meta data automatically', function (done) {
       expect(
         loadImage(
           blobJPEG,
@@ -854,6 +854,8 @@
             expect(data.imageHead).to.be.ok
             expect(data.exif).to.be.ok
             expect(data.exif.get('Orientation')).to.equal(6)
+            expect(data.iptc).to.be.ok
+            expect(data.iptc.get('ObjectName')).to.equal('objectname')
             done()
           },
           { meta: true }
