@@ -16,34 +16,57 @@ $(function () {
 
   var result = $('#result')
   var exifNode = $('#exif')
+  var iptcNode = $('#iptc')
   var thumbNode = $('#thumbnail')
   var actionsNode = $('#actions')
   var currentFile
   var coordinates
+  var jcropAPI
 
-  function displayExifData (exif) {
-    var thumbnail = exif.get('Thumbnail')
-    var tags = exif.getAll()
-    var table = exifNode.find('table').empty()
+  function displayTagData (node, tags) {
+    var table = node.find('table').empty()
     var row = $('<tr></tr>')
     var cell = $('<td></td>')
     var prop
-    if (thumbnail) {
-      thumbNode.empty()
-      loadImage(thumbnail, function (img) {
-        thumbNode.append(img).show()
-      }, {orientation: exif.get('Orientation')})
-    }
     for (prop in tags) {
       if (tags.hasOwnProperty(prop)) {
         table.append(
-          row.clone()
+          row
+            .clone()
             .append(cell.clone().text(prop))
             .append(cell.clone().text(tags[prop]))
         )
       }
     }
-    exifNode.show()
+    node.show()
+  }
+
+  function displayThumbnailImage (node, thumbnail, options) {
+    if (thumbnail) {
+      thumbNode.empty()
+      loadImage(
+        thumbnail,
+        function (img) {
+          node.append(img).show()
+        },
+        options
+      )
+    }
+  }
+
+  function displayMetaData (data) {
+    if (!data) return
+    var exif = data.exif
+    var iptc = data.iptc
+    if (exif) {
+      displayThumbnailImage(thumbNode, exif.get('Thumbnail'), {
+        orientation: exif.get('Orientation')
+      })
+      displayTagData(exifNode, exif.getAll())
+    }
+    if (iptc) {
+      displayTagData(iptcNode, iptc.getAll())
+    }
   }
 
   function updateResults (img, data) {
@@ -62,7 +85,8 @@ $(function () {
           fileName = fileName.replace(/\.\w+$/, '.png')
         }
       }
-      content = $('<a target="_blank">').append(img)
+      content = $('<a target="_blank">')
+        .append(img)
         .attr('download', fileName)
         .attr('href', href)
     }
@@ -70,23 +94,21 @@ $(function () {
     if (img.getContext) {
       actionsNode.show()
     }
-    if (data && data.exif) {
-      displayExifData(data.exif)
-    }
+    displayMetaData(data)
   }
 
   function displayImage (file, options) {
     currentFile = file
-    if (!loadImage(
-      file,
-      updateResults,
-      options
-    )) {
-      result.children().replaceWith(
-        $('<span>' +
-          'Your browser does not support the URL or FileReader API.' +
-          '</span>')
-      )
+    if (!loadImage(file, updateResults, options)) {
+      result
+        .children()
+        .replaceWith(
+          $(
+            '<span>' +
+              'Your browser does not support the URL or FileReader API.' +
+              '</span>'
+          )
+        )
     }
   }
 
@@ -106,13 +128,18 @@ $(function () {
       return
     }
     exifNode.hide()
+    iptcNode.hide()
     thumbNode.hide()
     displayImage(file, options)
   }
 
   // Hide URL/FileReader API requirement message in capable browsers:
-  if (window.createObjectURL || window.URL || window.webkitURL ||
-      window.FileReader) {
+  if (
+    window.createObjectURL ||
+    window.URL ||
+    window.webkitURL ||
+    window.FileReader
+  ) {
     result.children().hide()
   }
 
@@ -124,40 +151,46 @@ $(function () {
     })
     .on('drop', dropChangeHandler)
 
-  $('#file-input')
-    .on('change', dropChangeHandler)
+  $('#file-input').on('change', dropChangeHandler)
 
-  $('#edit')
-    .on('click', function (event) {
-      event.preventDefault()
-      var imgNode = result.find('img, canvas')
-      var img = imgNode[0]
-      var pixelRatio = window.devicePixelRatio || 1
-      imgNode.Jcrop({
-        setSelect: [
-          40,
-          40,
-          (img.width / pixelRatio) - 40,
-          (img.height / pixelRatio) - 40
-        ],
-        onSelect: function (coords) {
-          coordinates = coords
+  $('#edit').on('click', function (event) {
+    event.preventDefault()
+    var imgNode = result.find('img, canvas')
+    var img = imgNode[0]
+    var pixelRatio = window.devicePixelRatio || 1
+    imgNode
+      .Jcrop(
+        {
+          setSelect: [
+            40,
+            40,
+            img.width / pixelRatio - 40,
+            img.height / pixelRatio - 40
+          ],
+          onSelect: function (coords) {
+            coordinates = coords
+          },
+          onRelease: function () {
+            coordinates = null
+          }
         },
-        onRelease: function () {
-          coordinates = null
+        function () {
+          jcropAPI = this
         }
-      }).parent().on('click', function (event) {
+      )
+      .parent()
+      .on('click', function (event) {
         event.preventDefault()
       })
-    })
+  })
 
-  $('#crop')
-    .on('click', function (event) {
-      event.preventDefault()
-      var img = result.find('img, canvas')[0]
-      var pixelRatio = window.devicePixelRatio || 1
-      if (img && coordinates) {
-        updateResults(loadImage.scale(img, {
+  $('#crop').on('click', function (event) {
+    event.preventDefault()
+    var img = result.find('img, canvas')[0]
+    var pixelRatio = window.devicePixelRatio || 1
+    if (img && coordinates) {
+      updateResults(
+        loadImage.scale(img, {
           left: coordinates.x * pixelRatio,
           top: coordinates.y * pixelRatio,
           sourceWidth: coordinates.w * pixelRatio,
@@ -166,8 +199,16 @@ $(function () {
           maxWidth: result.width(),
           pixelRatio: pixelRatio,
           downsamplingRatio: 0.5
-        }))
-        coordinates = null
-      }
-    })
+        })
+      )
+      coordinates = null
+    }
+  })
+
+  $('#cancel').on('click', function (event) {
+    event.preventDefault()
+    if (jcropAPI) {
+      jcropAPI.release()
+    }
+  })
 })

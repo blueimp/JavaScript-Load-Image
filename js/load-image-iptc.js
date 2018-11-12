@@ -1,5 +1,5 @@
 /*
- * JavaScript Load Image Iptc Parser
+ * JavaScript Load Image IPTC Parser
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan
@@ -31,7 +31,7 @@
   }
 
   loadImage.IptcMap.prototype.map = {
-    'ObjectName': 0x5
+    ObjectName: 0x5
   }
 
   loadImage.IptcMap.prototype.get = function (id) {
@@ -56,7 +56,10 @@
     var segmentStartPos = startOffset
     while (segmentStartPos < startOffset + sectionLength) {
       // we currently handle the 2: class of iptc tag
-      if (dataView.getUint8(segmentStartPos) === 0x1C && dataView.getUint8(segmentStartPos + 1) === 0x02) {
+      if (
+        dataView.getUint8(segmentStartPos) === 0x1c &&
+        dataView.getUint8(segmentStartPos + 1) === 0x02
+      ) {
         segmentType = dataView.getUint8(segmentStartPos + 2)
 
         // only store data for known tags
@@ -94,7 +97,7 @@
       )
     }
 
-    // Hunt forward, looking for the correct Iptc block signature:
+    // Hunt forward, looking for the correct IPTC block signature:
     // Reference: https://metacpan.org/pod/distribution/Image-MetaData-JPEG/lib/Image/MetaData/JPEG/Structures.pod#Structure-of-a-Photoshop-style-APP13-segment
 
     // From https://github.com/exif-js/exif-js/blob/master/exif.js ~ line 474 on
@@ -124,16 +127,15 @@
       }
       offset++
     }
-    console.log('No Iptc data at this offset - could be XMP')
+    console.log('No IPTC data at this offset - could be XMP')
   }
 
-  // Registers this Iptc parser for the APP13 JPEG meta data segment:
-  loadImage.metaDataParsers.jpeg[0xffed] = []
+  // Registers this IPTC parser for the APP13 JPEG meta data segment:
   loadImage.metaDataParsers.jpeg[0xffed].push(loadImage.parseIptcData)
 
   // Adds the following properties to the parseMetaData callback data:
   // * iptc: The iptc tags, parsed by the parseIptcData method
 
   // Adds the following options to the parseMetaData method:
-  // * disableIptc: Disables Iptc parsing.
+  // * disableIptc: Disables IPTC parsing.
 })

@@ -1,11 +1,11 @@
 /*
- * JavaScript Load Image Iptc Map
+ * JavaScript Load Image IPTC Map
  * https://github.com/blueimp/JavaScript-Load-Image
  *
  * Copyright 2013, Sebastian Tschan
  * Copyright 2018, Dave Bevan
  *
- * Iptc tags mapping based on
+ * IPTC tags mapping based on
  * https://github.com/jseidelin/exif-js
  * https://iptc.org/standards/photo-metadata
  * http://www.iptc.org/std/IIM/4.1/specification/IIMV4.1.pdf
@@ -32,7 +32,7 @@
 
   loadImage.IptcMap.prototype.tags = {
     // ==========
-    // Iptc tags:
+    // IPTC tags:
     // ==========
     0x03: 'ObjectType',
     0x04: 'ObjectAttribute',
@@ -100,7 +100,6 @@
     var value = this.get(id)
     return String(value)
   }
-
   ;(function (iptcMapPrototype) {
     var tags = iptcMapPrototype.tags
     var map = iptcMapPrototype.map || {}

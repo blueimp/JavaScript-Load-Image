@@ -23,21 +23,24 @@
     'ovGITCqXzKbzCY1Kp9Sq9YrNarfcrvcLDovH5PKsAAA7'
   var imageUrlGIF = 'data:image/gif;base64,' + b64DataGIF
   var blobGIF = canCreateBlob && window.dataURLtoBlob(imageUrlGIF)
-  // 2x1px JPEG (color white, with the Exif orientation flag set to 6 and Iptc ObjectName (2:5) set to 'objectname'):
+  // 2x1px JPEG (color white, with the Exif orientation flag set to 6 and the
+  // IPTC ObjectName (2:5) set to 'objectname'):
   var b64DataJPEG =
-    '/9j/4AAQSkZJRgABAQEAYABgAAD/4QAiRXhpZgAASUkqAAgAAAABABIBAwABAAAABgASAAAAAAD/' +
-    '7QAsUGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAAA8cAgUACm9iamVjdG5hbWUA/9sAQwABAQEBAQEB' +
-    'AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB' +
-    '/9sAQwEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB' +
-    'AQEBAQEBAQEBAQEB/8AAEQgAAQACAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgME' +
-    'BQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEV' +
-    'UtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3' +
-    'eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh' +
-    '4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALUR' +
-    'AAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDTh' +
-    'JfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJ' +
-    'ipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz' +
-    '9PX29/j5+v/aAAwDAQACEQMRAD8A/v4ooooA/9k='
+    '/9j/4AAQSkZJRgABAQEAYABgAAD/4QAiRXhpZgAASUkqAAgAAAABABIBAwABAAAA' +
+    'BgASAAAAAAD/7QAsUGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAAA8cAgUACm9iamVj' +
+    'dG5hbWUA/9sAQwABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB' +
+    'AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB/9sAQwEBAQEBAQEBAQEBAQEBAQEB' +
+    'AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB' +
+    '/8AAEQgAAQACAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYH' +
+    'CAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGh' +
+    'CCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldY' +
+    'WVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1' +
+    'tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8B' +
+    'AAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAEC' +
+    'dwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBka' +
+    'JicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWG' +
+    'h4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ' +
+    '2uLj5OXm5+jp6vLz9PX29/j5+v/aAAwDAQACEQMRAD8A/v4ooooA/9k='
   var imageUrlJPEG = 'data:image/jpeg;base64,' + b64DataJPEG
   var blobJPEG = canCreateBlob && window.dataURLtoBlob(imageUrlJPEG)
   function createBlob (data, type) {
@@ -56,7 +59,7 @@
   }
 
   describe('Loading', function () {
-    it('Return the img element or FileReader object to allow aborting the image load', function () {
+    it('Return an object with onload and onerror methods', function () {
       var img = loadImage(blobGIF, function () {})
       expect(img).to.be.an.instanceOf(Object)
       expect(img.onload).to.be.a('function')
@@ -109,7 +112,7 @@
       ).to.be.ok
     })
 
-    it('Discard object URL if noRevoke is undefined or false', function (done) {
+    it('Discard object URL if noRevoke is undefined/false', function (done) {
       expect(
         loadImage(blobGIF, function (img) {
           loadImage(img.src, function (img2) {
@@ -285,7 +288,7 @@
         ).to.be.ok
       })
 
-      it('Ignore max settings if image dimensions are smaller', function (done) {
+      it('Ignore max settings for smaller image dimensions', function (done) {
         expect(
           loadImage(
             blobGIF,
@@ -299,7 +302,7 @@
         ).to.be.ok
       })
 
-      it('Ignore min settings if image dimensions are larger', function (done) {
+      it('Ignore min settings for larger image dimensions', function (done) {
         expect(
           loadImage(
             blobGIF,
@@ -408,7 +411,7 @@
       ).to.be.ok
     })
 
-    it('Crop using the given sourceWidth and sourceHeight dimensions', function (
+    it('Crop using the given sourceWidth/sourceHeight dimensions', function (
       done
     ) {
       expect(
@@ -424,7 +427,7 @@
       ).to.be.ok
     })
 
-    it('Crop using the given left and top coordinates', function (done) {
+    it('Crop using the given left/top coordinates', function (done) {
       expect(
         loadImage(
           blobGIF,
@@ -438,7 +441,7 @@
       ).to.be.ok
     })
 
-    it('Crop using the given right and bottom coordinates', function (done) {
+    it('Crop using the given right/bottom coordinates', function (done) {
       expect(
         loadImage(
           blobGIF,
@@ -480,9 +483,7 @@
       ).to.be.ok
     })
 
-    it('Crop using maxWidth/maxHeight with the given pixelRatio', function (
-      done
-    ) {
+    it('Crop using maxWidth/maxHeight and pixelRatio', function (done) {
       expect(
         loadImage(
           blobGIF,
@@ -498,9 +499,7 @@
       ).to.be.ok
     })
 
-    it('Crop using sourceWidth/sourceHeight with the given pixelRatio', function (
-      done
-    ) {
+    it('Crop using sourceWidth/sourceHeight and pixelRatio', function (done) {
       expect(
         loadImage(
           blobGIF,
@@ -516,9 +515,7 @@
       ).to.be.ok
     })
 
-    it('Crop using maxWidth/maxHeight with the given downsamplingRatio', function (
-      done
-    ) {
+    it('Crop using maxWidth/maxHeight and downsamplingRatio', function (done) {
       expect(
         loadImage(
           blobGIF,
@@ -734,9 +731,7 @@
       ).to.be.ok
     })
 
-    it('Should adjust constraints based on the exif orientation value', function (
-      done
-    ) {
+    it('Should scale image after exif based orientation', function (done) {
       expect(
         loadImage(
           blobJPEG,
@@ -815,7 +810,7 @@
   })
 
   describe('Metadata', function () {
-    it('Should parse Exif information', function (done) {
+    it('Should parse Exif tags', function (done) {
       loadImage.parseMetaData(blobJPEG, function (data) {
         expect(data.exif).to.be.ok
         expect(data.exif.get('Orientation')).to.equal(6)
@@ -823,7 +818,7 @@
       })
     })
 
-    it('Should parse Iptc information', function (done) {
+    it('Should parse IPTC tags', function (done) {
       loadImage.parseMetaData(blobJPEG, function (data) {
         expect(data.iptc).to.be.ok
         expect(data.iptc.get('ObjectName')).to.equal('objectname')
@@ -845,7 +840,7 @@
       })
     })
 
-    it('Should parse imageHead, Exif and Iptc meta data automatically', function (done) {
+    it('Should parse meta data automatically', function (done) {
       expect(
         loadImage(
           blobJPEG,
@@ -866,7 +861,9 @@
 
   if ('fetch' in window && 'Request' in window) {
     describe('Fetch', function () {
-      it('Should fetch blob from URL if meta is true', function (done) {
+      it('Should fetch image URL as blob if meta option is true', function (
+        done
+      ) {
         expect(
           loadImage(
             imageUrlJPEG,
@@ -875,6 +872,8 @@
               expect(data.imageHead).to.be.ok
               expect(data.exif).to.be.ok
               expect(data.exif.get('Orientation')).to.equal(6)
+              expect(data.iptc).to.be.ok
+              expect(data.iptc.get('ObjectName')).to.equal('objectname')
               done()
             },
             { meta: true }
@@ -882,7 +881,9 @@
         ).to.be.ok
       })
 
-      it('Should not fetch blob from URL if meta is false', function (done) {
+      it('Should load image URL as img if meta option is false', function (
+        done
+      ) {
         expect(
           loadImage(imageUrlJPEG, function (img, data) {
             expect(data.imageHead).to.be.falsy

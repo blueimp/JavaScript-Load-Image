@@ -19,7 +19,7 @@ body {
   background: #222;
   color: #fff;
   -webkit-text-size-adjust: 100%;
-      -ms-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
 }
 a {
   color: orange;
@@ -31,6 +31,10 @@ img {
 }
 h1 {
   line-height: 1em;
+}
+h2,
+h3 {
+  margin-top: 2em;
 }
 table {
   width: 100%;
@@ -49,8 +53,8 @@ tr:nth-child(odd) {
 td {
   padding: 10px;
 }
-.result,
-.thumbnail {
+#result,
+#thumbnail {
   padding: 20px;
   background: #fff;
   color: #222;
@@ -61,14 +65,14 @@ td {
 }
 
 @media (min-width: 481px) {
-  .navigation {
+  #navigation {
     list-style: none;
     padding: 0;
   }
-  .navigation li {
+  #navigation li {
     display: inline-block;
   }
-  .navigation li:not(:first-child):before {
+  #navigation li:not(:first-child):before {
     content: '| ';
   }
 }
