@@ -51,7 +51,6 @@
       }
       return outstr
     }
-
     var fieldValue, dataSize, segmentType
     var segmentStartPos = startOffset
     while (segmentStartPos < startOffset + sectionLength) {
@@ -61,12 +60,10 @@
         dataView.getUint8(segmentStartPos + 1) === 0x02
       ) {
         segmentType = dataView.getUint8(segmentStartPos + 2)
-
         // only store data for known tags
         if (segmentType in data.iptc.tags) {
           dataSize = dataView.getInt16(segmentStartPos + 3)
           fieldValue = getStringFromDB(dataView, segmentStartPos + 5, dataSize)
-
           // Check if we already stored a value with this name
           if (data.iptc.hasOwnProperty(segmentType)) {
             // Value already stored with this name, create multivalue field
@@ -88,7 +85,7 @@
     if (options.disableIptc) {
       return
     }
-
+    var markerLength = offset + length
     // Found '8BIM<EOT><EOT>' ?
     var isFieldSegmentStart = function (dataView, offset) {
       return (
@@ -96,12 +93,10 @@
         dataView.getUint16(offset + 4) === 0x0404
       )
     }
-
     // Hunt forward, looking for the correct IPTC block signature:
     // Reference: https://metacpan.org/pod/distribution/Image-MetaData-JPEG/lib/Image/MetaData/JPEG/Structures.pod#Structure-of-a-Photoshop-style-APP13-segment
-
     // From https://github.com/exif-js/exif-js/blob/master/exif.js ~ line 474 on
-    while (offset < offset + length) {
+    while (offset + 8 < markerLength) {
       if (isFieldSegmentStart(dataView, offset)) {
         var nameHeaderLength = dataView.getUint8(offset + 7)
         if (nameHeaderLength % 2 !== 0) nameHeaderLength += 1
@@ -110,13 +105,18 @@
           // Always 4
           nameHeaderLength = 4
         }
-
         var startOffset = offset + 8 + nameHeaderLength
+        if (startOffset > markerLength) {
+          console.log('Invalid IPTC data: Invalid segment offset.')
+          break
+        }
         var sectionLength = dataView.getUint16(offset + 6 + nameHeaderLength)
-
+        if (offset + sectionLength > markerLength) {
+          console.log('Invalid IPTC data: Invalid segment size.')
+          break
+        }
         // Create the iptc object to store the tags:
         data.iptc = new loadImage.IptcMap()
-
         // Parse the tags
         return loadImage.parseIptcTags(
           dataView,
