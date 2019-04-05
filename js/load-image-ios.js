@@ -15,11 +15,11 @@
 /*jslint nomen: true, bitwise: true */
 /*global define, window, document */
 
-(function (factory) {
+;(function (factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
-        define(['load-image'], factory);
+        define(['./load-image'], factory);
     } else if (typeof module !== 'undefined' && module.exports) {
         factory(require('./load-image'));
     } else {
