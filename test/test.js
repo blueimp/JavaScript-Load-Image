@@ -126,6 +126,16 @@
         })
       ).to.be.ok
     })
+
+    it('Provide original image width+height in callback data', function (done) {
+      expect(
+        loadImage(imageUrlGIF, function (img, data) {
+          expect(data.originalWidth).to.equal(80)
+          expect(data.originalHeight).to.equal(60)
+          done()
+        })
+      ).to.be.ok
+    })
   })
 
   describe('Scaling', function () {
@@ -134,9 +144,11 @@
         expect(
           loadImage(
             blobGIF,
-            function (img) {
+            function (img, data) {
               expect(img.width).to.equal(40)
               expect(img.height).to.equal(30)
+              expect(data.originalWidth).to.equal(80)
+              expect(data.originalHeight).to.equal(60)
               done()
             },
             { maxWidth: 40 }
@@ -148,9 +160,11 @@
         expect(
           loadImage(
             blobGIF,
-            function (img) {
+            function (img, data) {
               expect(img.width).to.equal(20)
               expect(img.height).to.equal(15)
+              expect(data.originalWidth).to.equal(80)
+              expect(data.originalHeight).to.equal(60)
               done()
             },
             { maxHeight: 15 }
@@ -162,9 +176,11 @@
         expect(
           loadImage(
             blobGIF,
-            function (img) {
+            function (img, data) {
               expect(img.width).to.equal(160)
               expect(img.height).to.equal(120)
+              expect(data.originalWidth).to.equal(80)
+              expect(data.originalHeight).to.equal(60)
               done()
             },
             { minWidth: 160 }
@@ -176,9 +192,11 @@
         expect(
           loadImage(
             blobGIF,
-            function (img) {
+            function (img, data) {
               expect(img.width).to.equal(320)
               expect(img.height).to.equal(240)
+              expect(data.originalWidth).to.equal(80)
+              expect(data.originalHeight).to.equal(60)
               done()
             },
             { minHeight: 240 }
