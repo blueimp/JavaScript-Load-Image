@@ -14,9 +14,9 @@
  * https://opensource.org/licenses/MIT
  */
 
-/* global define */
+/* global define, module, require */
 
-;(function (factory) {
+;(function(factory) {
   'use strict'
   if (typeof define === 'function' && define.amd) {
     // Register as an anonymous AMD module:
@@ -27,7 +27,7 @@
     // Browser globals:
     factory(window.loadImage)
   }
-})(function (loadImage) {
+})(function(loadImage) {
   'use strict'
 
   loadImage.IptcMap.prototype.tags = {
@@ -96,28 +96,28 @@
     // 0xca: 'PreviewData'
   }
 
-  loadImage.IptcMap.prototype.getText = function (id) {
+  loadImage.IptcMap.prototype.getText = function(id) {
     var value = this.get(id)
     return String(value)
   }
-  ;(function (iptcMapPrototype) {
+  ;(function(iptcMapPrototype) {
     var tags = iptcMapPrototype.tags
     var map = iptcMapPrototype.map || {}
     var prop
     // Map the tag names to tags:
     for (prop in tags) {
-      if (tags.hasOwnProperty(prop)) {
+      if (Object.prototype.hasOwnProperty.call(tags, prop)) {
         map[tags[prop]] = prop
       }
     }
   })(loadImage.IptcMap.prototype)
 
-  loadImage.IptcMap.prototype.getAll = function () {
+  loadImage.IptcMap.prototype.getAll = function() {
     var map = {}
     var prop
     var id
     for (prop in this) {
-      if (this.hasOwnProperty(prop)) {
+      if (Object.prototype.hasOwnProperty.call(this, prop)) {
         id = this.tags[prop]
         if (id) {
           map[id] = this.getText(id)

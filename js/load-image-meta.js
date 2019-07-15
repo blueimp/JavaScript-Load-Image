@@ -13,9 +13,9 @@
  * https://opensource.org/licenses/MIT
  */
 
-/* global define, Blob */
+/* global define, module, require, DataView, Uint8Array */
 
-;(function (factory) {
+;(function(factory) {
   'use strict'
   if (typeof define === 'function' && define.amd) {
     // Register as an anonymous AMD module:
@@ -26,7 +26,7 @@
     // Browser globals:
     factory(window.loadImage)
   }
-})(function (loadImage) {
+})(function(loadImage) {
   'use strict'
 
   var hasblobSlice =
@@ -37,7 +37,7 @@
 
   loadImage.blobSlice =
     hasblobSlice &&
-    function () {
+    function() {
       var slice = this.slice || this.webkitSlice || this.mozSlice
       return slice.apply(this, arguments)
     }
@@ -56,8 +56,10 @@
   // properties:
   // * maxMetaDataSize: Defines the maximum number of bytes to parse.
   // * disableImageHead: Disables creating the imageHead property.
-  loadImage.parseMetaData = function (file, callback, options, data) {
+  loadImage.parseMetaData = function(file, callback, options, data) {
+    // eslint-disable-next-line no-param-reassign
     options = options || {}
+    // eslint-disable-next-line no-param-reassign
     data = data || {}
     var that = this
     // 256 KiB should contain all EXIF/ICC/IPTC segments:
@@ -73,9 +75,10 @@
       noMetaData ||
       !loadImage.readFile(
         loadImage.blobSlice.call(file, 0, maxMetaDataSize),
-        function (e) {
+        function(e) {
           if (e.target.error) {
             // FileReader error
+            // eslint-disable-next-line no-console
             console.log(e.target.error)
             callback(data)
             return
@@ -110,6 +113,7 @@
                 // but not the marker bytes, so we add 2:
                 markerLength = dataView.getUint16(offset + 2) + 2
                 if (offset + markerLength > dataView.byteLength) {
+                  // eslint-disable-next-line no-console
                   console.log('Invalid meta data: Invalid segment size.')
                   break
                 }
@@ -146,6 +150,7 @@
               }
             }
           } else {
+            // eslint-disable-next-line no-console
             console.log('Invalid JPEG file: Missing JPEG marker.')
           }
           callback(data)
@@ -158,16 +163,16 @@
   }
 
   // Determines if meta data should be loaded automatically:
-  loadImage.hasMetaOption = function (options) {
+  loadImage.hasMetaOption = function(options) {
     return options && options.meta
   }
 
   var originalTransform = loadImage.transform
-  loadImage.transform = function (img, options, callback, file, data) {
+  loadImage.transform = function(img, options, callback, file, data) {
     if (loadImage.hasMetaOption(options)) {
       loadImage.parseMetaData(
         file,
-        function (data) {
+        function(data) {
           originalTransform.call(loadImage, img, options, callback, file, data)
         },
         options,

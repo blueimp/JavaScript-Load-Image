@@ -10,9 +10,9 @@
  * https://opensource.org/licenses/MIT
  */
 
-/* global define */
+/* global define, module, require, Buffer */
 
-;(function (factory) {
+;(function(factory) {
   'use strict'
   if (typeof define === 'function' && define.amd) {
     // Register as an anonymous AMD module:
@@ -23,10 +23,10 @@
     // Browser globals:
     factory(window.loadImage)
   }
-})(function (loadImage) {
+})(function(loadImage) {
   'use strict'
 
-  loadImage.IptcMap = function () {
+  loadImage.IptcMap = function() {
     return this
   }
 
@@ -34,17 +34,25 @@
     ObjectName: 0x5
   }
 
-  loadImage.IptcMap.prototype.get = function (id) {
+  loadImage.IptcMap.prototype.get = function(id) {
     return this[id] || this[this.map[id]]
   }
 
-  loadImage.parseIptcTags = function (
+  loadImage.parseIptcTags = function(
     dataView,
     startOffset,
     sectionLength,
     data
   ) {
-    function getStringFromDB (buffer, start, length) {
+    /**
+     * Retrieves string for the given Buffer and range
+     *
+     * @param {Buffer} buffer IPTC buffer
+     * @param {number} start Range start
+     * @param {number} length Range length
+     * @returns {string} String value
+     */
+    function getStringFromDB(buffer, start, length) {
       var outstr = ''
       for (var n = start; n < start + length; n++) {
         outstr += String.fromCharCode(buffer.getUint8(n))
@@ -65,7 +73,7 @@
           dataSize = dataView.getInt16(segmentStartPos + 3)
           fieldValue = getStringFromDB(dataView, segmentStartPos + 5, dataSize)
           // Check if we already stored a value with this name
-          if (data.iptc.hasOwnProperty(segmentType)) {
+          if (Object.prototype.hasOwnProperty.call(data.iptc, segmentType)) {
             // Value already stored with this name, create multivalue field
             if (data.iptc[segmentType] instanceof Array) {
               data.iptc[segmentType].push(fieldValue)
@@ -81,13 +89,13 @@
     }
   }
 
-  loadImage.parseIptcData = function (dataView, offset, length, data, options) {
+  loadImage.parseIptcData = function(dataView, offset, length, data, options) {
     if (options.disableIptc) {
       return
     }
     var markerLength = offset + length
     // Found '8BIM<EOT><EOT>' ?
-    var isFieldSegmentStart = function (dataView, offset) {
+    var isFieldSegmentStart = function(dataView, offset) {
       return (
         dataView.getUint32(offset) === 0x3842494d &&
         dataView.getUint16(offset + 4) === 0x0404
@@ -107,11 +115,13 @@
         }
         var startOffset = offset + 8 + nameHeaderLength
         if (startOffset > markerLength) {
+          // eslint-disable-next-line no-console
           console.log('Invalid IPTC data: Invalid segment offset.')
           break
         }
         var sectionLength = dataView.getUint16(offset + 6 + nameHeaderLength)
         if (offset + sectionLength > markerLength) {
+          // eslint-disable-next-line no-console
           console.log('Invalid IPTC data: Invalid segment size.')
           break
         }
@@ -125,8 +135,10 @@
           data
         )
       }
+      // eslint-disable-next-line no-param-reassign
       offset++
     }
+    // eslint-disable-next-line no-console
     console.log('No IPTC data at this offset - could be XMP')
   }
 

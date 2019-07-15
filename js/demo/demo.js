@@ -9,9 +9,9 @@
  * https://opensource.org/licenses/MIT
  */
 
-/* global loadImage, HTMLCanvasElement, $ */
+/* global loadImage, $ */
 
-$(function () {
+$(function() {
   'use strict'
 
   var result = $('#result')
@@ -23,13 +23,19 @@ $(function () {
   var coordinates
   var jcropAPI
 
-  function displayTagData (node, tags) {
+  /**
+   * Displays tag data
+   *
+   * @param {*} node jQuery node
+   * @param {object} tags Tags object
+   */
+  function displayTagData(node, tags) {
     var table = node.find('table').empty()
     var row = $('<tr></tr>')
     var cell = $('<td></td>')
     var prop
     for (prop in tags) {
-      if (tags.hasOwnProperty(prop)) {
+      if (Object.prototype.hasOwnProperty.call(tags, prop)) {
         table.append(
           row
             .clone()
@@ -41,12 +47,19 @@ $(function () {
     node.show()
   }
 
-  function displayThumbnailImage (node, thumbnail, options) {
+  /**
+   * Displays the thumbnal image
+   *
+   * @param {*} node jQuery node
+   * @param {string} thumbnail Thumbnail URL
+   * @param {object} [options] Options object
+   */
+  function displayThumbnailImage(node, thumbnail, options) {
     if (thumbnail) {
       thumbNode.empty()
       loadImage(
         thumbnail,
-        function (img) {
+        function(img) {
           node.append(img).show()
         },
         options
@@ -54,7 +67,12 @@ $(function () {
     }
   }
 
-  function displayMetaData (data) {
+  /**
+   * Displays meta data
+   *
+   * @param {object} [data] Meta data object
+   */
+  function displayMetaData(data) {
     if (!data) return
     var exif = data.exif
     var iptc = data.iptc
@@ -69,7 +87,13 @@ $(function () {
     }
   }
 
-  function updateResults (img, data) {
+  /**
+   * Updates the results view
+   *
+   * @param {*} img Image or canvas element
+   * @param {object} [data] Meta data object
+   */
+  function updateResults(img, data) {
     var fileName = currentFile.name
     var href = img.src
     var dataURLStart
@@ -97,7 +121,13 @@ $(function () {
     displayMetaData(data)
   }
 
-  function displayImage (file, options) {
+  /**
+   * Displays the image
+   *
+   * @param {File|Blob|string} file File or Blob object or image URL
+   * @param {object} [options] Options object
+   */
+  function displayImage(file, options) {
     currentFile = file
     if (!loadImage(file, updateResults, options)) {
       result
@@ -112,10 +142,15 @@ $(function () {
     }
   }
 
-  function dropChangeHandler (e) {
-    e.preventDefault()
-    e = e.originalEvent
-    var target = e.dataTransfer || e.target
+  /**
+   * Handles drop and file selection change events
+   *
+   * @param {event} event Drop or file selection change event
+   */
+  function dropChangeHandler(event) {
+    event.preventDefault()
+    var originalEvent = event.originalEvent
+    var target = originalEvent.dataTransfer || originalEvent.target
     var file = target && target.files && target.files[0]
     var options = {
       maxWidth: result.width(),
@@ -144,21 +179,22 @@ $(function () {
   }
 
   $(document)
-    .on('dragover', function (e) {
+    .on('dragover', function(e) {
       e.preventDefault()
-      e = e.originalEvent
-      e.dataTransfer.dropEffect = 'copy'
+      var originalEvent = event.originalEvent
+      originalEvent.dataTransfer.dropEffect = 'copy'
     })
     .on('drop', dropChangeHandler)
 
   $('#file-input').on('change', dropChangeHandler)
 
-  $('#edit').on('click', function (event) {
+  $('#edit').on('click', function(event) {
     event.preventDefault()
     var imgNode = result.find('img, canvas')
     var img = imgNode[0]
     var pixelRatio = window.devicePixelRatio || 1
     imgNode
+      // eslint-disable-next-line new-cap
       .Jcrop(
         {
           setSelect: [
@@ -167,24 +203,24 @@ $(function () {
             img.width / pixelRatio - 40,
             img.height / pixelRatio - 40
           ],
-          onSelect: function (coords) {
+          onSelect: function(coords) {
             coordinates = coords
           },
-          onRelease: function () {
+          onRelease: function() {
             coordinates = null
           }
         },
-        function () {
+        function() {
           jcropAPI = this
         }
       )
       .parent()
-      .on('click', function (event) {
+      .on('click', function(event) {
         event.preventDefault()
       })
   })
 
-  $('#crop').on('click', function (event) {
+  $('#crop').on('click', function(event) {
     event.preventDefault()
     var img = result.find('img, canvas')[0]
     var pixelRatio = window.devicePixelRatio || 1
@@ -205,7 +241,7 @@ $(function () {
     }
   })
 
-  $('#cancel').on('click', function (event) {
+  $('#cancel').on('click', function(event) {
     event.preventDefault()
     if (jcropAPI) {
       jcropAPI.release()

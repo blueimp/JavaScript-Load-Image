@@ -12,9 +12,9 @@
  * https://opensource.org/licenses/MIT
  */
 
-/* global define */
+/* global define, module, require */
 
-;(function (factory) {
+;(function(factory) {
   'use strict'
   if (typeof define === 'function' && define.amd) {
     // Register as an anonymous AMD module:
@@ -25,7 +25,7 @@
     // Browser globals:
     factory(window.loadImage)
   }
-})(function (loadImage) {
+})(function(loadImage) {
   'use strict'
 
   loadImage.ExifMap.prototype.tags = {
@@ -321,7 +321,7 @@
     }
   }
 
-  loadImage.ExifMap.prototype.getText = function (id) {
+  loadImage.ExifMap.prototype.getText = function(id) {
     var value = this.get(id)
     switch (id) {
       case 'LightSource':
@@ -359,24 +359,24 @@
     }
     return String(value)
   }
-  ;(function (exifMapPrototype) {
+  ;(function(exifMapPrototype) {
     var tags = exifMapPrototype.tags
     var map = exifMapPrototype.map
     var prop
     // Map the tag names to tags:
     for (prop in tags) {
-      if (tags.hasOwnProperty(prop)) {
+      if (Object.prototype.hasOwnProperty.call(tags, prop)) {
         map[tags[prop]] = prop
       }
     }
   })(loadImage.ExifMap.prototype)
 
-  loadImage.ExifMap.prototype.getAll = function () {
+  loadImage.ExifMap.prototype.getAll = function() {
     var map = {}
     var prop
     var id
     for (prop in this) {
-      if (this.hasOwnProperty(prop)) {
+      if (Object.prototype.hasOwnProperty.call(this, prop)) {
         id = this.tags[prop]
         if (id) {
           map[id] = this.getText(id)

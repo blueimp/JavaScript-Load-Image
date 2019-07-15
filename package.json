@@ -32,17 +32,37 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "concurrently": "^4.1.0",
-    "eslint": "^5.16.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.17.3",
-    "eslint-plugin-node": "^9.1.0",
-    "eslint-plugin-promise": "^4.1.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "get-port-cli": "^2.0.0",
-    "http-server": "^0.11.1",
-    "mocha-chrome": "^2.0.0",
-    "uglify-js": "^3.6.0"
+    "concurrently": "4",
+    "eslint": "6",
+    "eslint-config-blueimp": "1",
+    "eslint-config-prettier": "6",
+    "eslint-plugin-jsdoc": "15",
+    "eslint-plugin-prettier": "3",
+    "prettier": "1",
+    "get-port-cli": "2",
+    "http-server": "0",
+    "mocha-chrome": "2",
+    "uglify-js": "3"
+  },
+  "eslintConfig": {
+    "extends": [
+      "blueimp",
+      "plugin:jsdoc/recommended",
+      "plugin:prettier/recommended"
+    ],
+    "env": {
+      "browser": true
+    }
+  },
+  "eslintIgnore": [
+    "js/*.min.js",
+    "js/vendor",
+    "test/vendor"
+  ],
+  "prettier": {
+    "proseWrap": "always",
+    "semi": false,
+    "singleQuote": true
   },
   "scripts": {
     "lint": "eslint .",
@@ -55,5 +75,9 @@
     "version": "npm run build && git add -A js",
     "postversion": "git push --tags origin master master:gh-pages && npm publish"
   },
+  "files": [
+    "js/*.js",
+    "js/*.js.map"
+  ],
   "main": "js/index.js"
 }
