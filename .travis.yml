@@ -1,9 +1,0 @@
-dist: trusty
-addons:
-  chrome: stable
-# Using sudo as workaround for
-# https://github.com/shellscape/mocha-chrome/pull/21
-sudo: required
-language: node_js
-node_js:
-  - "stable"
