@@ -875,7 +875,10 @@
     })
   })
 
-  if ('fetch' in window && 'Request' in window) {
+  if (
+    ('fetch' in window && 'Request' in window) ||
+    ('XMLHttpRequest' in window && 'ProgressEvent' in window)
+  ) {
     describe('Fetch', function() {
       it('Should fetch image URL as blob if meta option is true', function(done) {
         expect(
