@@ -95,14 +95,14 @@ $(function() {
    */
   function updateResults(img, data) {
     var fileName = currentFile.name
-    var href = img.src
+    var href = currentFile.url || img.src
     var dataURLStart
     var content
     if (!(img.src || img instanceof HTMLCanvasElement)) {
       content = $('<span>Loading image file failed</span>')
     } else {
       if (!href) {
-        href = img.toDataURL(currentFile.type + 'REMOVEME')
+        href = img.toDataURL(currentFile.type)
         // Check if file type is supported for the dataURL export:
         dataURLStart = 'data:' + currentFile.type
         if (href.slice(0, dataURLStart.length) !== dataURLStart) {
@@ -125,10 +125,18 @@ $(function() {
    * Displays the image
    *
    * @param {File|Blob|string} file File or Blob object or image URL
-   * @param {object} [options] Options object
    */
-  function displayImage(file, options) {
-    currentFile = file
+  function displayImage(file) {
+    var options = {
+      maxWidth: result.width(),
+      canvas: true,
+      pixelRatio: window.devicePixelRatio,
+      downsamplingRatio: 0.5,
+      orientation: true
+    }
+    exifNode.hide()
+    iptcNode.hide()
+    thumbNode.hide()
     if (!loadImage(file, updateResults, options)) {
       result
         .children()
@@ -147,25 +155,29 @@ $(function() {
    *
    * @param {event} event Drop or file selection change event
    */
-  function dropChangeHandler(event) {
+  function fileChangeHandler(event) {
     event.preventDefault()
     var originalEvent = event.originalEvent
     var target = originalEvent.dataTransfer || originalEvent.target
     var file = target && target.files && target.files[0]
-    var options = {
-      maxWidth: result.width(),
-      canvas: true,
-      pixelRatio: window.devicePixelRatio,
-      downsamplingRatio: 0.5,
-      orientation: true
-    }
     if (!file) {
       return
     }
-    exifNode.hide()
-    iptcNode.hide()
-    thumbNode.hide()
-    displayImage(file, options)
+    currentFile = file
+    displayImage(file)
+  }
+
+  /**
+   * Handles URL change events
+   */
+  function urlChangeHandler() {
+    var url = $(this).val()
+    if (!url || (currentFile && currentFile.url === url)) return
+    currentFile = {
+      name: url.replace(/^.*\//g, ''),
+      url: url
+    }
+    displayImage(url)
   }
 
   // Hide URL/FileReader API requirement message in capable browsers:
@@ -182,11 +194,13 @@ $(function() {
     .on('dragover', function(e) {
       e.preventDefault()
       var originalEvent = event.originalEvent
-      originalEvent.dataTransfer.dropEffect = 'copy'
+      if (originalEvent) originalEvent.dataTransfer.dropEffect = 'copy'
     })
-    .on('drop', dropChangeHandler)
+    .on('drop', fileChangeHandler)
 
-  $('#file-input').on('change', dropChangeHandler)
+  $('#file-input').on('change', fileChangeHandler)
+
+  $('#url').on('change paste input', urlChangeHandler)
 
   $('#edit').on('click', function(event) {
     event.preventDefault()
@@ -243,8 +257,6 @@ $(function() {
 
   $('#cancel').on('click', function(event) {
     event.preventDefault()
-    if (jcropAPI) {
-      jcropAPI.release()
-    }
+    if (jcropAPI) jcropAPI.release()
   })
 })
