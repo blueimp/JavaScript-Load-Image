@@ -37,7 +37,7 @@
       loadImage.fetchBlob(
         file,
         function(blob) {
-          if (blob) {
+          if (blob && loadImage.isInstanceOf('Blob', blob)) {
             // eslint-disable-next-line no-param-reassign
             file = blob
             url = loadImage.createObjectURL(file)
