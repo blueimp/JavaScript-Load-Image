@@ -1,0 +1,34 @@
+name: Node CI
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: npm install
+        run: npm install
+        env:
+          CI: true
+      - name: lint
+        run: npm run lint
+        env:
+          CI: true
+
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: mocha
+        run: docker-compose run --rm mocha
+      - name: docker-compose logs
+        if: always()
+        run: docker-compose logs nginx
+      - name: docker-compose down
+        if: always()
+        run: docker-compose down -v
