@@ -207,15 +207,16 @@ $(function () {
     var imgNode = result.find('img, canvas')
     var img = imgNode[0]
     var pixelRatio = window.devicePixelRatio || 1
+    var margin = img.width / pixelRatio >= 140 ? 40 : 0
     imgNode
       // eslint-disable-next-line new-cap
       .Jcrop(
         {
           setSelect: [
-            40,
-            40,
-            img.width / pixelRatio - 40,
-            img.height / pixelRatio - 40
+            margin,
+            margin,
+            img.width / pixelRatio - margin,
+            img.height / pixelRatio - margin
           ],
           onSelect: function (coords) {
             coordinates = coords
