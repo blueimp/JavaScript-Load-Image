@@ -123,11 +123,8 @@
       expect(
         loadImage(blobGIF, function (img) {
           loadImage(img.src, function (img2) {
-            if (!window.callPhantom) {
-              // revokeObjectUrl doesn't seem to have an effect in PhantomJS
-              expect(img2).to.be.an.instanceOf(window.Event)
-              expect(img2.type).to.equal('error')
-            }
+            expect(img2).to.be.an.instanceOf(window.Event)
+            expect(img2.type).to.equal('error')
             done()
           })
         })
