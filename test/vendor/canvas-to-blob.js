@@ -14,14 +14,14 @@
 
 /* global define, Uint8Array, ArrayBuffer, module */
 
-;(function(window) {
+;(function (window) {
   'use strict'
 
   var CanvasPrototype =
     window.HTMLCanvasElement && window.HTMLCanvasElement.prototype
   var hasBlobConstructor =
     window.Blob &&
-    (function() {
+    (function () {
       try {
         return Boolean(new Blob())
       } catch (e) {
@@ -31,7 +31,7 @@
   var hasArrayBufferViewSupport =
     hasBlobConstructor &&
     window.Uint8Array &&
-    (function() {
+    (function () {
       try {
         return new Blob([new Uint8Array(100)]).size === 100
       } catch (e) {
@@ -49,7 +49,7 @@
     window.atob &&
     window.ArrayBuffer &&
     window.Uint8Array &&
-    function(dataURI) {
+    function (dataURI) {
       var matches,
         mediaType,
         isBase64,
@@ -95,9 +95,9 @@
     }
   if (window.HTMLCanvasElement && !CanvasPrototype.toBlob) {
     if (CanvasPrototype.mozGetAsFile) {
-      CanvasPrototype.toBlob = function(callback, type, quality) {
+      CanvasPrototype.toBlob = function (callback, type, quality) {
         var self = this
-        setTimeout(function() {
+        setTimeout(function () {
           if (quality && CanvasPrototype.toDataURL && dataURLtoBlob) {
             callback(dataURLtoBlob(self.toDataURL(type, quality)))
           } else {
@@ -106,16 +106,16 @@
         })
       }
     } else if (CanvasPrototype.toDataURL && dataURLtoBlob) {
-      CanvasPrototype.toBlob = function(callback, type, quality) {
+      CanvasPrototype.toBlob = function (callback, type, quality) {
         var self = this
-        setTimeout(function() {
+        setTimeout(function () {
           callback(dataURLtoBlob(self.toDataURL(type, quality)))
         })
       }
     }
   }
   if (typeof define === 'function' && define.amd) {
-    define(function() {
+    define(function () {
       return dataURLtoBlob
     })
   } else if (typeof module === 'object' && module.exports) {

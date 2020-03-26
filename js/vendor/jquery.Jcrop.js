@@ -1,9 +1,9 @@
 /**
- * jquery.Jcrop.js v0.9.12
+ * jquery.Jcrop.js v0.9.15
  * jQuery Image Cropping Plugin - released under MIT License 
  * Author: Kelly Hallman <khallman@gmail.com>
  * http://github.com/tapmodo/Jcrop
- * Copyright (c) 2008-2013 Tapmodo Interactive LLC {{{
+ * Copyright (c) 2008-2018 Tapmodo Interactive LLC {{{
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -228,10 +228,10 @@
     function newSelection(e) //{{{
     {
       if (options.disabled) {
-        return false;
+        return;
       }
       if (!options.allowSelect) {
-        return false;
+        return;
       }
       btndown = true;
       docOffset = getPos($img);
