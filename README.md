@@ -209,8 +209,16 @@ The optional third argument to **loadImage()** is a map of options:
   Defaults to `1` and requires `canvas: true`.
 - **downsamplingRatio**: Defines the ratio in which the image is downsampled.  
   By default, images are downsampled in one step. With a ratio of `0.5`, each
-  step scales the image to half the size, before reaching the target dimensions.  
+  step scales the image to half the size, before reaching the target
+  dimensions.  
   Requires `canvas: true`.
+- **imageSmoothingEnabled**: If set to `false`,
+  [disables image smoothing](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/imageSmoothingEnabled).  
+  Defaults to `true` and requires `canvas: true`.
+- **imageSmoothingQuality**: Sets the
+  [quality of image smoothing](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/imageSmoothingQuality).  
+  Possible values: `'low'`, `'medium'`, `'high'`  
+  Defaults to `'low'` and requires `canvas: true`.
 - **crop**: Crops the image to the maxWidth/maxHeight constraints if set to
   `true`.  
   Enabling the `crop` option also enables the `canvas` option.

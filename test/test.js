@@ -398,6 +398,114 @@
         ).to.be.ok
       })
     })
+
+    describe('image smoothing', function () {
+      if (
+        !document.createElement('canvas').getContext('2d').imageSmoothingEnabled
+      ) {
+        return
+      }
+
+      it('imageSmoothingEnabled defaults to true', function (done) {
+        expect(
+          loadImage(
+            blobGIF,
+            function (img) {
+              expect(img.width).to.equal(160)
+              expect(img.getContext('2d').imageSmoothingEnabled).to.equal(true)
+              done()
+            },
+            { minWidth: 160, canvas: true }
+          )
+        ).to.be.ok
+      })
+
+      it('Sets imageSmoothingEnabled to false', function (done) {
+        expect(
+          loadImage(
+            blobGIF,
+            function (img) {
+              expect(img.width).to.equal(160)
+              expect(img.getContext('2d').imageSmoothingEnabled).to.equal(false)
+              done()
+            },
+            { minWidth: 160, canvas: true, imageSmoothingEnabled: false }
+          )
+        ).to.be.ok
+      })
+
+      if (
+        document.createElement('canvas').getContext('2d')
+          .imageSmoothingQuality !== 'low'
+      ) {
+        return
+      }
+
+      it('imageSmoothingQuality defaults to "low"', function (done) {
+        expect(
+          loadImage(
+            blobGIF,
+            function (img) {
+              expect(img.width).to.equal(160)
+              expect(img.getContext('2d').imageSmoothingQuality).to.equal('low')
+              done()
+            },
+            { minWidth: 160, canvas: true }
+          )
+        ).to.be.ok
+      })
+
+      it('Sets imageSmoothingQuality to "medium"', function (done) {
+        expect(
+          loadImage(
+            blobGIF,
+            function (img) {
+              expect(img.width).to.equal(160)
+              expect(img.getContext('2d').imageSmoothingQuality).to.equal(
+                'medium'
+              )
+              done()
+            },
+            { minWidth: 160, canvas: true, imageSmoothingQuality: 'medium' }
+          )
+        ).to.be.ok
+      })
+
+      it('Sets imageSmoothingQuality to "high"', function (done) {
+        expect(
+          loadImage(
+            blobGIF,
+            function (img) {
+              expect(img.width).to.equal(160)
+              expect(img.getContext('2d').imageSmoothingQuality).to.equal(
+                'high'
+              )
+              done()
+            },
+            { minWidth: 160, canvas: true, imageSmoothingQuality: 'high' }
+          )
+        ).to.be.ok
+      })
+
+      it('Ignores imageSmoothingQuality if imageSmoothingEnabled is false', function (done) {
+        expect(
+          loadImage(
+            blobGIF,
+            function (img) {
+              expect(img.width).to.equal(160)
+              expect(img.getContext('2d').imageSmoothingQuality).to.equal('low')
+              done()
+            },
+            {
+              minWidth: 160,
+              canvas: true,
+              imageSmoothingQuality: 'high',
+              imageSmoothingEnabled: false
+            }
+          )
+        ).to.be.ok
+      })
+    })
   })
 
   describe('Cropping', function () {

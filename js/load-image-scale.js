@@ -85,21 +85,26 @@
     destX,
     destY,
     destWidth,
-    destHeight
+    destHeight,
+    options
   ) {
-    canvas
-      .getContext('2d')
-      .drawImage(
-        img,
-        sourceX,
-        sourceY,
-        sourceWidth,
-        sourceHeight,
-        destX,
-        destY,
-        destWidth,
-        destHeight
-      )
+    var ctx = canvas.getContext('2d')
+    if (options.imageSmoothingEnabled === false) {
+      ctx.imageSmoothingEnabled = false
+    } else if (options.imageSmoothingQuality) {
+      ctx.imageSmoothingQuality = options.imageSmoothingQuality
+    }
+    ctx.drawImage(
+      img,
+      sourceX,
+      sourceY,
+      sourceWidth,
+      sourceHeight,
+      destX,
+      destY,
+      destWidth,
+      destHeight
+    )
     return canvas
   }
 
@@ -246,7 +251,8 @@
             0,
             0,
             canvas.width,
-            canvas.height
+            canvas.height,
+            options
           )
           sourceX = 0
           sourceY = 0
@@ -266,7 +272,8 @@
             0,
             0,
             sourceWidth,
-            sourceHeight
+            sourceHeight,
+            options
           )
         }
       }
@@ -283,7 +290,8 @@
         0,
         0,
         destWidth,
-        destHeight
+        destHeight,
+        options
       )
     }
     img.width = destWidth
