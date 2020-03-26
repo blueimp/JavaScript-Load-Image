@@ -64,15 +64,15 @@ Or alternatively, choose which components you want to include:
 In your application code, use the **loadImage()** function like this:
 
 ```js
-document.getElementById("file-input").onchange = function(e) {
+document.getElementById('file-input').onchange = function (e) {
   loadImage(
     e.target.files[0],
-    function(img) {
-      document.body.appendChild(img);
+    function (img) {
+      document.body.appendChild(img)
     },
     { maxWidth: 600 } // Options
-  );
-};
+  )
+}
 ```
 
 ### Image scaling
@@ -84,7 +84,7 @@ image:
 var scaledImage = loadImage.scale(
   img, // img or canvas element
   { maxWidth: 600 }
-);
+)
 ```
 
 ## Requirements
@@ -112,18 +112,18 @@ It always returns a HTML
 passing an image URL:
 
 ```js
-document.getElementById("file-input").onchange = function(e) {
+document.getElementById('file-input').onchange = function (e) {
   var loadingImage = loadImage(
     e.target.files[0],
-    function(img) {
-      document.body.appendChild(img);
+    function (img) {
+      document.body.appendChild(img)
     },
     { maxWidth: 600 }
-  );
+  )
   if (!loadingImage) {
     // Alternative code ...
   }
-};
+}
 ```
 
 The **img** element or
@@ -132,16 +132,16 @@ the **loadImage()** function allows to abort the loading process by setting the
 **onload** and **onerror** event handlers to null:
 
 ```js
-document.getElementById("file-input").onchange = function(e) {
+document.getElementById('file-input').onchange = function (e) {
   var loadingImage = loadImage(
     e.target.files[0],
-    function(img) {
-      document.body.appendChild(img);
+    function (img) {
+      document.body.appendChild(img)
     },
     { maxWidth: 600 }
-  );
-  loadingImage.onload = loadingImage.onerror = null;
-};
+  )
+  loadingImage.onload = loadingImage.onerror = null
+}
 ```
 
 The second argument must be a **callback** function, which is called when the
@@ -154,20 +154,20 @@ The second is on object with the original image dimensions as properties and
 potentially additional [meta data](#meta-data-parsing):
 
 ```js
-var imageUrl = "https://example.org/image.png";
+var imageUrl = 'https://example.org/image.png'
 loadImage(
   imageUrl,
-  function(img, data) {
-    if (img.type === "error") {
-      console.error("Error loading image " + imageUrl);
+  function (img, data) {
+    if (img.type === 'error') {
+      console.error('Error loading image ' + imageUrl)
     } else {
-      document.body.appendChild(img);
-      console.log("Original image width: ", data.originalWidth);
-      console.log("Original image height: ", data.originalHeight);
+      document.body.appendChild(img)
+      console.log('Original image width: ', data.originalWidth)
+      console.log('Original image height: ', data.originalHeight)
     }
   },
   { maxWidth: 600 }
-);
+)
 ```
 
 ## Options
@@ -242,8 +242,8 @@ They can be used the following way:
 ```js
 loadImage(
   fileOrBlobOrUrl,
-  function(img) {
-    document.body.appendChild(img);
+  function (img) {
+    document.body.appendChild(img)
   },
   {
     maxWidth: 600,
@@ -252,7 +252,7 @@ loadImage(
     minHeight: 50,
     canvas: true
   }
-);
+)
 ```
 
 All settings are optional. By default, the image is returned as HTML **img**
@@ -266,13 +266,13 @@ meta data automatically with the `meta` option:
 ```js
 loadImage(
   fileOrBlobOrUrl,
-  function(img, data) {
-    console.log("Original image head: ", data.imageHead);
-    console.log("Exif data: ", data.exif); // requires exif extension
-    console.log("IPTC data: ", data.iptc); // requires iptc extension
+  function (img, data) {
+    console.log('Original image head: ', data.imageHead)
+    console.log('Exif data: ', data.exif) // requires exif extension
+    console.log('IPTC data: ', data.iptc) // requires iptc extension
   },
   { meta: true }
-);
+)
 ```
 
 The extension also provides the method **loadImage.parseMetaData**, which can be
@@ -281,9 +281,9 @@ used the following way:
 ```js
 loadImage.parseMetaData(
   fileOrBlob,
-  function(data) {
+  function (data) {
     if (!data.imageHead) {
-      return;
+      return
     }
     // Combine data.imageHead with the image body of a resized file
     // to create scaled images with the original image meta data, e.g.:
@@ -295,13 +295,13 @@ loadImage.parseMetaData(
         loadImage.blobSlice.call(resizedImageBlob, 20)
       ],
       { type: resizedImageBlob.type }
-    );
+    )
   },
   {
     maxMetaDataSize: 262144,
     disableImageHead: false
   }
-);
+)
 ```
 
 **Note:**  
@@ -322,14 +322,14 @@ Exif data could be found in the given image.
 The **exif** object stores the parsed Exif tags:
 
 ```js
-var orientation = data.exif[0x0112];
+var orientation = data.exif[0x0112]
 ```
 
 It also provides an **exif.get()** method to retrieve the tag value via the
 tag's mapped name:
 
 ```js
-var orientation = data.exif.get("Orientation");
+var orientation = data.exif.get('Orientation')
 ```
 
 By default, the only available mapped names are **Orientation** and
@@ -339,10 +339,10 @@ become available, as well as two additional methods, **exif.getText()** and
 **exif.getAll()**:
 
 ```js
-var flashText = data.exif.getText("Flash"); // e.g.: 'Flash fired, auto mode',
+var flashText = data.exif.getText('Flash') // e.g.: 'Flash fired, auto mode',
 
 // A map of all parsed tags with their mapped names/text as keys/values:
-var allTags = data.exif.getAll();
+var allTags = data.exif.getAll()
 ```
 
 The Exif parser also adds additional options for the parseMetaData method, to
@@ -361,14 +361,14 @@ IPTC data could be found in the given image.
 The **iptc** object stores the parsed IPTC tags:
 
 ```js
-var objectname = data.iptc[0x5];
+var objectname = data.iptc[0x5]
 ```
 
 It also provides an **iptc.get()** method to retrieve the tag value via the
 tag's mapped name:
 
 ```js
-var objectname = data.iptc.get("ObjectName");
+var objectname = data.iptc.get('ObjectName')
 ```
 
 By default, the only available mapped names are **ObjectName**.  
@@ -377,10 +377,10 @@ become available, as well as two additional methods, **iptc.getText()** and
 **iptc.getAll()**:
 
 ```js
-var keywords = data.iptc.getText("Keywords"); // e.g.: ['Weather','Sky']
+var keywords = data.iptc.getText('Keywords') // e.g.: ['Weather','Sky']
 
 // A map of all parsed tags with their mapped names/text as keys/values:
-var allTags = data.iptc.getAll();
+var allTags = data.iptc.getAll()
 ```
 
 The IPTC parser also adds additional options for the parseMetaData method, to
