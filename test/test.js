@@ -872,40 +872,42 @@
     })
   })
 
-  if (
-    ('fetch' in window && 'Request' in window) ||
-    ('XMLHttpRequest' in window && 'ProgressEvent' in window)
-  ) {
-    describe('Fetch', function () {
-      it('Should fetch image URL as blob if meta option is true', function (done) {
-        expect(
-          loadImage(
-            imageUrlJPEG,
-            function (img, data) {
-              expect(data).to.be.ok
-              expect(data.imageHead).to.be.ok
-              expect(data.exif).to.be.ok
-              expect(data.exif.get('Orientation')).to.equal(6)
-              expect(data.iptc).to.be.ok
-              expect(data.iptc.get('ObjectName')).to.equal('objectname')
-              done()
-            },
-            { meta: true }
-          )
-        ).to.be.ok
-      })
+  describe('Fetch', function () {
+    if (
+      !('fetch' in window && 'Request' in window) &&
+      !('XMLHttpRequest' in window && 'ProgressEvent' in window)
+    ) {
+      return
+    }
 
-      it('Should load image URL as img if meta option is false', function (done) {
-        expect(
-          loadImage(imageUrlJPEG, function (img, data) {
-            expect(data.imageHead).to.be.undefined
-            expect(data.exif).to.be.undefined
-            expect(img.width).to.equal(2)
-            expect(img.height).to.equal(1)
+    it('Should fetch image URL as blob if meta option is true', function (done) {
+      expect(
+        loadImage(
+          imageUrlJPEG,
+          function (img, data) {
+            expect(data).to.be.ok
+            expect(data.imageHead).to.be.ok
+            expect(data.exif).to.be.ok
+            expect(data.exif.get('Orientation')).to.equal(6)
+            expect(data.iptc).to.be.ok
+            expect(data.iptc.get('ObjectName')).to.equal('objectname')
             done()
-          })
-        ).to.be.ok
-      })
+          },
+          { meta: true }
+        )
+      ).to.be.ok
     })
-  }
+
+    it('Should load image URL as img if meta option is false', function (done) {
+      expect(
+        loadImage(imageUrlJPEG, function (img, data) {
+          expect(data.imageHead).to.be.undefined
+          expect(data.exif).to.be.undefined
+          expect(img.width).to.equal(2)
+          expect(img.height).to.equal(1)
+          done()
+        })
+      ).to.be.ok
+    })
+  })
 })(this.chai.expect, this.loadImage)
