@@ -16,7 +16,7 @@
 
 /* global define, module, require */
 
-;(function(factory) {
+;(function (factory) {
   'use strict'
   if (typeof define === 'function' && define.amd) {
     // Register as an anonymous AMD module:
@@ -27,7 +27,7 @@
     // Browser globals:
     factory(window.loadImage)
   }
-})(function(loadImage) {
+})(function (loadImage) {
   'use strict'
 
   loadImage.IptcMap.prototype.tags = {
@@ -96,11 +96,11 @@
     // 0xca: 'PreviewData'
   }
 
-  loadImage.IptcMap.prototype.getText = function(id) {
+  loadImage.IptcMap.prototype.getText = function (id) {
     var value = this.get(id)
     return String(value)
   }
-  ;(function(iptcMapPrototype) {
+  ;(function (iptcMapPrototype) {
     var tags = iptcMapPrototype.tags
     var map = iptcMapPrototype.map || {}
     var prop
@@ -112,7 +112,7 @@
     }
   })(loadImage.IptcMap.prototype)
 
-  loadImage.IptcMap.prototype.getAll = function() {
+  loadImage.IptcMap.prototype.getAll = function () {
     var map = {}
     var prop
     var id

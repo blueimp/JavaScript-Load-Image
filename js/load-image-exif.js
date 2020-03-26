@@ -13,7 +13,7 @@
 
 /* eslint-disable no-console */
 
-;(function(factory) {
+;(function (factory) {
   'use strict'
   if (typeof define === 'function' && define.amd) {
     // Register as an anonymous AMD module:
@@ -24,10 +24,10 @@
     // Browser globals:
     factory(window.loadImage)
   }
-})(function(loadImage) {
+})(function (loadImage) {
   'use strict'
 
-  loadImage.ExifMap = function() {
+  loadImage.ExifMap = function () {
     return this
   }
 
@@ -35,11 +35,11 @@
     Orientation: 0x0112
   }
 
-  loadImage.ExifMap.prototype.get = function(id) {
+  loadImage.ExifMap.prototype.get = function (id) {
     return this[id] || this[this.map[id]]
   }
 
-  loadImage.getExifThumbnail = function(dataView, offset, length) {
+  loadImage.getExifThumbnail = function (dataView, offset, length) {
     if (!length || offset + length > dataView.byteLength) {
       console.log('Invalid Exif data: Invalid thumbnail data.')
       return
@@ -52,14 +52,14 @@
   loadImage.exifTagTypes = {
     // byte, 8-bit unsigned int:
     1: {
-      getValue: function(dataView, dataOffset) {
+      getValue: function (dataView, dataOffset) {
         return dataView.getUint8(dataOffset)
       },
       size: 1
     },
     // ascii, 8-bit byte:
     2: {
-      getValue: function(dataView, dataOffset) {
+      getValue: function (dataView, dataOffset) {
         return String.fromCharCode(dataView.getUint8(dataOffset))
       },
       size: 1,
@@ -67,21 +67,21 @@
     },
     // short, 16 bit int:
     3: {
-      getValue: function(dataView, dataOffset, littleEndian) {
+      getValue: function (dataView, dataOffset, littleEndian) {
         return dataView.getUint16(dataOffset, littleEndian)
       },
       size: 2
     },
     // long, 32 bit int:
     4: {
-      getValue: function(dataView, dataOffset, littleEndian) {
+      getValue: function (dataView, dataOffset, littleEndian) {
         return dataView.getUint32(dataOffset, littleEndian)
       },
       size: 4
     },
     // rational = two long values, first is numerator, second is denominator:
     5: {
-      getValue: function(dataView, dataOffset, littleEndian) {
+      getValue: function (dataView, dataOffset, littleEndian) {
         return (
           dataView.getUint32(dataOffset, littleEndian) /
           dataView.getUint32(dataOffset + 4, littleEndian)
@@ -91,14 +91,14 @@
     },
     // slong, 32 bit signed int:
     9: {
-      getValue: function(dataView, dataOffset, littleEndian) {
+      getValue: function (dataView, dataOffset, littleEndian) {
         return dataView.getInt32(dataOffset, littleEndian)
       },
       size: 4
     },
     // srational, two slongs, first is numerator, second is denominator:
     10: {
-      getValue: function(dataView, dataOffset, littleEndian) {
+      getValue: function (dataView, dataOffset, littleEndian) {
         return (
           dataView.getInt32(dataOffset, littleEndian) /
           dataView.getInt32(dataOffset + 4, littleEndian)
@@ -110,7 +110,7 @@
   // undefined, 8-bit byte, value depending on field:
   loadImage.exifTagTypes[7] = loadImage.exifTagTypes[1]
 
-  loadImage.getExifValue = function(
+  loadImage.getExifValue = function (
     dataView,
     tiffOffset,
     offset,
@@ -167,7 +167,7 @@
     return values
   }
 
-  loadImage.parseExifTag = function(
+  loadImage.parseExifTag = function (
     dataView,
     tiffOffset,
     offset,
@@ -185,7 +185,7 @@
     )
   }
 
-  loadImage.parseExifTags = function(
+  loadImage.parseExifTags = function (
     dataView,
     tiffOffset,
     dirOffset,
@@ -216,7 +216,7 @@
     return dataView.getUint32(dirEndOffset, littleEndian)
   }
 
-  loadImage.parseExifData = function(dataView, offset, length, data, options) {
+  loadImage.parseExifData = function (dataView, offset, length, data, options) {
     if (options.disableExif) {
       return
     }

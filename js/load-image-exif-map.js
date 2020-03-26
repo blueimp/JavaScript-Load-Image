@@ -14,7 +14,7 @@
 
 /* global define, module, require */
 
-;(function(factory) {
+;(function (factory) {
   'use strict'
   if (typeof define === 'function' && define.amd) {
     // Register as an anonymous AMD module:
@@ -25,7 +25,7 @@
     // Browser globals:
     factory(window.loadImage)
   }
-})(function(loadImage) {
+})(function (loadImage) {
   'use strict'
 
   loadImage.ExifMap.prototype.tags = {
@@ -321,7 +321,7 @@
     }
   }
 
-  loadImage.ExifMap.prototype.getText = function(id) {
+  loadImage.ExifMap.prototype.getText = function (id) {
     var value = this.get(id)
     switch (id) {
       case 'LightSource':
@@ -359,7 +359,7 @@
     }
     return String(value)
   }
-  ;(function(exifMapPrototype) {
+  ;(function (exifMapPrototype) {
     var tags = exifMapPrototype.tags
     var map = exifMapPrototype.map
     var prop
@@ -371,7 +371,7 @@
     }
   })(loadImage.ExifMap.prototype)
 
-  loadImage.ExifMap.prototype.getAll = function() {
+  loadImage.ExifMap.prototype.getAll = function () {
     var map = {}
     var prop
     var id

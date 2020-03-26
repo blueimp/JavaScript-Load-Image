@@ -11,7 +11,7 @@
 
 /* global define, webkitURL, module */
 
-;(function($) {
+;(function ($) {
   'use strict'
 
   /**
@@ -27,16 +27,16 @@
   function loadImage(file, callback, options) {
     var img = document.createElement('img')
     var url
-    img.onerror = function(event) {
+    img.onerror = function (event) {
       return loadImage.onerror(img, event, file, callback, options)
     }
-    img.onload = function(event) {
+    img.onload = function (event) {
       return loadImage.onload(img, event, file, callback, options)
     }
     if (typeof file === 'string') {
       loadImage.fetchBlob(
         file,
-        function(blob) {
+        function (blob) {
           if (blob && loadImage.isInstanceOf('Blob', blob)) {
             // eslint-disable-next-line no-param-reassign
             file = blob
@@ -63,7 +63,7 @@
         img.src = url
         return img
       }
-      return loadImage.readFile(file, function(e) {
+      return loadImage.readFile(file, function (e) {
         var target = e.target
         if (target && target.result) {
           img.src = target.result
@@ -96,27 +96,27 @@
   // If the callback given to this function returns a blob, it is used as image
   // source instead of the original url and overrides the file argument used in
   // the onload and onerror event callbacks:
-  loadImage.fetchBlob = function(url, callback) {
+  loadImage.fetchBlob = function (url, callback) {
     callback()
   }
 
-  loadImage.isInstanceOf = function(type, obj) {
+  loadImage.isInstanceOf = function (type, obj) {
     // Cross-frame instanceof check
     return Object.prototype.toString.call(obj) === '[object ' + type + ']'
   }
 
-  loadImage.transform = function(img, options, callback, file, data) {
+  loadImage.transform = function (img, options, callback, file, data) {
     callback(img, data)
   }
 
-  loadImage.onerror = function(img, event, file, callback, options) {
+  loadImage.onerror = function (img, event, file, callback, options) {
     revokeHelper(img, options)
     if (callback) {
       callback.call(img, event)
     }
   }
 
-  loadImage.onload = function(img, event, file, callback, options) {
+  loadImage.onload = function (img, event, file, callback, options) {
     revokeHelper(img, options)
     if (callback) {
       loadImage.transform(img, options, callback, file, {
@@ -126,18 +126,18 @@
     }
   }
 
-  loadImage.createObjectURL = function(file) {
+  loadImage.createObjectURL = function (file) {
     return urlAPI ? urlAPI.createObjectURL(file) : false
   }
 
-  loadImage.revokeObjectURL = function(url) {
+  loadImage.revokeObjectURL = function (url) {
     return urlAPI ? urlAPI.revokeObjectURL(url) : false
   }
 
   // Loads a given File object via FileReader interface,
   // invokes the callback with the event object (load or error).
   // The result can be read via event.target.result:
-  loadImage.readFile = function(file, callback, method) {
+  loadImage.readFile = function (file, callback, method) {
     if ($.FileReader) {
       var fileReader = new FileReader()
       fileReader.onload = fileReader.onerror = callback
@@ -152,7 +152,7 @@
   }
 
   if (typeof define === 'function' && define.amd) {
-    define(function() {
+    define(function () {
       return loadImage
     })
   } else if (typeof module === 'object' && module.exports) {

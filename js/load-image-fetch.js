@@ -11,7 +11,7 @@
 
 /* global define, module, require */
 
-;(function(factory) {
+;(function (factory) {
   'use strict'
   if (typeof define === 'function' && define.amd) {
     // Register as an anonymous AMD module:
@@ -22,18 +22,18 @@
     // Browser globals:
     factory(window.loadImage)
   }
-})(function(loadImage) {
+})(function (loadImage) {
   'use strict'
 
   if (typeof fetch !== 'undefined' && typeof Request !== 'undefined') {
-    loadImage.fetchBlob = function(url, callback, options) {
+    loadImage.fetchBlob = function (url, callback, options) {
       if (loadImage.hasMetaOption(options)) {
         fetch(new Request(url, options))
-          .then(function(response) {
+          .then(function (response) {
             return response.blob()
           })
           .then(callback)
-          .catch(function(err) {
+          .catch(function (err) {
             console.log(err) // eslint-disable-line no-console
             callback()
           })
@@ -46,23 +46,23 @@
     typeof XMLHttpRequest !== 'undefined' &&
     typeof ProgressEvent !== 'undefined'
   ) {
-    loadImage.fetchBlob = function(url, callback, options) {
+    loadImage.fetchBlob = function (url, callback, options) {
       if (loadImage.hasMetaOption(options)) {
         // eslint-disable-next-line no-param-reassign
         options = options || {}
         var req = new XMLHttpRequest()
         req.open(options.method || 'GET', url)
         if (options.headers) {
-          Object.keys(options.headers).forEach(function(key) {
+          Object.keys(options.headers).forEach(function (key) {
             req.setRequestHeader(key, options.headers[key])
           })
         }
         req.withCredentials = options.credentials === 'include'
         req.responseType = 'blob'
-        req.onload = function() {
+        req.onload = function () {
           callback(req.response)
         }
-        req.onerror = req.onabort = req.ontimeout = function(e) {
+        req.onerror = req.onabort = req.ontimeout = function (e) {
           console.log(e) // eslint-disable-line no-console
           callback()
         }

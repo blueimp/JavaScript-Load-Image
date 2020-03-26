@@ -12,7 +12,7 @@
 
 /* global define, module, require, Buffer */
 
-;(function(factory) {
+;(function (factory) {
   'use strict'
   if (typeof define === 'function' && define.amd) {
     // Register as an anonymous AMD module:
@@ -23,10 +23,10 @@
     // Browser globals:
     factory(window.loadImage)
   }
-})(function(loadImage) {
+})(function (loadImage) {
   'use strict'
 
-  loadImage.IptcMap = function() {
+  loadImage.IptcMap = function () {
     return this
   }
 
@@ -34,11 +34,11 @@
     ObjectName: 0x5
   }
 
-  loadImage.IptcMap.prototype.get = function(id) {
+  loadImage.IptcMap.prototype.get = function (id) {
     return this[id] || this[this.map[id]]
   }
 
-  loadImage.parseIptcTags = function(
+  loadImage.parseIptcTags = function (
     dataView,
     startOffset,
     sectionLength,
@@ -89,13 +89,13 @@
     }
   }
 
-  loadImage.parseIptcData = function(dataView, offset, length, data, options) {
+  loadImage.parseIptcData = function (dataView, offset, length, data, options) {
     if (options.disableIptc) {
       return
     }
     var markerLength = offset + length
     // Found '8BIM<EOT><EOT>' ?
-    var isFieldSegmentStart = function(dataView, offset) {
+    var isFieldSegmentStart = function (dataView, offset) {
       return (
         dataView.getUint32(offset) === 0x3842494d &&
         dataView.getUint16(offset + 4) === 0x0404

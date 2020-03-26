@@ -11,7 +11,7 @@
 
 /* global define, module, require */
 
-;(function(factory) {
+;(function (factory) {
   'use strict'
   if (typeof define === 'function' && define.amd) {
     // Register as an anonymous AMD module:
@@ -26,7 +26,7 @@
     // Browser globals:
     factory(window.loadImage)
   }
-})(function(loadImage) {
+})(function (loadImage) {
   'use strict'
 
   var originalHasCanvasOption = loadImage.hasCanvasOption
@@ -35,14 +35,14 @@
   var originalGetTransformedOptions = loadImage.getTransformedOptions
 
   // Determines if the target image should be a canvas element:
-  loadImage.hasCanvasOption = function(options) {
+  loadImage.hasCanvasOption = function (options) {
     return (
       !!options.orientation || originalHasCanvasOption.call(loadImage, options)
     )
   }
 
   // Determines if meta data should be loaded automatically:
-  loadImage.hasMetaOption = function(options) {
+  loadImage.hasMetaOption = function (options) {
     return (
       (options && options.orientation === true) ||
       originalHasMetaOption.call(loadImage, options)
@@ -51,7 +51,7 @@
 
   // Transform image orientation based on
   // the given EXIF orientation option:
-  loadImage.transformCoordinates = function(canvas, options) {
+  loadImage.transformCoordinates = function (canvas, options) {
     originalTransformCoordinates.call(loadImage, canvas, options)
     var ctx = canvas.getContext('2d')
     var width = canvas.width
@@ -110,7 +110,7 @@
 
   // Transforms coordinate and dimension options
   // based on the given orientation option:
-  loadImage.getTransformedOptions = function(img, opts, data) {
+  loadImage.getTransformedOptions = function (img, opts, data) {
     var options = originalGetTransformedOptions.call(loadImage, img, opts)
     var orientation = options.orientation
     var newOptions

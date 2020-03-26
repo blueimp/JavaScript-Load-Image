@@ -11,7 +11,7 @@
 
 /* global loadImage, $ */
 
-$(function() {
+$(function () {
   'use strict'
 
   var result = $('#result')
@@ -59,7 +59,7 @@ $(function() {
       thumbNode.empty()
       loadImage(
         thumbnail,
-        function(img) {
+        function (img) {
           node.append(img).show()
         },
         options
@@ -191,7 +191,7 @@ $(function() {
   }
 
   $(document)
-    .on('dragover', function(e) {
+    .on('dragover', function (e) {
       e.preventDefault()
       var originalEvent = event.originalEvent
       if (originalEvent) originalEvent.dataTransfer.dropEffect = 'copy'
@@ -202,7 +202,7 @@ $(function() {
 
   $('#url').on('change paste input', urlChangeHandler)
 
-  $('#edit').on('click', function(event) {
+  $('#edit').on('click', function (event) {
     event.preventDefault()
     var imgNode = result.find('img, canvas')
     var img = imgNode[0]
@@ -217,24 +217,24 @@ $(function() {
             img.width / pixelRatio - 40,
             img.height / pixelRatio - 40
           ],
-          onSelect: function(coords) {
+          onSelect: function (coords) {
             coordinates = coords
           },
-          onRelease: function() {
+          onRelease: function () {
             coordinates = null
           }
         },
-        function() {
+        function () {
           jcropAPI = this
         }
       )
       .parent()
-      .on('click', function(event) {
+      .on('click', function (event) {
         event.preventDefault()
       })
   })
 
-  $('#crop').on('click', function(event) {
+  $('#crop').on('click', function (event) {
     event.preventDefault()
     var img = result.find('img, canvas')[0]
     var pixelRatio = window.devicePixelRatio || 1
@@ -255,7 +255,7 @@ $(function() {
     }
   })
 
-  $('#cancel').on('click', function(event) {
+  $('#cancel').on('click', function (event) {
     event.preventDefault()
     if (jcropAPI) jcropAPI.release()
   })
