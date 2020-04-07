@@ -23,24 +23,20 @@
     'ovGITCqXzKbzCY1Kp9Sq9YrNarfcrvcLDovH5PKsAAA7'
   var imageUrlGIF = 'data:image/gif;base64,' + b64DataGIF
   var blobGIF = canCreateBlob && window.dataURLtoBlob(imageUrlGIF)
-  // 2x1px JPEG (color white, with the Exif orientation flag set to 6 and the
-  // IPTC ObjectName (2:5) set to 'objectname'):
+  // black/white 1x2px JPEG, with the following meta information set:
+  // - EXIF Orientation: 6 (Rotated 90° CCW)
+  // - IPTC ObjectName: blueimp.net
+  // Meta information has been set via exiftool (exiftool.org):
+  // exiftool -all= -Orientation#=6 -YCbCrPositioning= -ResolutionUnit= \
+  //   -YResolution= -XResolution= -ObjectName=blueimp.net black+white-1x2.jpg
   var b64DataJPEG =
-    '/9j/4AAQSkZJRgABAQEAYABgAAD/4QAiRXhpZgAASUkqAAgAAAABABIBAwABAAAA' +
-    'BgASAAAAAAD/7QAsUGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAAA8cAgUACm9iamVj' +
-    'dG5hbWUA/9sAQwABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB' +
-    'AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB/9sAQwEBAQEBAQEBAQEBAQEBAQEB' +
-    'AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB' +
-    '/8AAEQgAAQACAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYH' +
-    'CAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGh' +
-    'CCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldY' +
-    'WVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1' +
-    'tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8B' +
-    'AAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAEC' +
-    'dwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBka' +
-    'JicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWG' +
-    'h4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ' +
-    '2uLj5OXm5+jp6vLz9PX29/j5+v/aAAwDAQACEQMRAD8A/v4ooooA/9k='
+    '/9j/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAYAAAAAAAD/7QA0UGhvdG9zaG9wIDMu' +
+    'MAA4QklNBAQAAAAAABccAgUAC2JsdWVpbXAubmV0HAIAAAIABAD/2wCEAAEBAQEBAQIBAQID' +
+    'AgICAwQDAwMDBAYEBAQEBAYHBgYGBgYGBwcHBwcHBwcICAgICAgJCQkJCQsLCwsLCwsLCwsB' +
+    'AgICAwMDBQMDBQsIBggLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL' +
+    'CwsLCwsLCwsLC//AABEIAAIAAQMBIgACEQEDEQH/xABSAAEBAAAAAAAAAAAAAAAAAAAAChAB' +
+    'AAAHAAAAAAAAAAAAAAAAAAUHCRlYltQBAQAAAAAAAAAAAAAAAAAAAAARAQAAAAAAAAAAAAAA' +
+    'AAAAAAD/2gAMAwEAAhEDEQA/AK+bT1LLGmVWmwjlAB//2Q=='
   var imageUrlJPEG = 'data:image/jpeg;base64,' + b64DataJPEG
   var blobJPEG = canCreateBlob && window.dataURLtoBlob(imageUrlJPEG)
   /**
@@ -646,15 +642,14 @@
           function (img) {
             expect(img.width).to.equal(10)
             expect(img.height).to.equal(10)
-
-            var data = img.getContext('2d').getImageData(0, 0, 10, 10).data
-            for (var i = 0; i < data.length / 4; i += 4) {
-              expect(data[i]).to.equal(0)
-              expect(data[i + 1]).to.equal(0)
-              expect(data[i + 2]).to.equal(0)
-              expect(data[i + 3]).to.equal(255)
+            var imageData = img.getContext('2d').getImageData(0, 0, 10, 10).data
+            // Check if all image pixels are opaque black (0, 0, 0, 255):
+            for (var i = 0; i < imageData.length / 4; i += 4) {
+              expect(imageData[i]).to.equal(0)
+              expect(imageData[i + 1]).to.equal(0)
+              expect(imageData[i + 2]).to.equal(0)
+              expect(imageData[i + 3]).to.equal(255)
             }
-
             done()
           },
           { maxWidth: 10, maxHeight: 10, crop: true, downsamplingRatio: 0.5 }
@@ -844,8 +839,29 @@
             expect(data).to.be.ok
             expect(data.exif).to.be.ok
             expect(data.exif.get('Orientation')).to.equal(6)
-            expect(img.width).to.equal(1)
-            expect(img.height).to.equal(2)
+            expect(img.width).to.equal(2)
+            expect(img.height).to.equal(1)
+            var imageData = img.getContext('2d').getImageData(0, 0, 2, 2).data
+            // 0:0 opaque white
+            expect(imageData[0]).to.equal(255)
+            expect(imageData[1]).to.equal(255)
+            expect(imageData[2]).to.equal(255)
+            expect(imageData[3]).to.equal(255)
+            // 0:1 opaque black
+            expect(imageData[0 + 4]).to.equal(0)
+            expect(imageData[1 + 4]).to.equal(0)
+            expect(imageData[2 + 4]).to.equal(0)
+            expect(imageData[3 + 4]).to.equal(255)
+            // 1:0 transparent black (off canvas)
+            expect(imageData[0 + 8]).to.equal(0)
+            expect(imageData[1 + 8]).to.equal(0)
+            expect(imageData[2 + 8]).to.equal(0)
+            expect(imageData[3 + 8]).to.equal(0)
+            // 1:1 transparent black (off canvas)
+            expect(imageData[0 + 12]).to.equal(0)
+            expect(imageData[1 + 12]).to.equal(0)
+            expect(imageData[2 + 12]).to.equal(0)
+            expect(imageData[3 + 12]).to.equal(0)
             done()
           },
           { orientation: true }
@@ -858,11 +874,11 @@
         loadImage(
           blobJPEG,
           function (img) {
-            expect(img.width).to.equal(10)
-            expect(img.height).to.equal(20)
+            expect(img.width).to.equal(20)
+            expect(img.height).to.equal(10)
             done()
           },
-          { orientation: true, minWidth: 10, minHeight: 20 }
+          { orientation: true, minWidth: 20, minHeight: 10 }
         )
       ).to.be.ok
     })
@@ -942,7 +958,7 @@
     it('Should parse IPTC tags', function (done) {
       loadImage.parseMetaData(blobJPEG, function (data) {
         expect(data.iptc).to.be.ok
-        expect(data.iptc.get('ObjectName')).to.equal('objectname')
+        expect(data.iptc.get('ObjectName')).to.equal('blueimp.net')
         done()
       })
     })
@@ -971,7 +987,7 @@
             expect(data.exif).to.be.ok
             expect(data.exif.get('Orientation')).to.equal(6)
             expect(data.iptc).to.be.ok
-            expect(data.iptc.get('ObjectName')).to.equal('objectname')
+            expect(data.iptc.get('ObjectName')).to.equal('blueimp.net')
             done()
           },
           { meta: true }
@@ -998,7 +1014,7 @@
             expect(data.exif).to.be.ok
             expect(data.exif.get('Orientation')).to.equal(6)
             expect(data.iptc).to.be.ok
-            expect(data.iptc.get('ObjectName')).to.equal('objectname')
+            expect(data.iptc.get('ObjectName')).to.equal('blueimp.net')
             done()
           },
           { meta: true }
@@ -1011,8 +1027,8 @@
         loadImage(imageUrlJPEG, function (img, data) {
           expect(data.imageHead).to.be.undefined
           expect(data.exif).to.be.undefined
-          expect(img.width).to.equal(2)
-          expect(img.height).to.equal(1)
+          expect(img.width).to.equal(1)
+          expect(img.height).to.equal(2)
           done()
         })
       ).to.be.ok
