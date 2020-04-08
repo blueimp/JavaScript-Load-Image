@@ -59,7 +59,7 @@
     var styleWidth = canvas.style.width
     var styleHeight = canvas.style.height
     var orientation = options.orientation
-    if (!orientation || orientation > 8) {
+    if (!(orientation > 1 && orientation < 9)) {
       return
     }
     if (orientation > 4) {
@@ -118,7 +118,7 @@
     if (orientation === true && data && data.exif) {
       orientation = data.exif.get('Orientation')
     }
-    if (!orientation || orientation > 8 || orientation === 1) {
+    if (!(orientation > 1 && orientation < 9)) {
       return options
     }
     newOptions = {}
