@@ -132,7 +132,8 @@ $(function () {
       canvas: true,
       pixelRatio: window.devicePixelRatio,
       downsamplingRatio: 0.5,
-      orientation: true
+      orientation: true,
+      meta: true
     }
     exifNode.hide()
     iptcNode.hide()
