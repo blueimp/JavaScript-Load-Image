@@ -34,17 +34,37 @@
   var originalTransformCoordinates = loadImage.transformCoordinates
   var originalGetTransformedOptions = loadImage.getTransformedOptions
 
+  ;(function () {
+    // black 2x1 JPEG, with the following meta information set:
+    // - EXIF Orientation: 6 (Rotated 90° CCW)
+    var testImageURL =
+      'data:image/jpeg;base64,/9j/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAYAAAA' +
+      'AAAD/2wCEAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBA' +
+      'QEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE' +
+      'BAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf/AABEIAAEAAgMBEQACEQEDEQH/x' +
+      'ABKAAEAAAAAAAAAAAAAAAAAAAALEAEAAAAAAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAA' +
+      'AAAAAEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8H//2Q=='
+    var img = document.createElement('img')
+    img.onload = function () {
+      // Check if browser supports automatic image orientation:
+      loadImage.orientation = img.width === 1 && img.height === 2
+    }
+    img.src = testImageURL
+  })()
+
   // Determines if the target image should be a canvas element:
   loadImage.hasCanvasOption = function (options) {
     return (
-      !!options.orientation || originalHasCanvasOption.call(loadImage, options)
+      (!!options.orientation === true && !loadImage.orientation) ||
+      (options.orientation > 1 && options.orientation < 9) ||
+      originalHasCanvasOption.call(loadImage, options)
     )
   }
 
   // Determines if meta data should be loaded automatically:
   loadImage.hasMetaOption = function (options) {
     return (
-      (options && options.orientation === true) ||
+      (options && options.orientation === true && !loadImage.orientation) ||
       originalHasMetaOption.call(loadImage, options)
     )
   }
@@ -115,8 +135,12 @@
     var orientation = options.orientation
     var newOptions
     var i
-    if (orientation === true && data && data.exif) {
-      orientation = data.exif.get('Orientation')
+    if (orientation === true) {
+      if (loadImage.orientation) {
+        // Browser supports automatic image orientation
+        return options
+      }
+      orientation = data && data.exif && data.exif.get('Orientation')
     }
     if (!(orientation > 1 && orientation < 9)) {
       return options

@@ -877,7 +877,7 @@
             expect(imageData[3 + 20]).to.equal(255)
             done()
           },
-          { orientation: true }
+          { orientation: true, meta: true, canvas: true }
         )
       ).to.be.ok
     })
@@ -894,6 +894,27 @@
           { orientation: true, minWidth: 20, minHeight: 30 }
         )
       ).to.be.ok
+    })
+
+    describe('from-image', function () {
+      if (!loadImage.orientation) return
+
+      it('Should use automatic browser image orientation', function (done) {
+        expect(
+          loadImage(
+            blobJPEG,
+            function (img, data) {
+              expect(data).to.be.ok
+              expect(data.exif).to.be.undefined
+              expect(img.getContext).to.be.undefined
+              expect(img.width).to.equal(2)
+              expect(img.height).to.equal(3)
+              done()
+            },
+            { orientation: true }
+          )
+        ).to.be.ok
+      })
     })
   })
 

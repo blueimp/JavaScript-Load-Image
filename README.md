@@ -228,8 +228,11 @@ The optional third argument to **loadImage()** is a map of options:
   When set to `true`, it will set the orientation value based on the EXIF data
   of the image, which will be parsed automatically if the exif library is
   available.  
-  Setting the `orientation` also enables the `canvas` option.  
-  Setting `orientation` to `true` also enables the `meta` option.
+  Setting `orientation` to an integer in the range of `2` to `8` enables the
+  `canvas` option.  
+  Setting `orientation` to `true` enables the `canvas` and `meta` options,
+  unless the browser supports automatic image orientation (see
+  [browser support for image-orientation](https://caniuse.com/#feat=css-image-orientation)).
 - **meta**: Automatically parses the image meta data if set to `true`.  
   The meta data is passed to the callback as part of the second argument.  
   If the file is given as URL and the browser supports the
