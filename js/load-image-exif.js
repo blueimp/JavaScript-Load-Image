@@ -9,7 +9,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-/* global define, module, require */
+/* global define, module, require, DataView */
 
 /* eslint-disable no-console */
 
@@ -321,6 +321,19 @@
 
   // Registers the Exif parser for the APP1 JPEG meta data segment:
   loadImage.metaDataParsers.jpeg[0xffe1].push(loadImage.parseExifData)
+
+  loadImage.exifWriters = {
+    // Orientation writer:
+    0x0112: function (buffer, data, value) {
+      var view = new DataView(buffer, data.exifOffsets[0x0112] + 8, 2)
+      view.setUint16(0, value, data.exifLittleEndian)
+      return buffer
+    }
+  }
+
+  loadImage.writeExifData = function (buffer, data, id, value) {
+    loadImage.exifWriters[data.exif.map[id]](buffer, data, value)
+  }
 
   // Adds the following properties to the parseMetaData callback data:
   // * exif: The parsed Exif tags

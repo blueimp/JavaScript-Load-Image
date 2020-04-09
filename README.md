@@ -39,6 +39,7 @@
 - [Meta data parsing](#meta-data-parsing)
   - [Image head](#image-head)
   - [Exif parser](#exif-parser)
+  - [Exif writer](#exif-writer)
   - [IPTC parser](#iptc-parser)
 - [License](#license)
 - [Credits](#credits)
@@ -470,6 +471,29 @@ disable certain aspects of the parser:
 - `disableExifSub`: Disables parsing of the Exif Sub IFD.
 - `disableExifGps`: Disables parsing of the Exif GPS Info IFD.
 - `disableExifOffsets`: Disables storing Exif tag offsets
+
+### Exif writer
+
+The Exif parser extension also includes a minimal writer that allows to override
+the Exif `Orientation` value in the parsed `imageHead` `ArrayBuffer`:
+
+```js
+loadImage(
+  fileOrBlobOrUrl,
+  function (img, data) {
+    if (data.imageHead && data.exif) {
+      // Reset Exif Orientation data:
+      loadImage.writeExifData(data.imageHead, data, 'Orientation', 1)
+      img.toBlob(function (blob) {
+        loadImage.replaceHead(blob, data.imageHead, function (newBlob) {
+          // do something with newBlob
+        })
+      }, 'image/jpeg')
+    }
+  },
+  { meta: true, orientation: true, canvas: true, maxWidth: 800 }
+)
+```
 
 ### IPTC parser
 

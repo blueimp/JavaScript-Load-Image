@@ -106,6 +106,16 @@
       ).to.be.ok
     })
 
+    it('Provide original image width+height in callback data', function (done) {
+      expect(
+        loadImage(imageUrlGIF, function (img, data) {
+          expect(data.originalWidth).to.equal(60)
+          expect(data.originalHeight).to.equal(40)
+          done()
+        })
+      ).to.be.ok
+    })
+
     it('Keep object URL if noRevoke is true', function (done) {
       expect(
         loadImage(
@@ -130,16 +140,6 @@
             expect(img2.type).to.equal('error')
             done()
           })
-        })
-      ).to.be.ok
-    })
-
-    it('Provide original image width+height in callback data', function (done) {
-      expect(
-        loadImage(imageUrlGIF, function (img, data) {
-          expect(data.originalWidth).to.equal(60)
-          expect(data.originalHeight).to.equal(40)
-          done()
         })
       ).to.be.ok
     })
@@ -989,6 +989,16 @@
       })
     })
 
+    it('Should parse Exif tag offsets', function (done) {
+      loadImage.parseMetaData(blobJPEG, function (data) {
+        expect(data.exifOffsets).to.be.ok
+        expect(data.exifOffsets.get('Orientation')).to.equal(0x16)
+        expect(data.exifTiffOffset).to.equal(0xc)
+        expect(data.exifLittleEndian).to.equal(false)
+        done()
+      })
+    })
+
     it('Should parse IPTC tags', function (done) {
       loadImage.parseMetaData(blobJPEG, function (data) {
         expect(data.iptc).to.be.ok
@@ -1028,6 +1038,40 @@
         )
       ).to.be.ok
     })
+
+    it('Should write Exif Orientation tag and replace image head', function (done) {
+      loadImage(
+        blobJPEG,
+        function (img, data) {
+          expect(data.imageHead).to.be.ok
+          expect(data.exif).to.be.ok
+          expect(data.exif.get('Orientation')).to.equal(6)
+          expect(data.iptc).to.be.ok
+          expect(data.iptc.get('ObjectName')).to.equal('blueimp.net')
+          // Reset Exif Orientation data:
+          loadImage.writeExifData(data.imageHead, data, 'Orientation', 1)
+          img.toBlob(function (blob) {
+            loadImage.replaceHead(blob, data.imageHead, function (newBlob) {
+              loadImage(
+                newBlob,
+                function (img, data) {
+                  expect(img.width).to.equal(40)
+                  expect(img.height).to.equal(60)
+                  expect(data.imageHead).to.be.ok
+                  expect(data.exif).to.be.ok
+                  expect(data.exif.get('Orientation')).to.equal(1)
+                  expect(data.iptc).to.be.ok
+                  expect(data.iptc.get('ObjectName')).to.equal('blueimp.net')
+                  done()
+                },
+                { meta: true }
+              )
+            })
+          }, 'image/jpeg')
+        },
+        { meta: true, orientation: true, canvas: true, minWidth: 40 }
+      )
+    })
   })
 
   describe('Fetch', function () {
@@ -1041,7 +1085,9 @@
     it('Should fetch image URL as blob if meta option is true', function (done) {
       expect(
         loadImage(
-          imageUrlJPEG,
+          // IE11 does not allow XMLHttpRequest access to data URLs,
+          // so we use an ObjectURL instead of imageUrlJPEG directly:
+          loadImage.createObjectURL(blobJPEG),
           function (img, data) {
             expect(data).to.be.ok
             expect(data.imageHead).to.be.ok

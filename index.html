@@ -81,7 +81,7 @@
     </p>
     <p>Or <strong>drag &amp; drop</strong> an image file onto this webpage.</p>
     <h2>Result</h2>
-    <p id="actions" style="display:none;">
+    <p id="actions" style="display: none;">
       <button type="button" id="edit">Edit</button>
       <button type="button" id="crop">Crop</button>
       <button type="button" id="cancel">Cancel</button>
@@ -94,15 +94,17 @@
         API.
       </p>
     </div>
-    <div id="exif" style="display:none;">
+    <div id="exif" style="display: none;">
       <h3>Exif meta data</h3>
-      <p id="thumbnail" style="display:none;"></p>
+      <p id="thumbnail" style="display: none;"></p>
       <table></table>
     </div>
-    <div id="iptc" style="display:none;">
+    <div id="iptc" style="display: none;">
       <h3>IPTC meta data</h3>
       <table></table>
     </div>
+
+    <script src="js/vendor/canvas-to-blob.js"></script>
     <script src="js/load-image.js"></script>
     <script src="js/load-image-scale.js"></script>
     <script src="js/load-image-meta.js"></script>
