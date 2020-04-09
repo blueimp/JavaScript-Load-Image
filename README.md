@@ -309,8 +309,7 @@ loadImage.parseMetaData(
     )
   },
   {
-    maxMetaDataSize: 262144,
-    disableImageHead: false
+    maxMetaDataSize: 262144
   }
 )
 ```
@@ -328,19 +327,26 @@ The Meta data extension also adds additional options used for the
 ### Exif parser
 
 If you include the Load Image Exif Parser extension, the argument passed to the
-callback for **parseMetaData** will contain the additional property **exif** if
-Exif data could be found in the given image.  
+callback for **parseMetaData** will contain the additional properties if Exif
+data could be found in the given image:
+
+- **exif**: The parsed Exif tags
+- **exifOffsets**: The parsed Exif tag offsets
+- **exifTiffOffset**: TIFF header offset (used for offset pointers)
+- **exifLittleEndian**: little endian order if true, big endian if false
+
 The **exif** object stores the parsed Exif tags:
 
 ```js
-var orientation = data.exif[0x0112]
+var orientation = data.exif[0x0112] // Orientation
 ```
 
-It also provides an **exif.get()** method to retrieve the tag value via the
-tag's mapped name:
+The **exif** and **exifOffsets** objects also provide a **get()** method to
+retrieve the tag value/offset via the tag's mapped name:
 
 ```js
 var orientation = data.exif.get('Orientation')
+var orientationOffset = data.exifOffsets.get('Orientation')
 ```
 
 By default, the only available mapped names are **Orientation** and
@@ -363,6 +369,7 @@ disable certain aspects of the parser:
 - **disableExifThumbnail**: Disables parsing of the Exif Thumbnail.
 - **disableExifSub**: Disables parsing of the Exif Sub IFD.
 - **disableExifGps**: Disables parsing of the Exif GPS Info IFD.
+- **disableExifOffsets**: Disables storing Exif tag offsets
 
 ### IPTC parser
 

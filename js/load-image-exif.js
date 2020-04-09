@@ -171,18 +171,19 @@
     dataView,
     tiffOffset,
     offset,
-    littleEndian,
-    data
+    littleEndian
   ) {
-    var tag = dataView.getUint16(offset, littleEndian)
-    data.exif[tag] = loadImage.getExifValue(
-      dataView,
-      tiffOffset,
-      offset,
-      dataView.getUint16(offset + 2, littleEndian), // tag type
-      dataView.getUint32(offset + 4, littleEndian), // tag length
-      littleEndian
-    )
+    return {
+      number: dataView.getUint16(offset, littleEndian),
+      value: loadImage.getExifValue(
+        dataView,
+        tiffOffset,
+        offset,
+        dataView.getUint16(offset + 2, littleEndian), // tag type
+        dataView.getUint32(offset + 4, littleEndian), // tag length
+        littleEndian
+      )
+    }
   }
 
   loadImage.parseExifTags = function (
@@ -192,7 +193,7 @@
     littleEndian,
     data
   ) {
-    var tagsNumber, dirEndOffset, i
+    var tagsNumber, dirEndOffset, i, tagOffset, tag
     if (dirOffset + 6 > dataView.byteLength) {
       console.log('Invalid Exif data: Invalid directory offset.')
       return
@@ -204,13 +205,18 @@
       return
     }
     for (i = 0; i < tagsNumber; i += 1) {
-      this.parseExifTag(
+      tagOffset = dirOffset + 2 + 12 * i
+      tag = this.parseExifTag(
         dataView,
         tiffOffset,
-        dirOffset + 2 + 12 * i, // tag offset
+        tagOffset,
         littleEndian,
         data
       )
+      data.exif[tag.number] = tag.value
+      if (data.exifOffsets) {
+        data.exifOffsets[tag.number] = tagOffset
+      }
     }
     // Return the offset to the next directory:
     return dataView.getUint32(dirEndOffset, littleEndian)
@@ -259,6 +265,11 @@
     dirOffset = dataView.getUint32(tiffOffset + 4, littleEndian)
     // Create the exif object to store the tags:
     data.exif = new loadImage.ExifMap()
+    if (!options.disableExifOffsets) {
+      data.exifOffsets = new loadImage.ExifMap()
+      data.exifTiffOffset = tiffOffset
+      data.exifLittleEndian = littleEndian
+    }
     // Parse the tags of the main image directory and retrieve the
     // offset to the next directory, usually the thumbnail directory:
     dirOffset = loadImage.parseExifTags(
@@ -312,11 +323,15 @@
   loadImage.metaDataParsers.jpeg[0xffe1].push(loadImage.parseExifData)
 
   // Adds the following properties to the parseMetaData callback data:
-  // * exif: The exif tags, parsed by the parseExifData method
+  // * exif: The parsed Exif tags
+  // * exifOffsets: The parsed Exif tag offsets
+  // * exifTiffOffset: TIFF header offset (used for offset pointers)
+  // * exifLittleEndian: little endian order if true, big endian if false
 
   // Adds the following options to the parseMetaData method:
   // * disableExif: Disables Exif parsing.
   // * disableExifThumbnail: Disables parsing of the Exif Thumbnail.
   // * disableExifSub: Disables parsing of the Exif Sub IFD.
   // * disableExifGps: Disables parsing of the Exif GPS Info IFD.
+  // * disableExifOffsets: Disables storing Exif tag offsets
 })
