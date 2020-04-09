@@ -37,6 +37,7 @@
   - [crossOrigin](#crossorigin)
   - [noRevoke](#norevoke)
 - [Meta data parsing](#meta-data-parsing)
+  - [Image head](#image-head)
   - [Exif parser](#exif-parser)
   - [IPTC parser](#iptc-parser)
 - [License](#license)
@@ -386,15 +387,43 @@ loadImage.parseMetaData(
 )
 ```
 
-**Note:**  
-Blob objects of resized images can be created via
-[canvas.toBlob()](https://github.com/blueimp/JavaScript-Canvas-to-Blob).
-
 The Meta data extension also adds additional options used for the
 `parseMetaData` method:
 
 - `maxMetaDataSize`: Maximum number of bytes of meta data to parse.
 - `disableImageHead`: Disable parsing the original image head.
+- `disableMetaDataParsers`: Disable parsing meta data (image head only)
+
+### Image head
+
+Resized JPEG images can be combined with their original image head via
+`loadImage.replaceHead`, which requires the resized image as `Blob` object as
+first argument and an `ArrayBuffer` image head as second argument. The third
+argument must be a `callback` function, which is called with the new `Blob`
+object:
+
+```js
+loadImage(
+  fileOrBlobOrUrl,
+  function (img, data) {
+    if (data.imageHead && data.exif) {
+      img.toBlob(function (blob) {
+        loadImage.replaceHead(blob, data.imageHead, function (newBlob) {
+          // do something with newBlob
+        })
+      }, 'image/jpeg')
+    }
+  },
+  { meta: true, canvas: true, maxWidth: 800 }
+)
+```
+
+**Note:**  
+Blob objects of resized images can be created via
+[canvas.toBlob](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob).
+For browsers which don't have native support, a
+[canvas.toBlob polyfill](https://github.com/blueimp/JavaScript-Canvas-to-Blob)
+is available.
 
 ### Exif parser
 
