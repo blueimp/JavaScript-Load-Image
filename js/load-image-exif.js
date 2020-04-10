@@ -32,7 +32,8 @@
   }
 
   loadImage.ExifMap.prototype.map = {
-    Orientation: 0x0112
+    Orientation: 0x0112,
+    Thumbnail: 0x0201
   }
 
   loadImage.ExifMap.prototype.get = function (id) {
@@ -44,9 +45,7 @@
       console.log('Invalid Exif data: Invalid thumbnail data.')
       return
     }
-    return loadImage.createObjectURL(
-      new Blob([dataView.buffer.slice(offset, offset + length)])
-    )
+    return new Blob([dataView.buffer.slice(offset, offset + length)])
   }
 
   loadImage.exifTagTypes = {
@@ -229,7 +228,6 @@
     var tiffOffset = offset + 10
     var littleEndian
     var dirOffset
-    var thumbnailData
     // Check for the ASCII code for "Exif" (0x45786966):
     if (dataView.getUint32(offset + 4) !== 0x45786966) {
       // No Exif data, might be XMP data instead
@@ -280,20 +278,19 @@
       data
     )
     if (dirOffset && !options.disableExifThumbnail) {
-      thumbnailData = { exif: {} }
       dirOffset = loadImage.parseExifTags(
         dataView,
         tiffOffset,
         tiffOffset + dirOffset,
         littleEndian,
-        thumbnailData
+        data
       )
       // Check for JPEG Thumbnail offset:
-      if (thumbnailData.exif[0x0201]) {
-        data.exif.Thumbnail = loadImage.getExifThumbnail(
+      if (data.exif[0x0201]) {
+        data.exif[0x0201] = loadImage.getExifThumbnail(
           dataView,
-          tiffOffset + thumbnailData.exif[0x0201],
-          thumbnailData.exif[0x0202] // Thumbnail data length
+          tiffOffset + data.exif[0x0201],
+          data.exif[0x0202] // Thumbnail data length
         )
       }
     }
