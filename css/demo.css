@@ -41,6 +41,7 @@ table {
   word-wrap: break-word;
   table-layout: fixed;
   border-collapse: collapse;
+  margin-bottom: 20px;
 }
 tr {
   background: #fff;
@@ -55,6 +56,7 @@ td {
 }
 #result,
 #thumbnail {
+  margin-bottom: 20px;
   padding: 20px;
   background: #fff;
   color: #222;

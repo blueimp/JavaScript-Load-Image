@@ -27,28 +27,67 @@
 })(function (loadImage) {
   'use strict'
 
-  loadImage.ExifMap = function () {
-    return this
+  /**
+   * Exif tag map
+   *
+   * @name ExifMap
+   * @class
+   * @param {number} tagCode Private IFD tag code
+   */
+  function ExifMap(tagCode) {
+    if (tagCode) {
+      Object.defineProperty(this, 'map', {
+        value: this.privateIFDs[tagCode].map
+      })
+      Object.defineProperty(this, 'tags', {
+        value: (this.tags && this.tags[tagCode]) || {}
+      })
+    }
   }
 
-  loadImage.ExifMap.prototype.map = {
+  ExifMap.prototype.map = {
     Orientation: 0x0112,
-    Thumbnail: 0x0201
+    Thumbnail: 0x0201,
+    Exif: 0x8769,
+    GPSInfo: 0x8825,
+    Interoperability: 0xa005
   }
 
-  loadImage.ExifMap.prototype.get = function (id) {
+  ExifMap.prototype.privateIFDs = {
+    0x8769: { name: 'Exif', map: {} },
+    0x8825: { name: 'GPSInfo', map: {} },
+    0xa005: { name: 'Interoperability', map: {} }
+  }
+
+  /**
+   * Retrieves exif tag value
+   *
+   * @param {number|string} id Exif tag code or name
+   * @returns {object} Exif tag value
+   */
+  ExifMap.prototype.get = function (id) {
     return this[id] || this[this.map[id]]
   }
 
-  loadImage.getExifThumbnail = function (dataView, offset, length) {
+  /**
+   * Returns the Exif Thumbnail data as Blob.
+   *
+   * @param {DataView} dataView Data view interface
+   * @param {number} offset Thumbnail data offset
+   * @param {number} length Thumbnail data length
+   * @returns {undefined|Blob} Returns the Thumbnail Blob or undefined
+   */
+  function getExifThumbnail(dataView, offset, length) {
     if (!length || offset + length > dataView.byteLength) {
       console.log('Invalid Exif data: Invalid thumbnail data.')
       return
     }
-    return new Blob([dataView.buffer.slice(offset, offset + length)])
+    return new Blob([dataView.buffer.slice(offset, offset + length)], {
+      type: 'image/jpeg'
+    })
   }
 
-  loadImage.exifTagTypes = {
+  var ExifTagTypes = {
     // byte, 8-bit unsigned int:
     1: {
       getValue: function (dataView, dataOffset) {
@@ -107,9 +146,20 @@
     }
   }
   // undefined, 8-bit byte, value depending on field:
-  loadImage.exifTagTypes[7] = loadImage.exifTagTypes[1]
+  ExifTagTypes[7] = ExifTagTypes[1]
 
-  loadImage.getExifValue = function (
+  /**
+   * Returns Exif tag value.
+   *
+   * @param {DataView} dataView Data view interface
+   * @param {number} tiffOffset TIFF offset
+   * @param {number} offset Tag offset
+   * @param {number} type Tag type
+   * @param {number} length Tag length
+   * @param {boolean} littleEndian Little endian encoding
+   * @returns {object} Tag value
+   */
+  function getExifValue(
     dataView,
     tiffOffset,
     offset,
@@ -117,7 +167,7 @@
     length,
     littleEndian
   ) {
-    var tagType = loadImage.exifTagTypes[type]
+    var tagType = ExifTagTypes[type]
     var tagSize
     var dataOffset
     var values
@@ -166,33 +216,30 @@
     return values
   }
 
-  loadImage.parseExifTag = function (
-    dataView,
-    tiffOffset,
-    offset,
-    littleEndian
-  ) {
-    return {
-      number: dataView.getUint16(offset, littleEndian),
-      value: loadImage.getExifValue(
-        dataView,
-        tiffOffset,
-        offset,
-        dataView.getUint16(offset + 2, littleEndian), // tag type
-        dataView.getUint32(offset + 4, littleEndian), // tag length
-        littleEndian
-      )
-    }
-  }
-
-  loadImage.parseExifTags = function (
+  /**
+   * Parses Exif tags.
+   *
+   * @param {DataView} dataView Data view interface
+   * @param {number} tiffOffset TIFF offset
+   * @param {number} dirOffset Directory offset
+   * @param {boolean} littleEndian Little endian encoding
+   * @param {ExifMap} tags Map to store parsed exif tags
+   * @param {ExifMap} tagOffsets Map to store parsed exif tag offsets
+   * @param {object} includeTags Map of tags to include
+   * @param {object} excludeTags Map of tags to exclude
+   * @returns {number} Next directory offset
+   */
+  function parseExifTags(
     dataView,
     tiffOffset,
     dirOffset,
     littleEndian,
-    data
+    tags,
+    tagOffsets,
+    includeTags,
+    excludeTags
   ) {
-    var tagsNumber, dirEndOffset, i, tagOffset, tag
+    var tagsNumber, dirEndOffset, i, tagOffset, tagNumber, tagValue
     if (dirOffset + 6 > dataView.byteLength) {
       console.log('Invalid Exif data: Invalid directory offset.')
       return
@@ -205,29 +252,80 @@
     }
     for (i = 0; i < tagsNumber; i += 1) {
       tagOffset = dirOffset + 2 + 12 * i
-      tag = this.parseExifTag(
+      tagNumber = dataView.getUint16(tagOffset, littleEndian)
+      if (includeTags && !includeTags[tagNumber]) continue
+      if (excludeTags && excludeTags[tagNumber] === true) continue
+      tagValue = getExifValue(
         dataView,
         tiffOffset,
         tagOffset,
-        littleEndian,
-        data
+        dataView.getUint16(tagOffset + 2, littleEndian), // tag type
+        dataView.getUint32(tagOffset + 4, littleEndian), // tag length
+        littleEndian
       )
-      data.exif[tag.number] = tag.value
-      if (data.exifOffsets) {
-        data.exifOffsets[tag.number] = tagOffset
+      tags[tagNumber] = tagValue
+      if (tagOffsets) {
+        tagOffsets[tagNumber] = tagOffset
       }
     }
     // Return the offset to the next directory:
     return dataView.getUint32(dirEndOffset, littleEndian)
   }
 
+  /**
+   * Parses Private IFD tags.
+   *
+   * @param {object} data Data object to store exif tags and offsets
+   * @param {number} tagCode Private IFD tag code
+   * @param {DataView} dataView Data view interface
+   * @param {number} tiffOffset TIFF offset
+   * @param {boolean} littleEndian Little endian encoding
+   * @param {object} includeTags Map of tags to include
+   * @param {object} excludeTags Map of tags to exclude
+   */
+  function parseExifPrivateIFD(
+    data,
+    tagCode,
+    dataView,
+    tiffOffset,
+    littleEndian,
+    includeTags,
+    excludeTags
+  ) {
+    var dirOffset = data.exif[tagCode]
+    if (dirOffset) {
+      data.exif[tagCode] = new ExifMap(tagCode)
+      if (data.exifOffsets) {
+        data.exifOffsets[tagCode] = new ExifMap(tagCode)
+      }
+      parseExifTags(
+        dataView,
+        tiffOffset,
+        tiffOffset + dirOffset,
+        littleEndian,
+        data.exif[tagCode],
+        data.exifOffsets && data.exifOffsets[tagCode],
+        includeTags && includeTags[tagCode],
+        excludeTags && excludeTags[tagCode]
+      )
+    }
+  }
+
   loadImage.parseExifData = function (dataView, offset, length, data, options) {
     if (options.disableExif) {
       return
     }
+    var includeTags = options.includeExifTags
+    var excludeTags = options.excludeExifTags || {
+      0x8769: {
+        // ExifIFDPointer
+        0x927c: true // MakerNote
+      }
+    }
     var tiffOffset = offset + 10
     var littleEndian
     var dirOffset
+    var privateIFDs
     // Check for the ASCII code for "Exif" (0x45786966):
     if (dataView.getUint32(offset + 4) !== 0x45786966) {
       // No Exif data, might be XMP data instead
@@ -262,58 +360,56 @@
     // Retrieve the directory offset bytes, usually 0x00000008 or 8 decimal:
     dirOffset = dataView.getUint32(tiffOffset + 4, littleEndian)
     // Create the exif object to store the tags:
-    data.exif = new loadImage.ExifMap()
+    data.exif = new ExifMap()
     if (!options.disableExifOffsets) {
-      data.exifOffsets = new loadImage.ExifMap()
+      data.exifOffsets = new ExifMap()
       data.exifTiffOffset = tiffOffset
       data.exifLittleEndian = littleEndian
     }
     // Parse the tags of the main image directory and retrieve the
     // offset to the next directory, usually the thumbnail directory:
-    dirOffset = loadImage.parseExifTags(
+    dirOffset = parseExifTags(
       dataView,
       tiffOffset,
       tiffOffset + dirOffset,
       littleEndian,
-      data
+      data.exif,
+      data.exifOffsets,
+      includeTags,
+      excludeTags
     )
     if (dirOffset && !options.disableExifThumbnail) {
-      dirOffset = loadImage.parseExifTags(
+      dirOffset = parseExifTags(
         dataView,
         tiffOffset,
         tiffOffset + dirOffset,
         littleEndian,
-        data
+        data.exif,
+        data.exifOffsets,
+        includeTags,
+        excludeTags
       )
       // Check for JPEG Thumbnail offset:
-      if (data.exif[0x0201]) {
-        data.exif[0x0201] = loadImage.getExifThumbnail(
+      if (data.exif[0x0201] && data.exif[0x0202]) {
+        data.exif[0x0201] = getExifThumbnail(
           dataView,
           tiffOffset + data.exif[0x0201],
           data.exif[0x0202] // Thumbnail data length
         )
       }
     }
-    // Check for Exif Sub IFD Pointer:
-    if (data.exif[0x8769] && !options.disableExifSub) {
-      loadImage.parseExifTags(
+    privateIFDs = Object.keys(data.exif.privateIFDs)
+    privateIFDs.forEach(function (tagCode) {
+      parseExifPrivateIFD(
+        data,
+        tagCode,
         dataView,
         tiffOffset,
-        tiffOffset + data.exif[0x8769], // directory offset
         littleEndian,
-        data
+        includeTags,
+        excludeTags
       )
-    }
-    // Check for GPS Info IFD Pointer:
-    if (data.exif[0x8825] && !options.disableExifGps) {
-      loadImage.parseExifTags(
-        dataView,
-        tiffOffset,
-        tiffOffset + data.exif[0x8825], // directory offset
-        littleEndian,
-        data
-      )
-    }
+    })
   }
 
   // Registers the Exif parser for the APP1 JPEG meta data segment:
@@ -332,16 +428,18 @@
     loadImage.exifWriters[data.exif.map[id]](buffer, data, value)
   }
 
+  loadImage.ExifMap = ExifMap
+
   // Adds the following properties to the parseMetaData callback data:
-  // * exif: The parsed Exif tags
-  // * exifOffsets: The parsed Exif tag offsets
-  // * exifTiffOffset: TIFF header offset (used for offset pointers)
-  // * exifLittleEndian: little endian order if true, big endian if false
+  // - exif: The parsed Exif tags
+  // - exifOffsets: The parsed Exif tag offsets
+  // - exifTiffOffset: TIFF header offset (used for offset pointers)
+  // - exifLittleEndian: little endian order if true, big endian if false
 
   // Adds the following options to the parseMetaData method:
-  // * disableExif: Disables Exif parsing.
-  // * disableExifThumbnail: Disables parsing of the Exif Thumbnail.
-  // * disableExifSub: Disables parsing of the Exif Sub IFD.
-  // * disableExifGps: Disables parsing of the Exif GPS Info IFD.
-  // * disableExifOffsets: Disables storing Exif tag offsets
+  // - disableExif: Disables Exif parsing when true.
+  // - disableExifThumbnail: Disables parsing of Thumbnail data when true.
+  // - disableExifOffsets: Disables storing Exif tag offsets when true.
+  // - includeExifTags: A map of Exif tags to include for parsing.
+  // - excludeExifTags: A map of Exif tags to exclude from parsing.
 })

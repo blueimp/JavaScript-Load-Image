@@ -989,6 +989,17 @@
       })
     })
 
+    it('Should not parse Exif tags if disabled', function (done) {
+      loadImage.parseMetaData(
+        blobJPEG,
+        function (data) {
+          expect(data.exif).to.be.undefined
+          done()
+        },
+        { disableExif: true }
+      )
+    })
+
     it('Should parse Exif tag offsets', function (done) {
       loadImage.parseMetaData(blobJPEG, function (data) {
         expect(data.exifOffsets).to.be.ok
@@ -999,12 +1010,137 @@
       })
     })
 
+    it('Should not parse Exif tag offsets if disabled', function (done) {
+      loadImage.parseMetaData(
+        blobJPEG,
+        function (data) {
+          expect(data.exifOffsets).to.be.undefined
+          done()
+        },
+        { disableExifOffsets: true }
+      )
+    })
+
+    it('Should only parse included Exif tags', function (done) {
+      loadImage.parseMetaData(
+        blobJPEG,
+        function (data) {
+          expect(data.exif).to.be.ok
+          expect(data.exif.get('Orientation')).to.equal(6)
+          loadImage.parseMetaData(
+            blobJPEG,
+            function (data) {
+              expect(data.exif).to.be.ok
+              expect(data.exif.get('Orientation')).to.be.undefined
+              done()
+            },
+            { includeExifTags: { 0x0132: true } } // DateTime
+          )
+        },
+        { includeExifTags: { 0x0112: true } } // Orientation
+      )
+    })
+
+    it('Should not parse excluded Exif tags', function (done) {
+      loadImage.parseMetaData(
+        blobJPEG,
+        function (data) {
+          expect(data.exif).to.be.ok
+          expect(data.exif.get('Orientation')).to.equal(6)
+          loadImage.parseMetaData(
+            blobJPEG,
+            function (data) {
+              expect(data.exif).to.be.ok
+              expect(data.exif.get('Orientation')).to.be.undefined
+              done()
+            },
+            { excludeExifTags: { 0x0112: true } } // Orientation
+          )
+        },
+        { excludeExifTags: { 0x0132: true } } // DateTime
+      )
+    })
+
     it('Should parse IPTC tags', function (done) {
       loadImage.parseMetaData(blobJPEG, function (data) {
         expect(data.iptc).to.be.ok
         expect(data.iptc.get('ObjectName')).to.equal('blueimp.net')
         done()
       })
+    })
+
+    it('Should not parse IPTC tags if disabled', function (done) {
+      loadImage.parseMetaData(
+        blobJPEG,
+        function (data) {
+          expect(data.iptc).to.be.undefined
+          done()
+        },
+        { disableIptc: true }
+      )
+    })
+
+    it('Should parse IPTC tag offsets', function (done) {
+      loadImage.parseMetaData(blobJPEG, function (data) {
+        expect(data.iptcOffsets).to.be.ok
+        expect(data.iptcOffsets.get('ObjectName')).to.equal(0x44)
+        done()
+      })
+    })
+
+    it('Should not parse IPTC tag offsets if disabled', function (done) {
+      loadImage.parseMetaData(
+        blobJPEG,
+        function (data) {
+          expect(data.iptcOffsets).to.be.undefined
+          done()
+        },
+        { disableIptcOffsets: true }
+      )
+    })
+
+    it('Should only parse included IPTC tags', function (done) {
+      loadImage.parseMetaData(
+        blobJPEG,
+        function (data) {
+          expect(data.iptc).to.be.ok
+          expect(data.iptc.get('ApplicationRecordVersion')).to.be.undefined
+          expect(data.iptc.get('ObjectName')).to.equal('blueimp.net')
+          loadImage.parseMetaData(
+            blobJPEG,
+            function (data) {
+              expect(data.iptc).to.be.ok
+              expect(data.iptc.get('ApplicationRecordVersion')).to.equal(4)
+              expect(data.iptc.get('ObjectName')).to.be.undefined
+              done()
+            },
+            { includeIptcTags: { 0: true } } // ApplicationRecordVersion
+          )
+        },
+        { includeIptcTags: { 5: true } } // ObjectName
+      )
+    })
+
+    it('Should not parse excluded IPTC tags', function (done) {
+      loadImage.parseMetaData(
+        blobJPEG,
+        function (data) {
+          expect(data.iptc).to.be.ok
+          expect(data.iptc.get('ApplicationRecordVersion')).to.equal(4)
+          expect(data.iptc.get('ObjectName')).to.be.undefined
+          loadImage.parseMetaData(
+            blobJPEG,
+            function (data) {
+              expect(data.iptc).to.be.ok
+              expect(data.iptc.get('ApplicationRecordVersion')).to.be.undefined
+              expect(data.iptc.get('ObjectName')).to.equal('blueimp.net')
+              done()
+            },
+            { excludeIptcTags: { 0: true } } // Orientation
+          )
+        },
+        { excludeIptcTags: { 5: true } } // DateTime
+      )
     })
 
     it('Should parse the complete image head', function (done) {
@@ -1019,6 +1155,17 @@
           }
         )
       })
+    })
+
+    it('Should not parse the complete image head if disabled', function (done) {
+      loadImage.parseMetaData(
+        blobJPEG,
+        function (data) {
+          expect(data.imageHead).to.be.undefined
+          done()
+        },
+        { disableImageHead: true }
+      )
     })
 
     it('Should parse meta data automatically', function (done) {

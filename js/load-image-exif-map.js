@@ -28,15 +28,14 @@
 })(function (loadImage) {
   'use strict'
 
-  loadImage.ExifMap.prototype.tags = {
+  var ExifMapProto = loadImage.ExifMap.prototype
+
+  ExifMapProto.tags = {
     // =================
     // TIFF tags (IFD0):
     // =================
     0x0100: 'ImageWidth',
     0x0101: 'ImageHeight',
-    0x8769: 'ExifIFDPointer',
-    0x8825: 'GPSInfoIFDPointer',
-    0xa005: 'InteroperabilityIFDPointer',
     0x0102: 'BitsPerSample',
     0x0103: 'Compression',
     0x0106: 'PhotometricInterpretation',
@@ -65,116 +64,120 @@
     0x0131: 'Software',
     0x013b: 'Artist',
     0x8298: 'Copyright',
-    // ==================
-    // Exif Sub IFD tags:
-    // ==================
-    0x9000: 'ExifVersion', // EXIF version
-    0xa000: 'FlashpixVersion', // Flashpix format version
-    0xa001: 'ColorSpace', // Color space information tag
-    0xa002: 'PixelXDimension', // Valid width of meaningful image
-    0xa003: 'PixelYDimension', // Valid height of meaningful image
-    0xa500: 'Gamma',
-    0x9101: 'ComponentsConfiguration', // Information about channels
-    0x9102: 'CompressedBitsPerPixel', // Compressed bits per pixel
-    0x927c: 'MakerNote', // Any desired information written by the manufacturer
-    0x9286: 'UserComment', // Comments by user
-    0xa004: 'RelatedSoundFile', // Name of related sound file
-    0x9003: 'DateTimeOriginal', // Date and time when the original image was generated
-    0x9004: 'DateTimeDigitized', // Date and time when the image was stored digitally
-    0x9290: 'SubSecTime', // Fractions of seconds for DateTime
-    0x9291: 'SubSecTimeOriginal', // Fractions of seconds for DateTimeOriginal
-    0x9292: 'SubSecTimeDigitized', // Fractions of seconds for DateTimeDigitized
-    0x829a: 'ExposureTime', // Exposure time (in seconds)
-    0x829d: 'FNumber',
-    0x8822: 'ExposureProgram', // Exposure program
-    0x8824: 'SpectralSensitivity', // Spectral sensitivity
-    0x8827: 'PhotographicSensitivity', // EXIF 2.3, ISOSpeedRatings in EXIF 2.2
-    0x8828: 'OECF', // Optoelectric conversion factor
-    0x8830: 'SensitivityType',
-    0x8831: 'StandardOutputSensitivity',
-    0x8832: 'RecommendedExposureIndex',
-    0x8833: 'ISOSpeed',
-    0x8834: 'ISOSpeedLatitudeyyy',
-    0x8835: 'ISOSpeedLatitudezzz',
-    0x9201: 'ShutterSpeedValue', // Shutter speed
-    0x9202: 'ApertureValue', // Lens aperture
-    0x9203: 'BrightnessValue', // Value of brightness
-    0x9204: 'ExposureBias', // Exposure bias
-    0x9205: 'MaxApertureValue', // Smallest F number of lens
-    0x9206: 'SubjectDistance', // Distance to subject in meters
-    0x9207: 'MeteringMode', // Metering mode
-    0x9208: 'LightSource', // Kind of light source
-    0x9209: 'Flash', // Flash status
-    0x9214: 'SubjectArea', // Location and area of main subject
-    0x920a: 'FocalLength', // Focal length of the lens in mm
-    0xa20b: 'FlashEnergy', // Strobe energy in BCPS
-    0xa20c: 'SpatialFrequencyResponse',
-    0xa20e: 'FocalPlaneXResolution', // Number of pixels in width direction per FPRUnit
-    0xa20f: 'FocalPlaneYResolution', // Number of pixels in height direction per FPRUnit
-    0xa210: 'FocalPlaneResolutionUnit', // Unit for measuring the focal plane resolution
-    0xa214: 'SubjectLocation', // Location of subject in image
-    0xa215: 'ExposureIndex', // Exposure index selected on camera
-    0xa217: 'SensingMethod', // Image sensor type
-    0xa300: 'FileSource', // Image source (3 == DSC)
-    0xa301: 'SceneType', // Scene type (1 == directly photographed)
-    0xa302: 'CFAPattern', // Color filter array geometric pattern
-    0xa401: 'CustomRendered', // Special processing
-    0xa402: 'ExposureMode', // Exposure mode
-    0xa403: 'WhiteBalance', // 1 = auto white balance, 2 = manual
-    0xa404: 'DigitalZoomRatio', // Digital zoom ratio
-    0xa405: 'FocalLengthIn35mmFilm',
-    0xa406: 'SceneCaptureType', // Type of scene
-    0xa407: 'GainControl', // Degree of overall image gain adjustment
-    0xa408: 'Contrast', // Direction of contrast processing applied by camera
-    0xa409: 'Saturation', // Direction of saturation processing applied by camera
-    0xa40a: 'Sharpness', // Direction of sharpness processing applied by camera
-    0xa40b: 'DeviceSettingDescription',
-    0xa40c: 'SubjectDistanceRange', // Distance to subject
-    0xa420: 'ImageUniqueID', // Identifier assigned uniquely to each image
-    0xa430: 'CameraOwnerName',
-    0xa431: 'BodySerialNumber',
-    0xa432: 'LensSpecification',
-    0xa433: 'LensMake',
-    0xa434: 'LensModel',
-    0xa435: 'LensSerialNumber',
-    // ==============
-    // GPS Info tags:
-    // ==============
-    0x0000: 'GPSVersionID',
-    0x0001: 'GPSLatitudeRef',
-    0x0002: 'GPSLatitude',
-    0x0003: 'GPSLongitudeRef',
-    0x0004: 'GPSLongitude',
-    0x0005: 'GPSAltitudeRef',
-    0x0006: 'GPSAltitude',
-    0x0007: 'GPSTimeStamp',
-    0x0008: 'GPSSatellites',
-    0x0009: 'GPSStatus',
-    0x000a: 'GPSMeasureMode',
-    0x000b: 'GPSDOP',
-    0x000c: 'GPSSpeedRef',
-    0x000d: 'GPSSpeed',
-    0x000e: 'GPSTrackRef',
-    0x000f: 'GPSTrack',
-    0x0010: 'GPSImgDirectionRef',
-    0x0011: 'GPSImgDirection',
-    0x0012: 'GPSMapDatum',
-    0x0013: 'GPSDestLatitudeRef',
-    0x0014: 'GPSDestLatitude',
-    0x0015: 'GPSDestLongitudeRef',
-    0x0016: 'GPSDestLongitude',
-    0x0017: 'GPSDestBearingRef',
-    0x0018: 'GPSDestBearing',
-    0x0019: 'GPSDestDistanceRef',
-    0x001a: 'GPSDestDistance',
-    0x001b: 'GPSProcessingMethod',
-    0x001c: 'GPSAreaInformation',
-    0x001d: 'GPSDateStamp',
-    0x001e: 'GPSDifferential',
-    0x001f: 'GPSHPositioningError'
+    0x8769: {
+      // ExifIFDPointer
+      0x9000: 'ExifVersion', // EXIF version
+      0xa000: 'FlashpixVersion', // Flashpix format version
+      0xa001: 'ColorSpace', // Color space information tag
+      0xa002: 'PixelXDimension', // Valid width of meaningful image
+      0xa003: 'PixelYDimension', // Valid height of meaningful image
+      0xa500: 'Gamma',
+      0x9101: 'ComponentsConfiguration', // Information about channels
+      0x9102: 'CompressedBitsPerPixel', // Compressed bits per pixel
+      0x927c: 'MakerNote', // Any desired information written by the manufacturer
+      0x9286: 'UserComment', // Comments by user
+      0xa004: 'RelatedSoundFile', // Name of related sound file
+      0x9003: 'DateTimeOriginal', // Date and time when the original image was generated
+      0x9004: 'DateTimeDigitized', // Date and time when the image was stored digitally
+      0x9290: 'SubSecTime', // Fractions of seconds for DateTime
+      0x9291: 'SubSecTimeOriginal', // Fractions of seconds for DateTimeOriginal
+      0x9292: 'SubSecTimeDigitized', // Fractions of seconds for DateTimeDigitized
+      0x829a: 'ExposureTime', // Exposure time (in seconds)
+      0x829d: 'FNumber',
+      0x8822: 'ExposureProgram', // Exposure program
+      0x8824: 'SpectralSensitivity', // Spectral sensitivity
+      0x8827: 'PhotographicSensitivity', // EXIF 2.3, ISOSpeedRatings in EXIF 2.2
+      0x8828: 'OECF', // Optoelectric conversion factor
+      0x8830: 'SensitivityType',
+      0x8831: 'StandardOutputSensitivity',
+      0x8832: 'RecommendedExposureIndex',
+      0x8833: 'ISOSpeed',
+      0x8834: 'ISOSpeedLatitudeyyy',
+      0x8835: 'ISOSpeedLatitudezzz',
+      0x9201: 'ShutterSpeedValue', // Shutter speed
+      0x9202: 'ApertureValue', // Lens aperture
+      0x9203: 'BrightnessValue', // Value of brightness
+      0x9204: 'ExposureBias', // Exposure bias
+      0x9205: 'MaxApertureValue', // Smallest F number of lens
+      0x9206: 'SubjectDistance', // Distance to subject in meters
+      0x9207: 'MeteringMode', // Metering mode
+      0x9208: 'LightSource', // Kind of light source
+      0x9209: 'Flash', // Flash status
+      0x9214: 'SubjectArea', // Location and area of main subject
+      0x920a: 'FocalLength', // Focal length of the lens in mm
+      0xa20b: 'FlashEnergy', // Strobe energy in BCPS
+      0xa20c: 'SpatialFrequencyResponse',
+      0xa20e: 'FocalPlaneXResolution', // Number of pixels in width direction per FPRUnit
+      0xa20f: 'FocalPlaneYResolution', // Number of pixels in height direction per FPRUnit
+      0xa210: 'FocalPlaneResolutionUnit', // Unit for measuring the focal plane resolution
+      0xa214: 'SubjectLocation', // Location of subject in image
+      0xa215: 'ExposureIndex', // Exposure index selected on camera
+      0xa217: 'SensingMethod', // Image sensor type
+      0xa300: 'FileSource', // Image source (3 == DSC)
+      0xa301: 'SceneType', // Scene type (1 == directly photographed)
+      0xa302: 'CFAPattern', // Color filter array geometric pattern
+      0xa401: 'CustomRendered', // Special processing
+      0xa402: 'ExposureMode', // Exposure mode
+      0xa403: 'WhiteBalance', // 1 = auto white balance, 2 = manual
+      0xa404: 'DigitalZoomRatio', // Digital zoom ratio
+      0xa405: 'FocalLengthIn35mmFilm',
+      0xa406: 'SceneCaptureType', // Type of scene
+      0xa407: 'GainControl', // Degree of overall image gain adjustment
+      0xa408: 'Contrast', // Direction of contrast processing applied by camera
+      0xa409: 'Saturation', // Direction of saturation processing applied by camera
+      0xa40a: 'Sharpness', // Direction of sharpness processing applied by camera
+      0xa40b: 'DeviceSettingDescription',
+      0xa40c: 'SubjectDistanceRange', // Distance to subject
+      0xa420: 'ImageUniqueID', // Identifier assigned uniquely to each image
+      0xa430: 'CameraOwnerName',
+      0xa431: 'BodySerialNumber',
+      0xa432: 'LensSpecification',
+      0xa433: 'LensMake',
+      0xa434: 'LensModel',
+      0xa435: 'LensSerialNumber'
+    },
+    0x8825: {
+      // GPSInfoIFDPointer
+      0x0000: 'GPSVersionID',
+      0x0001: 'GPSLatitudeRef',
+      0x0002: 'GPSLatitude',
+      0x0003: 'GPSLongitudeRef',
+      0x0004: 'GPSLongitude',
+      0x0005: 'GPSAltitudeRef',
+      0x0006: 'GPSAltitude',
+      0x0007: 'GPSTimeStamp',
+      0x0008: 'GPSSatellites',
+      0x0009: 'GPSStatus',
+      0x000a: 'GPSMeasureMode',
+      0x000b: 'GPSDOP',
+      0x000c: 'GPSSpeedRef',
+      0x000d: 'GPSSpeed',
+      0x000e: 'GPSTrackRef',
+      0x000f: 'GPSTrack',
+      0x0010: 'GPSImgDirectionRef',
+      0x0011: 'GPSImgDirection',
+      0x0012: 'GPSMapDatum',
+      0x0013: 'GPSDestLatitudeRef',
+      0x0014: 'GPSDestLatitude',
+      0x0015: 'GPSDestLongitudeRef',
+      0x0016: 'GPSDestLongitude',
+      0x0017: 'GPSDestBearingRef',
+      0x0018: 'GPSDestBearing',
+      0x0019: 'GPSDestDistanceRef',
+      0x001a: 'GPSDestDistance',
+      0x001b: 'GPSProcessingMethod',
+      0x001c: 'GPSAreaInformation',
+      0x001d: 'GPSDateStamp',
+      0x001e: 'GPSDifferential',
+      0x001f: 'GPSHPositioningError'
+    },
+    0xa005: {
+      // InteroperabilityIFDPointer
+      0x0001: 'InteroperabilityIndex'
+    }
   }
 
-  loadImage.ExifMap.prototype.stringValues = {
+  ExifMapProto.stringValues = {
     ExposureProgram: {
       0: 'Undefined',
       1: 'Manual',
@@ -321,9 +324,9 @@
     }
   }
 
-  loadImage.ExifMap.prototype.getText = function (id) {
-    var value = this.get(id)
-    switch (id) {
+  ExifMapProto.getText = function (name) {
+    var value = this.get(name)
+    switch (name) {
       case 'LightSource':
       case 'Flash':
       case 'MeteringMode':
@@ -340,7 +343,7 @@
       case 'SubjectDistanceRange':
       case 'FileSource':
       case 'Orientation':
-        return this.stringValues[id][value]
+        return this.stringValues[name][value]
       case 'ExifVersion':
       case 'FlashpixVersion':
         if (!value) return
@@ -348,10 +351,10 @@
       case 'ComponentsConfiguration':
         if (!value) return
         return (
-          this.stringValues[id][value[0]] +
-          this.stringValues[id][value[1]] +
-          this.stringValues[id][value[2]] +
-          this.stringValues[id][value[3]]
+          this.stringValues[name][value[0]] +
+          this.stringValues[name][value[1]] +
+          this.stringValues[name][value[2]] +
+          this.stringValues[name][value[3]]
         )
       case 'GPSVersionID':
         if (!value) return
@@ -359,30 +362,53 @@
     }
     return String(value)
   }
-  ;(function (exifMapPrototype) {
-    var tags = exifMapPrototype.tags
-    var map = exifMapPrototype.map
-    var prop
-    // Map the tag names to tags:
-    for (prop in tags) {
-      if (Object.prototype.hasOwnProperty.call(tags, prop)) {
-        map[tags[prop]] = prop
-      }
-    }
-  })(loadImage.ExifMap.prototype)
 
-  loadImage.ExifMap.prototype.getAll = function () {
+  ExifMapProto.getAll = function () {
     var map = {}
     var prop
-    var id
+    var obj
+    var name
     for (prop in this) {
       if (Object.prototype.hasOwnProperty.call(this, prop)) {
-        id = this.tags[prop]
-        if (id) {
-          map[id] = this.getText(id)
+        obj = this[prop]
+        if (obj && obj.getAll) {
+          map[this.privateIFDs[prop].name] = obj.getAll()
+        } else {
+          name = this.tags[prop]
+          if (name) map[name] = this.getText(name)
         }
       }
     }
     return map
   }
+
+  ExifMapProto.getName = function (tagCode) {
+    var name = this.tags[tagCode]
+    if (typeof name === 'object') return this.privateIFDs[tagCode].name
+    return name
+  }
+
+  // Extend the map of tag names to tag codes:
+  ;(function () {
+    var tags = ExifMapProto.tags
+    var prop
+    var privateIFD
+    var subTags
+    // Map the tag names to tags:
+    for (prop in tags) {
+      if (Object.prototype.hasOwnProperty.call(tags, prop)) {
+        privateIFD = ExifMapProto.privateIFDs[prop]
+        if (privateIFD) {
+          subTags = tags[prop]
+          for (prop in subTags) {
+            if (Object.prototype.hasOwnProperty.call(subTags, prop)) {
+              privateIFD.map[subTags[prop]] = Number(prop)
+            }
+          }
+        } else {
+          ExifMapProto.map[tags[prop]] = Number(prop)
+        }
+      }
+    }
+  })()
 })

@@ -6,9 +6,8 @@
  * Copyright 2018, Dave Bevan
  *
  * IPTC tags mapping based on
- * https://github.com/jseidelin/exif-js
  * https://iptc.org/standards/photo-metadata
- * http://www.iptc.org/std/IIM/4.1/specification/IIMV4.1.pdf
+ * https://exiftool.org/TagNames/IPTC.html
  *
  * Licensed under the MIT license:
  * https://opensource.org/licenses/MIT
@@ -30,100 +29,141 @@
 })(function (loadImage) {
   'use strict'
 
-  loadImage.IptcMap.prototype.tags = {
-    // ==========
-    // IPTC tags:
-    // ==========
-    0x03: 'ObjectType',
-    0x04: 'ObjectAttribute',
-    0x05: 'ObjectName',
-    0x07: 'EditStatus',
-    0x08: 'EditorialUpdate',
-    0x0a: 'Urgency',
-    0x0c: 'SubjectRef',
-    0x0f: 'Category',
-    0x14: 'SupplCategory',
-    0x16: 'FixtureID',
-    0x19: 'Keywords',
-    0x1a: 'ContentLocCode',
-    0x1b: 'ContentLocName',
-    0x1e: 'ReleaseDate',
-    0x23: 'ReleaseTime',
-    0x25: 'ExpirationDate',
-    0x26: 'ExpirationTime',
-    0x28: 'SpecialInstructions',
-    0x2a: 'ActionAdvised',
-    0x2d: 'RefService',
-    0x2f: 'RefDate',
-    0x32: 'RefNumber',
-    0x37: 'DateCreated',
-    0x3c: 'TimeCreated',
-    0x3e: 'DigitalCreationDate',
-    0x3f: 'DigitalCreationTime',
-    0x41: 'OriginatingProgram',
-    0x46: 'ProgramVersion',
-    0x4b: 'ObjectCycle',
-    0x50: 'Byline',
-    0x55: 'BylineTitle',
-    0x5a: 'City',
-    0x5c: 'Sublocation',
-    0x5f: 'State',
-    0x64: 'CountryCode',
-    0x65: 'CountryName',
-    0x67: 'OrigTransRef',
-    0x69: 'Headline',
-    0x6e: 'Credit',
-    0x73: 'Source',
-    0x74: 'CopyrightNotice',
-    0x76: 'Contact',
-    0x78: 'Caption',
-    0x7a: 'WriterEditor',
-    0x82: 'ImageType',
-    0x83: 'ImageOrientation',
-    0x87: 'LanguageID'
+  var IptcMapProto = loadImage.IptcMap.prototype
 
-    // We don't record these tags:
-    //
-    // 0x00: 'RecordVersion',
-    // 0x7d: 'RasterizedCaption',
-    // 0x96: 'AudioType',
-    // 0x97: 'AudioSamplingRate',
-    // 0x98: 'AudioSamplingRes',
-    // 0x99: 'AudioDuration',
-    // 0x9a: 'AudioOutcue',
-    // 0xc8: 'PreviewFileFormat',
-    // 0xc9: 'PreviewFileFormatVer',
-    // 0xca: 'PreviewData'
+  IptcMapProto.tags = {
+    0: 'ApplicationRecordVersion',
+    3: 'ObjectTypeReference',
+    4: 'ObjectAttributeReference',
+    5: 'ObjectName',
+    7: 'EditStatus',
+    8: 'EditorialUpdate',
+    10: 'Urgency',
+    12: 'SubjectReference',
+    15: 'Category',
+    20: 'SupplementalCategories',
+    22: 'FixtureIdentifier',
+    25: 'Keywords',
+    26: 'ContentLocationCode',
+    27: 'ContentLocationName',
+    30: 'ReleaseDate',
+    35: 'ReleaseTime',
+    37: 'ExpirationDate',
+    38: 'ExpirationTime',
+    40: 'SpecialInstructions',
+    42: 'ActionAdvised',
+    45: 'ReferenceService',
+    47: 'ReferenceDate',
+    50: 'ReferenceNumber',
+    55: 'DateCreated',
+    60: 'TimeCreated',
+    62: 'DigitalCreationDate',
+    63: 'DigitalCreationTime',
+    65: 'OriginatingProgram',
+    70: 'ProgramVersion',
+    75: 'ObjectCycle',
+    80: 'Byline',
+    85: 'BylineTitle',
+    90: 'City',
+    92: 'Sublocation',
+    95: 'State',
+    100: 'CountryCode',
+    101: 'Country',
+    103: 'OriginalTransmissionReference',
+    105: 'Headline',
+    110: 'Credit',
+    115: 'Source',
+    116: 'CopyrightNotice',
+    118: 'Contact',
+    120: 'Caption',
+    121: 'LocalCaption',
+    122: 'Writer',
+    125: 'RasterizedCaption',
+    130: 'ImageType',
+    131: 'ImageOrientation',
+    135: 'LanguageIdentifier',
+    150: 'AudioType',
+    151: 'AudioSamplingRate',
+    152: 'AudioSamplingResolution',
+    153: 'AudioDuration',
+    154: 'AudioOutcue',
+    184: 'JobID',
+    185: 'MasterDocumentID',
+    186: 'ShortDocumentID',
+    187: 'UniqueDocumentID',
+    188: 'OwnerID',
+    200: 'ObjectPreviewFileFormat',
+    201: 'ObjectPreviewFileVersion',
+    202: 'ObjectPreviewData',
+    221: 'Prefs',
+    225: 'ClassifyState',
+    228: 'SimilarityIndex',
+    230: 'DocumentNotes',
+    231: 'DocumentHistory',
+    232: 'ExifCameraInfo',
+    255: 'CatalogSets'
   }
 
-  loadImage.IptcMap.prototype.getText = function (id) {
+  IptcMapProto.stringValues = {
+    10: {
+      0: '0 (reserved)',
+      1: '1 (most urgent)',
+      2: '2',
+      3: '3',
+      4: '4',
+      5: '5 (normal urgency)',
+      6: '6',
+      7: '7',
+      8: '8 (least urgent)',
+      9: '9 (user-defined priority)'
+    },
+    75: {
+      a: 'Morning',
+      b: 'Both Morning and Evening',
+      p: 'Evening'
+    },
+    131: {
+      L: 'Landscape',
+      P: 'Portrait',
+      S: 'Square'
+    }
+  }
+
+  IptcMapProto.getText = function (id) {
     var value = this.get(id)
+    var tagCode = this.map[id]
+    var stringValue = this.stringValues[tagCode]
+    if (stringValue) return stringValue[value]
     return String(value)
   }
-  ;(function (iptcMapPrototype) {
-    var tags = iptcMapPrototype.tags
-    var map = iptcMapPrototype.map || {}
-    var prop
-    // Map the tag names to tags:
-    for (prop in tags) {
-      if (Object.prototype.hasOwnProperty.call(tags, prop)) {
-        map[tags[prop]] = prop
-      }
-    }
-  })(loadImage.IptcMap.prototype)
 
-  loadImage.IptcMap.prototype.getAll = function () {
+  IptcMapProto.getAll = function () {
     var map = {}
     var prop
-    var id
+    var name
     for (prop in this) {
       if (Object.prototype.hasOwnProperty.call(this, prop)) {
-        id = this.tags[prop]
-        if (id) {
-          map[id] = this.getText(id)
-        }
+        name = this.tags[prop]
+        if (name) map[name] = this.getText(name)
       }
     }
     return map
   }
+
+  IptcMapProto.getName = function (tagCode) {
+    return this.tags[tagCode]
+  }
+
+  // Extend the map of tag names to tag codes:
+  ;(function () {
+    var tags = IptcMapProto.tags
+    var map = IptcMapProto.map || {}
+    var prop
+    // Map the tag names to tags:
+    for (prop in tags) {
+      if (Object.prototype.hasOwnProperty.call(tags, prop)) {
+        map[tags[prop]] = Number(prop)
+      }
+    }
+  })()
 })

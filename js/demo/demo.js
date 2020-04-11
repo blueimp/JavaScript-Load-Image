@@ -29,12 +29,16 @@ $(function () {
    * @param {object} tags Tags object
    */
   function displayTagData(node, tags) {
-    var table = node.find('table').empty()
+    var table = $('<table>')
     var row = $('<tr></tr>')
     var cell = $('<td></td>')
     var prop
     for (prop in tags) {
       if (Object.prototype.hasOwnProperty.call(tags, prop)) {
+        if (typeof tags[prop] === 'object') {
+          displayTagData(node, tags[prop])
+          continue
+        }
         table.append(
           row
             .clone()
@@ -43,7 +47,7 @@ $(function () {
         )
       }
     }
-    node.show()
+    node.append(table).show()
   }
 
   /**
@@ -55,11 +59,15 @@ $(function () {
    */
   function displayThumbnailImage(node, thumbnail, options) {
     if (thumbnail) {
-      thumbNode.empty()
+      var link = $('<a>')
+        .attr('href', loadImage.createObjectURL(thumbnail))
+        .attr('download', 'thumbnail.jpg')
+        .appendTo(node)
       loadImage(
         thumbnail,
         function (img) {
-          node.append(img).show()
+          link.append(img)
+          node.show()
         },
         options
       )
@@ -136,9 +144,9 @@ $(function () {
       orientation: true,
       meta: true
     }
-    exifNode.hide()
-    iptcNode.hide()
-    thumbNode.hide()
+    exifNode.hide().find('table').remove()
+    iptcNode.hide().find('table').remove()
+    thumbNode.hide().empty()
     if (!loadImage(file, updateResults, options)) {
       result
         .children()

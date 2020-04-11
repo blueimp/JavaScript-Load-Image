@@ -429,8 +429,8 @@ is available.
 ### Exif parser
 
 If you include the Load Image Exif Parser extension, the argument passed to the
-callback for `parseMetaData` will contain the additional properties if Exif data
-could be found in the given image:
+callback for `parseMetaData` will contain the following additional properties if
+Exif data could be found in the given image:
 
 - `exif`: The parsed Exif tags
 - `exifOffsets`: The parsed Exif tag offsets
@@ -451,13 +451,25 @@ var orientation = data.exif.get('Orientation')
 var orientationOffset = data.exifOffsets.get('Orientation')
 ```
 
-By default, the only available mapped names are `Orientation` and `Thumbnail`.  
+By default, only the following names are mapped:
+
+- `Orientation`
+- `Thumbnail`
+- `Exif`
+- `GPSInfo`
+- `Interoperability`
+
 If you also include the Load Image Exif Map library, additional tag mappings
-become available, as well as two additional methods, `exif.getText()` and
-`exif.getAll()`:
+become available, as well as three additional methods:
+
+- `exif.getText()`
+- `exif.getName()`
+- `exif.getAll()`
 
 ```js
 var flashText = data.exif.getText('Flash') // e.g.: 'Flash fired, auto mode',
+
+var name = data.exif.getName(0x0112) // Orientation
 
 // A map of all parsed tags with their mapped names/text as keys/values:
 var allTags = data.exif.getAll()
@@ -466,11 +478,55 @@ var allTags = data.exif.getAll()
 The Exif parser also adds additional options for the parseMetaData method, to
 disable certain aspects of the parser:
 
-- `disableExif`: Disables Exif parsing.
-- `disableExifThumbnail`: Disables parsing of the Exif Thumbnail.
-- `disableExifSub`: Disables parsing of the Exif Sub IFD.
-- `disableExifGps`: Disables parsing of the Exif GPS Info IFD.
-- `disableExifOffsets`: Disables storing Exif tag offsets
+- `disableExif`: Disables Exif parsing when `true`.
+- `disableExifThumbnail`: Disables parsing of Thumbnail data when `true`.
+- `disableExifOffsets`: Disables storing Exif tag offsets when `true`.
+- `includeExifTags`: A map of Exif tags to include for parsing (includes all but
+  the excluded tags by default).
+- `excludeExifTags`: A map of Exif tags to exclude from parsing (defaults to
+  exclude `Exif` `MakerNote`).
+
+An example parsing only Orientation, Thumbnail and ExifVersion tags:
+
+```js
+loadImage.parseMetaData(
+  fileOrBlob,
+  function (data) {
+    console.log('Exif data: ', data.exif)
+  },
+  {
+    includeExifTags: {
+      0x0112: true, // Orientation
+      0x0201: true, // JPEGInterchangeFormat (Thumbnail data offset)
+      0x0202: true, // JPEGInterchangeFormatLength (Thumbnail data length)
+      0x8769: {
+        // ExifIFDPointer
+        0x9000: true // ExifVersion
+      }
+    }
+  }
+)
+```
+
+An example excluding `Exif` `MakerNote` and `GPSInfo`:
+
+```js
+loadImage.parseMetaData(
+  fileOrBlob,
+  function (data) {
+    console.log('Exif data: ', data.exif)
+  },
+  {
+    excludeExifTags: {
+      0x8769: {
+        // ExifIFDPointer
+        0x927c: true // MakerNote
+      },
+      0x8825: true // GPSInfoIFDPointer
+    }
+  }
+)
+```
 
 ### Exif writer
 
@@ -498,28 +554,40 @@ loadImage(
 ### IPTC parser
 
 If you include the Load Image IPTC Parser extension, the argument passed to the
-callback for `parseMetaData` will contain the additional property `iptc` if IPTC
-data could be found in the given image.  
+callback for `parseMetaData` will contain the following additional properties if
+IPTC data could be found in the given image:
+
+- `iptc`: The parsed IPTC tags
+- `iptcOffsets`: The parsed IPTC tag offsets
+
 The `iptc` object stores the parsed IPTC tags:
 
 ```js
-var objectname = data.iptc[0x5]
+var objectname = data.iptc[5]
 ```
 
-It also provides an `iptc.get()` method to retrieve the tag value via the tag's
-mapped name:
+The `iptc` and `iptcOffsets` objects also provide a `get()` method to retrieve
+the tag value/offset via the tag's mapped name:
 
 ```js
 var objectname = data.iptc.get('ObjectName')
 ```
 
-By default, the only available mapped names are `ObjectName`.  
+By default, only the following names are mapped:
+
+- `ObjectName`
+
 If you also include the Load Image IPTC Map library, additional tag mappings
-become available, as well as two additional methods, `iptc.getText()` and
-`iptc.getAll()`:
+become available, as well as three additional methods:
+
+- `iptc.getText()`
+- `iptc.getName()`
+- `iptc.getAll()`
 
 ```js
 var keywords = data.iptc.getText('Keywords') // e.g.: ['Weather','Sky']
+
+var name = data.iptc.getName(5) // ObjectName
 
 // A map of all parsed tags with their mapped names/text as keys/values:
 var allTags = data.iptc.getAll()
@@ -528,7 +596,45 @@ var allTags = data.iptc.getAll()
 The IPTC parser also adds additional options for the parseMetaData method, to
 disable certain aspects of the parser:
 
-- `disableIptc`: Disables IPTC parsing.
+- `disableIptc`: Disables IPTC parsing when true.
+- `disableIptcOffsets`: Disables storing IPTC tag offsets when `true`.
+- `includeIptcTags`: A map of IPTC tags to include for parsing (includes all but
+  the excluded tags by default).
+- `excludeIptcTags`: A map of IPTC tags to exclude from parsing (defaults to
+  exclude `ObjectPreviewData`).
+
+An example parsing only the `ObjectName` tag:
+
+```js
+loadImage.parseMetaData(
+  fileOrBlob,
+  function (data) {
+    console.log('IPTC data: ', data.iptc)
+  },
+  {
+    includeIptcTags: {
+      5: true // ObjectName
+    }
+  }
+)
+```
+
+An example excluding `ApplicationRecordVersion` and `ObjectPreviewData`:
+
+```js
+loadImage.parseMetaData(
+  fileOrBlob,
+  function (data) {
+    console.log('IPTC data: ', data.iptc)
+  },
+  {
+    excludeIptcTags: {
+      0: true, // ApplicationRecordVersion
+      202: true // ObjectPreviewData
+    }
+  }
+)
+```
 
 ## License
 
