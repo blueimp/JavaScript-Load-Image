@@ -68,6 +68,25 @@
     }
   }
 
+  /**
+   * Request helper function.
+   *
+   * @param {string} url URL to request
+   * @param {Function} callback Request callback
+   */
+  function request(url, callback) {
+    var xhr = new XMLHttpRequest()
+    xhr.onload = callback
+    xhr.onerror = callback
+    try {
+      xhr.open('GET', url, true)
+    } catch (e) {
+      callback.call(xhr, e)
+      return
+    }
+    xhr.send()
+  }
+
   describe('Loading', function () {
     it('Return an object with onload and onerror methods', function () {
       var img = loadImage(blobGIF, function () {})
@@ -116,32 +135,37 @@
       ).to.be.ok
     })
 
-    it('Keep object URL if noRevoke is true', function (done) {
-      expect(
-        loadImage(
-          blobGIF,
-          function (img) {
-            loadImage(img.src, function (img2) {
-              expect(img.width).to.equal(img2.width)
-              expect(img.height).to.equal(img2.height)
+    describe('ObjectURL revoke', function () {
+      // Using XMLHttpRequest via the request helper function to test Object
+      // URLs to work around Edge Legacy and IE caching image URLs.
+      if (!window.XMLHttpRequest) return
+
+      it('Keep object URL if noRevoke is set to true', function (done) {
+        expect(
+          loadImage(
+            blobGIF,
+            function (img) {
+              request(img.src, function (event) {
+                expect(event.type).to.equal('load')
+                done()
+              })
+            },
+            { noRevoke: true }
+          )
+        ).to.be.ok
+      })
+
+      it('Discard object URL if noRevoke is not set', function (done) {
+        expect(
+          loadImage(blobGIF, function (img) {
+            request(img.src, function (event) {
+              // IE throws an error that has no type property:
+              expect(event.type).to.be.oneOf(['error', undefined])
               done()
             })
-          },
-          { noRevoke: true }
-        )
-      ).to.be.ok
-    })
-
-    it('Discard object URL if noRevoke is undefined/false', function (done) {
-      expect(
-        loadImage(blobGIF, function (img) {
-          loadImage(img.src, function (img2) {
-            expect(img2).to.be.an.instanceOf(window.Event)
-            expect(img2.type).to.equal('error')
-            done()
           })
-        })
-      ).to.be.ok
+        ).to.be.ok
+      })
     })
   })
 
@@ -1232,7 +1256,7 @@
     it('Should fetch image URL as blob if meta option is true', function (done) {
       expect(
         loadImage(
-          // IE11 does not allow XMLHttpRequest access to data URLs,
+          // IE does not allow XMLHttpRequest access to data URLs,
           // so we use an ObjectURL instead of imageUrlJPEG directly:
           loadImage.createObjectURL(blobJPEG),
           function (img, data) {
