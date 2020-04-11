@@ -179,11 +179,6 @@
     )
   }
 
-  // Determines if meta data should be loaded automatically:
-  loadImage.hasMetaOption = function (options) {
-    return options && options.meta
-  }
-
   var originalTransform = loadImage.transform
   loadImage.transform = function (img, options, callback, file, data) {
     if (loadImage.hasMetaOption(options)) {

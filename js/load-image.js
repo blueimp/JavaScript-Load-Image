@@ -27,6 +27,26 @@
   function loadImage(file, callback, options) {
     var img = document.createElement('img')
     var url
+    /**
+     * Callback for the fetchBlob call.
+     *
+     * @param {Blob} blob Blob object
+     * @param {Error} err Error object
+     */
+    function fetchBlobCallback(blob, err) {
+      if (err) console.log(err) // eslint-disable-line no-console
+      if (blob && loadImage.isInstanceOf('Blob', blob)) {
+        // eslint-disable-next-line no-param-reassign
+        file = blob
+        url = loadImage.createObjectURL(file)
+      } else {
+        url = file
+        if (options && options.crossOrigin) {
+          img.crossOrigin = options.crossOrigin
+        }
+      }
+      img.src = url
+    }
     img.onerror = function (event) {
       return loadImage.onerror(img, event, file, url, callback, options)
     }
@@ -34,23 +54,11 @@
       return loadImage.onload(img, event, file, url, callback, options)
     }
     if (typeof file === 'string') {
-      loadImage.fetchBlob(
-        file,
-        function (blob) {
-          if (blob && loadImage.isInstanceOf('Blob', blob)) {
-            // eslint-disable-next-line no-param-reassign
-            file = blob
-            url = loadImage.createObjectURL(file)
-          } else {
-            url = file
-            if (options && options.crossOrigin) {
-              img.crossOrigin = options.crossOrigin
-            }
-          }
-          img.src = url
-        },
-        options
-      )
+      if (loadImage.hasMetaOption(options)) {
+        loadImage.fetchBlob(file, fetchBlobCallback, options)
+      } else {
+        fetchBlobCallback()
+      }
       return img
     } else if (
       loadImage.isInstanceOf('Blob', file) ||
@@ -90,6 +98,12 @@
     if (url && url.slice(0, 5) === 'blob:' && !(options && options.noRevoke)) {
       loadImage.revokeObjectURL(url)
     }
+  }
+
+  // Determines if meta data should be loaded automatically.
+  // Requires the load image meta extension to load meta data.
+  loadImage.hasMetaOption = function (options) {
+    return options && options.meta
   }
 
   // If the callback given to this function returns a blob, it is used as image
