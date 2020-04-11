@@ -28,10 +28,10 @@
     var img = document.createElement('img')
     var url
     img.onerror = function (event) {
-      return loadImage.onerror(img, event, file, callback, options)
+      return loadImage.onerror(img, event, file, url, callback, options)
     }
     img.onload = function (event) {
-      return loadImage.onload(img, event, file, callback, options)
+      return loadImage.onload(img, event, file, url, callback, options)
     }
     if (typeof file === 'string') {
       loadImage.fetchBlob(
@@ -58,7 +58,7 @@
       // (Firefox 3.6) support the File API but not Blobs:
       loadImage.isInstanceOf('File', file)
     ) {
-      url = img._objectURL = loadImage.createObjectURL(file)
+      url = loadImage.createObjectURL(file)
       if (url) {
         img.src = url
         return img
@@ -83,13 +83,12 @@
   /**
    * Helper function to revoke an object URL
    *
-   * @param {HTMLImageElement} img Image element
+   * @param {string} url Blob Object URL
    * @param {object} [options] Options object
    */
-  function revokeHelper(img, options) {
-    if (img._objectURL && !(options && options.noRevoke)) {
-      loadImage.revokeObjectURL(img._objectURL)
-      delete img._objectURL
+  function revokeHelper(url, options) {
+    if (url && url.slice(0, 5) === 'blob:' && !(options && options.noRevoke)) {
+      loadImage.revokeObjectURL(url)
     }
   }
 
@@ -109,15 +108,15 @@
     callback(img, data)
   }
 
-  loadImage.onerror = function (img, event, file, callback, options) {
-    revokeHelper(img, options)
+  loadImage.onerror = function (img, event, file, url, callback, options) {
+    revokeHelper(url, options)
     if (callback) {
       callback.call(img, event)
     }
   }
 
-  loadImage.onload = function (img, event, file, callback, options) {
-    revokeHelper(img, options)
+  loadImage.onload = function (img, event, file, url, callback, options) {
+    revokeHelper(url, options)
     if (callback) {
       loadImage.transform(img, options, callback, file, {
         originalWidth: img.naturalWidth || img.width,
