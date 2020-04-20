@@ -240,100 +240,103 @@ Defines the minimum height of the img/canvas element.
 
 The width of the sub-rectangle of the source image to draw into the destination
 canvas.  
- Defaults to the source image width and requires `canvas: true`.
+Defaults to the source image width and requires `canvas: true`.
 
 ### sourceHeight
 
 The height of the sub-rectangle of the source image to draw into the destination
 canvas.  
- Defaults to the source image height and requires `canvas: true`.
+Defaults to the source image height and requires `canvas: true`.
 
 ### top
 
 The top margin of the sub-rectangle of the source image.  
- Defaults to `0` and requires `canvas: true`.
+Defaults to `0` and requires `canvas: true`.
 
 ### right
 
 The right margin of the sub-rectangle of the source image.  
- Defaults to `0` and requires `canvas: true`.
+Defaults to `0` and requires `canvas: true`.
 
 ### bottom
 
 The bottom margin of the sub-rectangle of the source image.  
- Defaults to `0` and requires `canvas: true`.
+Defaults to `0` and requires `canvas: true`.
 
 ### left
 
 The left margin of the sub-rectangle of the source image.  
- Defaults to `0` and requires `canvas: true`.
+Defaults to `0` and requires `canvas: true`.
 
 ### contain
 
 Scales the image up/down to contain it in the max dimensions if set to `true`.  
- This emulates the CSS feature [background-image: contain](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Scaling_background_images#contain).
+This emulates the CSS feature
+[background-image: contain](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Scaling_background_images#contain).
 
 ### cover
 
 Scales the image up/down to cover the max dimensions with the image dimensions
 if set to `true`.  
- This emulates the CSS feature [background-image: cover](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Scaling_background_images#cover).
+This emulates the CSS feature
+[background-image: cover](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Scaling_background_images#cover).
 
 ### aspectRatio
 
 Crops the image to the given aspect ratio (e.g. `16/9`).  
- Setting the `aspectRatio` also enables the `crop` option.
+Setting the `aspectRatio` also enables the `crop` option.
 
 ### pixelRatio
 
 Defines the ratio of the canvas pixels to the physical image pixels on the
 screen.  
- Should be set to `window.devicePixelRatio` unless the scaled image is not rendered
-on screen.  
- Defaults to `1` and requires `canvas: true`.
+Should be set to `window.devicePixelRatio` unless the scaled image is not
+rendered on screen.  
+Defaults to `1` and requires `canvas: true`.
 
 ### downsamplingRatio
 
 Defines the ratio in which the image is downsampled.  
- By default, images are downsampled in one step. With a ratio of `0.5`, each step
+By default, images are downsampled in one step. With a ratio of `0.5`, each step
 scales the image to half the size, before reaching the target dimensions.  
- Requires `canvas: true`.
+Requires `canvas: true`.
 
 ### imageSmoothingEnabled
 
 If set to `false`,
 [disables image smoothing](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/imageSmoothingEnabled).  
- Defaults to `true` and requires `canvas: true`.
+Defaults to `true` and requires `canvas: true`.
 
 ### imageSmoothingQuality
 
 Sets the
 [quality of image smoothing](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/imageSmoothingQuality).  
- Possible values: `'low'`, `'medium'`, `'high'`  
- Defaults to `'low'` and requires `canvas: true`.
+Possible values: `'low'`, `'medium'`, `'high'`  
+Defaults to `'low'` and requires `canvas: true`.
 
 ### crop
 
 Crops the image to the maxWidth/maxHeight constraints if set to `true`.  
- Enabling the `crop` option also enables the `canvas` option.
+Enabling the `crop` option also enables the `canvas` option.
 
 ### orientation
 
 Transform the canvas according to the specified Exif orientation, which can be
 an `integer` in the range of `1` to `8` or the boolean value `true`.  
- When set to `true`, it will set the orientation value based on the EXIF data of
+When set to `true`, it will set the orientation value based on the EXIF data of
 the image, which will be parsed automatically if the exif library is available.
 
 Setting `orientation` to an integer in the range of `2` to `8` enables the
 `canvas` option.  
- Setting `orientation` to `true` enables the `canvas` and `meta` options, unless
-the browser supports automatic image orientation (see [browser support for image-orientation](https://caniuse.com/#feat=css-image-orientation)).
+Setting `orientation` to `true` enables the `canvas` and `meta` options, unless
+the browser supports automatic image orientation (see
+[browser support for image-orientation](https://caniuse.com/#feat=css-image-orientation)).
 
 ### meta
 
 Automatically parses the image meta data if set to `true`.  
- The meta data is passed to the callback as part of the second argument.  
- If the file is given as URL and the browser supports the
+The meta data is passed to the callback as part of the second argument.  
+If the file is given as URL and the browser supports the
 [fetch API](https://developer.mozilla.org/en/docs/Web/API/Fetch_API), fetches
 the file as Blob to be able to parse the meta data.
 
