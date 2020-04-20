@@ -29,7 +29,7 @@ $(function () {
    * @param {object} tags Tags object
    */
   function displayTagData(node, tags) {
-    var table = $('<table>')
+    var table = $('<table></table>')
     var row = $('<tr></tr>')
     var cell = $('<td></td>')
     var prop
@@ -59,7 +59,7 @@ $(function () {
    */
   function displayThumbnailImage(node, thumbnail, options) {
     if (thumbnail) {
-      var link = $('<a>')
+      var link = $('<a></a>')
         .attr('href', loadImage.createObjectURL(thumbnail))
         .attr('download', 'thumbnail.jpg')
         .appendTo(node)
@@ -105,7 +105,7 @@ $(function () {
       result.children().replaceWith($('<span>Loading image file failed</span>'))
       return
     }
-    var content = $('<a>').append(img)
+    var content = $('<a></a>').append(img)
     result.children().replaceWith(content)
     if (data) {
       if (img.getContext) {
