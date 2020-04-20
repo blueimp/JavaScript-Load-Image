@@ -39,8 +39,10 @@
 - [Meta data parsing](#meta-data-parsing)
   - [Image head](#image-head)
   - [Exif parser](#exif-parser)
+    - [Exif parser options](#exif-parser-options)
   - [Exif writer](#exif-writer)
   - [IPTC parser](#iptc-parser)
+    - [IPTC parser options](#iptc-parser-options)
 - [License](#license)
 - [Credits](#credits)
 
@@ -481,8 +483,9 @@ var name = data.exif.getName(0x0112) // Orientation
 var allTags = data.exif.getAll()
 ```
 
-The Exif parser also adds additional options for the parseMetaData method, to
-disable certain aspects of the parser:
+#### Exif parser options
+
+The Exif parser adds additional options:
 
 - `disableExif`: Disables Exif parsing when `true`.
 - `disableExifThumbnail`: Disables parsing of Thumbnail data when `true`.
@@ -599,8 +602,9 @@ var name = data.iptc.getName(5) // ObjectName
 var allTags = data.iptc.getAll()
 ```
 
-The IPTC parser also adds additional options for the parseMetaData method, to
-disable certain aspects of the parser:
+#### IPTC parser options
+
+The IPTC parser adds additional options:
 
 - `disableIptc`: Disables IPTC parsing when true.
 - `disableIptcOffsets`: Disables storing IPTC tag offsets when `true`.
