@@ -39,6 +39,10 @@
 - [Meta data parsing](#meta-data-parsing)
   - [Image head](#image-head)
   - [Exif parser](#exif-parser)
+    - [Exif Thumbnail](#exif-thumbnail)
+    - [Exif IFD](#exif-ifd)
+    - [GPSInfo IFD](#gpsinfo-ifd)
+    - [Interoperability IFD](#interoperability-ifd)
     - [Exif parser options](#exif-parser-options)
   - [Exif writer](#exif-writer)
   - [IPTC parser](#iptc-parser)
@@ -463,9 +467,9 @@ By default, only the following names are mapped:
 
 - `Orientation`
 - `Thumbnail`
-- `Exif`
-- `GPSInfo`
-- `Interoperability`
+- `Exif` (see [Exif IFD](#exif-ifd))
+- `GPSInfo` (see [GPSInfo IFD](#gpsinfo-ifd))
+- `Interoperability` (see [Interoperability IFD](#interoperability-ifd))
 
 If you also include the Load Image Exif Map library, additional tag mappings
 become available, as well as three additional methods:
@@ -481,6 +485,86 @@ var name = data.exif.getName(0x0112) // Orientation
 
 // A map of all parsed tags with their mapped names/text as keys/values:
 var allTags = data.exif.getAll()
+```
+
+#### Exif Thumbnail
+
+Example code displaying a thumbnail image embedded into the Exif meta data:
+
+```js
+loadImage(
+  fileOrBlobOrUrl,
+  function (img, data) {
+    var thumbBlob = data.exif && data.exif.get('Thumbnail')
+    if (thumbBlob) {
+      loadImage(thumbBlob, function (thumbImage) {
+        document.body.appendChild(thumbImage)
+      })
+    }
+  },
+  { meta: true }
+)
+```
+
+#### Exif IFD
+
+Example code displaying data from the Exif IFD (Image File Directory) that
+contains Exif specified TIFF tags:
+
+```js
+loadImage(
+  fileOrBlobOrUrl,
+  function (img, data) {
+    var exifIFD = data.exif && data.exif.get('Exif')
+    if (exifIFD) {
+      // Map of all Exif IFD tags with their mapped names/text as keys/values:
+      console.log(exifIFD.getAll())
+      // A specific Exif IFD tag value:
+      console.log(exifIFD.get('UserComment'))
+    }
+  },
+  { meta: true }
+)
+```
+
+#### GPSInfo IFD
+
+Example code displaying data from the Exif IFD (Image File Directory) that
+contains [GPS](https://en.wikipedia.org/wiki/Global_Positioning_System) info:
+
+```js
+loadImage(
+  fileOrBlobOrUrl,
+  function (img, data) {
+    var gpsInfo = data.exif && data.exif.get('GPSInfo')
+    if (gpsInfo) {
+      // Map of all GPSInfo tags with their mapped names/text as keys/values:
+      console.log(gpsInfo.getAll())
+      // A specific GPSInfo tag value:
+      console.log(gpsInfo.get('GPSLatitude'))
+    }
+  },
+  { meta: true }
+)
+```
+
+#### Interoperability IFD
+
+Example code displaying data from the Exif IFD (Image File Directory) that
+contains Interoperability data:
+
+```js
+loadImage(
+  fileOrBlobOrUrl,
+  function (img, data) {
+    var interoperabilityData = data.exif && data.exif.get('Interoperability')
+    if (interoperabilityData) {
+      // The InteroperabilityIndex tag value:
+      console.log(interoperabilityData.get('InteroperabilityIndex'))
+    }
+  },
+  { meta: true }
+)
 ```
 
 #### Exif parser options
