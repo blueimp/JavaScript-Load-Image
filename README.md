@@ -473,7 +473,7 @@ become available, as well as three additional methods:
 - `exif.getAll()`
 
 ```js
-var flashText = data.exif.getText('Flash') // e.g.: 'Flash fired, auto mode',
+var flashText = data.exif.getText('Orientation') // e.g. right-top for value 6
 
 var name = data.exif.getName(0x0112) // Orientation
 
