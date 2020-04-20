@@ -335,10 +335,13 @@ the browser supports automatic image orientation (see
 ### meta
 
 Automatically parses the image meta data if set to `true`.  
-The meta data is passed to the callback as part of the second argument.  
+If meta data has been found, the data object passed as second argument to the
+callback function has additional properties (see
+[meta data parsing](#meta-data-parsing)).  
 If the file is given as URL and the browser supports the
-[fetch API](https://developer.mozilla.org/en/docs/Web/API/Fetch_API), fetches
-the file as Blob to be able to parse the meta data.
+[fetch API](https://developer.mozilla.org/en/docs/Web/API/Fetch_API) or the XHR
+[responseType](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType)
+`blob`, fetches the file as Blob to be able to parse the meta data.
 
 ### canvas
 
