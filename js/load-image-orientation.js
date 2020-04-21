@@ -97,7 +97,7 @@ Exif orientation values to correctly display the letter F:
   // Determines if the target image should be a canvas element:
   loadImage.hasCanvasOption = function (options) {
     return (
-      (!!options.orientation === true && !loadImage.orientation) ||
+      (options.orientation === true && !loadImage.orientation) ||
       (options.orientation > 1 && options.orientation < 9) ||
       originalHasCanvasOption.call(loadImage, options)
     )
