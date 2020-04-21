@@ -111,64 +111,6 @@ Exif orientation values to correctly display the letter F:
     )
   }
 
-  // Transform image orientation based on the given EXIF orientation option:
-  loadImage.transformCoordinates = function (canvas, options) {
-    originalTransformCoordinates.call(loadImage, canvas, options)
-    var orientation = options.orientation
-    if (!(orientation > 1 && orientation < 9)) {
-      return
-    }
-    var ctx = canvas.getContext('2d')
-    var width = canvas.width
-    var height = canvas.height
-    var styleWidth = canvas.style.width
-    var styleHeight = canvas.style.height
-    if (orientation > 4) {
-      canvas.width = height
-      canvas.height = width
-      canvas.style.width = styleHeight
-      canvas.style.height = styleWidth
-    }
-    switch (orientation) {
-      case 2:
-        // horizontal flip
-        ctx.translate(width, 0)
-        ctx.scale(-1, 1)
-        break
-      case 3:
-        // 180° rotate left
-        ctx.translate(width, height)
-        ctx.rotate(Math.PI)
-        break
-      case 4:
-        // vertical flip
-        ctx.translate(0, height)
-        ctx.scale(1, -1)
-        break
-      case 5:
-        // vertical flip + 90° rotate right
-        ctx.rotate(0.5 * Math.PI)
-        ctx.scale(1, -1)
-        break
-      case 6:
-        // 90° rotate right
-        ctx.rotate(0.5 * Math.PI)
-        ctx.translate(0, -height)
-        break
-      case 7:
-        // horizontal flip + 90° rotate right
-        ctx.rotate(0.5 * Math.PI)
-        ctx.translate(width, -height)
-        ctx.scale(-1, 1)
-        break
-      case 8:
-        // 90° rotate left
-        ctx.rotate(-0.5 * Math.PI)
-        ctx.translate(-width, 0)
-        break
-    }
-  }
-
   // Transforms coordinate and dimension options
   // based on the given orientation option:
   loadImage.getTransformedOptions = function (img, opts, data) {
@@ -249,5 +191,63 @@ Exif orientation values to correctly display the letter F:
       newOptions.sourceHeight = options.sourceWidth
     }
     return newOptions
+  }
+
+  // Transform image orientation based on the given EXIF orientation option:
+  loadImage.transformCoordinates = function (canvas, options) {
+    originalTransformCoordinates.call(loadImage, canvas, options)
+    var orientation = options.orientation
+    if (!(orientation > 1 && orientation < 9)) {
+      return
+    }
+    var ctx = canvas.getContext('2d')
+    var width = canvas.width
+    var height = canvas.height
+    var styleWidth = canvas.style.width
+    var styleHeight = canvas.style.height
+    if (orientation > 4) {
+      canvas.width = height
+      canvas.height = width
+      canvas.style.width = styleHeight
+      canvas.style.height = styleWidth
+    }
+    switch (orientation) {
+      case 2:
+        // horizontal flip
+        ctx.translate(width, 0)
+        ctx.scale(-1, 1)
+        break
+      case 3:
+        // 180° rotate left
+        ctx.translate(width, height)
+        ctx.rotate(Math.PI)
+        break
+      case 4:
+        // vertical flip
+        ctx.translate(0, height)
+        ctx.scale(1, -1)
+        break
+      case 5:
+        // vertical flip + 90° rotate right
+        ctx.rotate(0.5 * Math.PI)
+        ctx.scale(1, -1)
+        break
+      case 6:
+        // 90° rotate right
+        ctx.rotate(0.5 * Math.PI)
+        ctx.translate(0, -height)
+        break
+      case 7:
+        // horizontal flip + 90° rotate right
+        ctx.rotate(0.5 * Math.PI)
+        ctx.translate(width, -height)
+        ctx.scale(-1, 1)
+        break
+      case 8:
+        // 90° rotate left
+        ctx.rotate(-0.5 * Math.PI)
+        ctx.translate(-width, 0)
+        break
+    }
   }
 })
