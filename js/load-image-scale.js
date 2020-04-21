@@ -45,7 +45,7 @@
 
   // Returns transformed options, allows to override e.g.
   // maxWidth, maxHeight and crop options based on the aspectRatio.
-  // gets img, options passed as arguments:
+  // gets img, options, data passed as arguments:
   loadImage.getTransformedOptions = function (img, options) {
     var aspectRatio = options.aspectRatio
     var newOptions
@@ -168,7 +168,7 @@
     }
     if (useCanvas) {
       // eslint-disable-next-line no-param-reassign
-      options = loadImage.getTransformedOptions(img, options, data)
+      options = loadImage.getTransformedOptions(img, options, data || {})
       sourceX = options.left || 0
       sourceY = options.top || 0
       if (options.sourceWidth) {
