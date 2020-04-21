@@ -300,6 +300,12 @@
               expect(img.height).to.equal(160)
               expect(img.style.width).to.equal('120px')
               expect(img.style.height).to.equal('80px')
+              // Check if pixelRatio scaling is idempotent:
+              var img2 = loadImage.scale(img, { minWidth: 120, pixelRatio: 2 })
+              expect(img2.width).to.equal(240)
+              expect(img2.height).to.equal(160)
+              expect(img2.style.width).to.equal('120px')
+              expect(img2.style.height).to.equal('80px')
               done()
             },
             { minWidth: 120, canvas: true, pixelRatio: 2 }
@@ -316,6 +322,12 @@
               expect(img.height).to.equal(40)
               expect(img.style.width).to.equal('30px')
               expect(img.style.height).to.equal('20px')
+              // Check if pixelRatio scaling is idempotent:
+              var img2 = loadImage.scale(img, { minWidth: 30, pixelRatio: 2 })
+              expect(img2.width).to.equal(60)
+              expect(img2.height).to.equal(40)
+              expect(img2.style.width).to.equal('30px')
+              expect(img2.style.height).to.equal('20px')
               done()
             },
             { maxWidth: 30, canvas: true, pixelRatio: 2 }

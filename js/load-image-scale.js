@@ -225,11 +225,17 @@
     if (useCanvas) {
       pixelRatio = options.pixelRatio
       if (pixelRatio > 1) {
-        canvas.style.width = destWidth + 'px'
-        canvas.style.height = destHeight + 'px'
-        destWidth *= pixelRatio
-        destHeight *= pixelRatio
-        canvas.getContext('2d').scale(pixelRatio, pixelRatio)
+        if (parseInt(img.style.width, 10) === width / pixelRatio) {
+          // Source image is already scaled according to device pixel ratio
+          canvas.style.width = destWidth / pixelRatio + 'px'
+          canvas.style.height = destHeight / pixelRatio + 'px'
+        } else {
+          canvas.style.width = destWidth + 'px'
+          canvas.style.height = destHeight + 'px'
+          destWidth *= pixelRatio
+          destHeight *= pixelRatio
+          canvas.getContext('2d').scale(pixelRatio, pixelRatio)
+        }
       }
       downsamplingRatio = options.downsamplingRatio
       if (
