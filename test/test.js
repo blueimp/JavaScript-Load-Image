@@ -682,7 +682,7 @@
   })
 
   describe('Orientation', function () {
-    it('Should keep the orientation', function (done) {
+    it('Keep the orientation', function (done) {
       expect(
         loadImage(
           blobGIF,
@@ -696,7 +696,7 @@
       ).to.be.ok
     })
 
-    it('Should rotate left', function (done) {
+    it('Rotate left', function (done) {
       expect(
         loadImage(
           blobGIF,
@@ -710,7 +710,7 @@
       ).to.be.ok
     })
 
-    it('Should rotate right', function (done) {
+    it('Rotate right', function (done) {
       expect(
         loadImage(
           blobGIF,
@@ -724,7 +724,7 @@
       ).to.be.ok
     })
 
-    it('Should adjust constraints to new coordinates', function (done) {
+    it('Adjust constraints to new coordinates', function (done) {
       expect(
         loadImage(
           blobGIF,
@@ -738,7 +738,7 @@
       ).to.be.ok
     })
 
-    it('Should adjust left and top to new coordinates', function (done) {
+    it('Adjust left and top to new coordinates', function (done) {
       expect(
         loadImage(
           blobGIF,
@@ -752,7 +752,7 @@
       ).to.be.ok
     })
 
-    it('Should adjust right and bottom to new coordinates', function (done) {
+    it('Adjust right and bottom to new coordinates', function (done) {
       expect(
         loadImage(
           blobGIF,
@@ -766,7 +766,7 @@
       ).to.be.ok
     })
 
-    it('Should adjust left and bottom to new coordinates', function (done) {
+    it('Adjust left and bottom to new coordinates', function (done) {
       expect(
         loadImage(
           blobGIF,
@@ -780,7 +780,7 @@
       ).to.be.ok
     })
 
-    it('Should adjust right and top to new coordinates', function (done) {
+    it('Adjust right and top to new coordinates', function (done) {
       expect(
         loadImage(
           blobGIF,
@@ -794,7 +794,7 @@
       ).to.be.ok
     })
 
-    it('Should rotate left with the given pixelRatio', function (done) {
+    it('Rotate left with the given pixelRatio', function (done) {
       expect(
         loadImage(
           blobGIF,
@@ -810,7 +810,7 @@
       ).to.be.ok
     })
 
-    it('Should rotate right with the given pixelRatio', function (done) {
+    it('Rotate right with the given pixelRatio', function (done) {
       expect(
         loadImage(
           blobGIF,
@@ -826,7 +826,7 @@
       ).to.be.ok
     })
 
-    it('Should ignore too small orientation value', function (done) {
+    it('Ignore too small orientation value', function (done) {
       expect(
         loadImage(
           blobGIF,
@@ -840,7 +840,7 @@
       ).to.be.ok
     })
 
-    it('Should ignore too large orientation value', function (done) {
+    it('Ignore too large orientation value', function (done) {
       expect(
         loadImage(
           blobGIF,
@@ -854,7 +854,7 @@
       ).to.be.ok
     })
 
-    it('Should rotate right based on the exif orientation value', function (done) {
+    it('Rotate right based on the exif orientation value', function (done) {
       expect(
         loadImage(
           blobJPEG,
@@ -906,7 +906,7 @@
       ).to.be.ok
     })
 
-    it('Should scale image after exif based orientation', function (done) {
+    it('Scale image after exif based orientation', function (done) {
       expect(
         loadImage(
           blobJPEG,
@@ -923,7 +923,7 @@
     describe('from-image', function () {
       if (!loadImage.orientation) return
 
-      it('Should use automatic browser image orientation', function (done) {
+      it('Use automatic browser image orientation', function (done) {
         expect(
           loadImage(
             blobJPEG,
@@ -1005,7 +1005,7 @@
   })
 
   describe('Metadata', function () {
-    it('Should parse Exif tags', function (done) {
+    it('Parse Exif tags', function (done) {
       loadImage.parseMetaData(blobJPEG, function (data) {
         expect(data.exif).to.be.ok
         expect(data.exif.get('Orientation')).to.equal(6)
@@ -1013,7 +1013,7 @@
       })
     })
 
-    it('Should not parse Exif tags if disabled', function (done) {
+    it('Do not parse Exif tags if disabled', function (done) {
       loadImage.parseMetaData(
         blobJPEG,
         function (data) {
@@ -1024,7 +1024,7 @@
       )
     })
 
-    it('Should parse Exif tag offsets', function (done) {
+    it('Parse Exif tag offsets', function (done) {
       loadImage.parseMetaData(blobJPEG, function (data) {
         expect(data.exifOffsets).to.be.ok
         expect(data.exifOffsets.get('Orientation')).to.equal(0x16)
@@ -1034,7 +1034,7 @@
       })
     })
 
-    it('Should not parse Exif tag offsets if disabled', function (done) {
+    it('Do not parse Exif tag offsets if disabled', function (done) {
       loadImage.parseMetaData(
         blobJPEG,
         function (data) {
@@ -1045,7 +1045,7 @@
       )
     })
 
-    it('Should only parse included Exif tags', function (done) {
+    it('Only parse included Exif tags', function (done) {
       loadImage.parseMetaData(
         blobJPEG,
         function (data) {
@@ -1065,7 +1065,7 @@
       )
     })
 
-    it('Should not parse excluded Exif tags', function (done) {
+    it('Do not parse excluded Exif tags', function (done) {
       loadImage.parseMetaData(
         blobJPEG,
         function (data) {
@@ -1085,7 +1085,7 @@
       )
     })
 
-    it('Should parse IPTC tags', function (done) {
+    it('Parse IPTC tags', function (done) {
       loadImage.parseMetaData(blobJPEG, function (data) {
         expect(data.iptc).to.be.ok
         expect(data.iptc.get('ObjectName')).to.equal('blueimp.net')
@@ -1093,7 +1093,7 @@
       })
     })
 
-    it('Should not parse IPTC tags if disabled', function (done) {
+    it('Do not parse IPTC tags if disabled', function (done) {
       loadImage.parseMetaData(
         blobJPEG,
         function (data) {
@@ -1104,7 +1104,7 @@
       )
     })
 
-    it('Should parse IPTC tag offsets', function (done) {
+    it('Parse IPTC tag offsets', function (done) {
       loadImage.parseMetaData(blobJPEG, function (data) {
         expect(data.iptcOffsets).to.be.ok
         expect(data.iptcOffsets.get('ObjectName')).to.equal(0x44)
@@ -1112,7 +1112,7 @@
       })
     })
 
-    it('Should not parse IPTC tag offsets if disabled', function (done) {
+    it('Do not parse IPTC tag offsets if disabled', function (done) {
       loadImage.parseMetaData(
         blobJPEG,
         function (data) {
@@ -1123,7 +1123,7 @@
       )
     })
 
-    it('Should only parse included IPTC tags', function (done) {
+    it('Only parse included IPTC tags', function (done) {
       loadImage.parseMetaData(
         blobJPEG,
         function (data) {
@@ -1145,7 +1145,7 @@
       )
     })
 
-    it('Should not parse excluded IPTC tags', function (done) {
+    it('Do not parse excluded IPTC tags', function (done) {
       loadImage.parseMetaData(
         blobJPEG,
         function (data) {
@@ -1167,7 +1167,7 @@
       )
     })
 
-    it('Should parse the complete image head', function (done) {
+    it('Parse the complete image head', function (done) {
       loadImage.parseMetaData(blobJPEG, function (data) {
         expect(data.imageHead).to.be.ok
         loadImage.parseMetaData(
@@ -1181,7 +1181,7 @@
       })
     })
 
-    it('Should not parse the complete image head if disabled', function (done) {
+    it('Do not parse the complete image head if disabled', function (done) {
       loadImage.parseMetaData(
         blobJPEG,
         function (data) {
@@ -1192,7 +1192,7 @@
       )
     })
 
-    it('Should parse meta data automatically', function (done) {
+    it('Parse meta data automatically', function (done) {
       expect(
         loadImage(
           blobJPEG,
@@ -1210,7 +1210,7 @@
       ).to.be.ok
     })
 
-    it('Should write Exif Orientation tag and replace image head', function (done) {
+    it('Write Exif Orientation tag and replace image head', function (done) {
       loadImage(
         blobJPEG,
         function (img, data) {
@@ -1253,7 +1253,7 @@
       return
     }
 
-    it('Should fetch image URL as blob if meta option is true', function (done) {
+    it('Fetch image URL as blob if meta option is true', function (done) {
       expect(
         loadImage(
           // IE does not allow XMLHttpRequest access to data URLs,
@@ -1273,7 +1273,7 @@
       ).to.be.ok
     })
 
-    it('Should load image URL as img if meta option is false', function (done) {
+    it('Load image URL as img if meta option is false', function (done) {
       expect(
         loadImage(imageUrlJPEG, function (img, data) {
           expect(data.imageHead).to.be.undefined
