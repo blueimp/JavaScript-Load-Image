@@ -119,7 +119,7 @@ Exif orientation values to correctly display the letter F:
         ctx.scale(1, -1)
         break
       case 5:
-        // vertical flip + 90 rotate right
+        // vertical flip + 90° rotate right
         ctx.rotate(0.5 * Math.PI)
         ctx.scale(1, -1)
         break
@@ -129,7 +129,7 @@ Exif orientation values to correctly display the letter F:
         ctx.translate(0, -height)
         break
       case 7:
-        // horizontal flip + 90 rotate right
+        // horizontal flip + 90° rotate right
         ctx.rotate(0.5 * Math.PI)
         ctx.translate(width, -height)
         ctx.scale(-1, 1)
@@ -185,7 +185,7 @@ Exif orientation values to correctly display the letter F:
         newOptions.bottom = options.top
         break
       case 5:
-        // vertical flip + 90 rotate right
+        // vertical flip + 90° rotate right
         newOptions.left = options.top
         newOptions.top = options.left
         newOptions.right = options.bottom
@@ -199,7 +199,7 @@ Exif orientation values to correctly display the letter F:
         newOptions.bottom = options.left
         break
       case 7:
-        // horizontal flip + 90 rotate right
+        // horizontal flip + 90° rotate right
         newOptions.left = options.bottom
         newOptions.top = options.right
         newOptions.right = options.top
