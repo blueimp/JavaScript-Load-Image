@@ -932,6 +932,20 @@
       ).to.be.ok
     })
 
+    it('Provide original image width+height from before orientation', function (done) {
+      expect(
+        loadImage(
+          blobJPEG,
+          function (img, data) {
+            expect(data.originalWidth).to.equal(3)
+            expect(data.originalHeight).to.equal(2)
+            done()
+          },
+          { meta: true, minWidth: 20, minHeight: 30 }
+        )
+      ).to.be.ok
+    })
+
     describe('from-image', function () {
       if (!loadImage.orientation) return
 
