@@ -111,19 +111,18 @@ Exif orientation values to correctly display the letter F:
     )
   }
 
-  // Transform image orientation based on
-  // the given EXIF orientation option:
+  // Transform image orientation based on the given EXIF orientation option:
   loadImage.transformCoordinates = function (canvas, options) {
     originalTransformCoordinates.call(loadImage, canvas, options)
+    var orientation = options.orientation
+    if (!(orientation > 1 && orientation < 9)) {
+      return
+    }
     var ctx = canvas.getContext('2d')
     var width = canvas.width
     var height = canvas.height
     var styleWidth = canvas.style.width
     var styleHeight = canvas.style.height
-    var orientation = options.orientation
-    if (!(orientation > 1 && orientation < 9)) {
-      return
-    }
     if (orientation > 4) {
       canvas.width = height
       canvas.height = width
