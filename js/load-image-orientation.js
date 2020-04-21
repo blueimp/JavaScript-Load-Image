@@ -9,6 +9,20 @@
  * https://opensource.org/licenses/MIT
  */
 
+/*
+
+Exif orientation values to correctly display the letter F:
+
+  1       2       3       4          5           6           7           8
+
+██████  ██████      ██  ██      ██████████  ██                  ██  ██████████
+██          ██      ██  ██      ██  ██      ██  ██          ██  ██      ██  ██
+████      ████    ████  ████    ██          ██████████  ██████████          ██
+██          ██      ██  ██
+██          ██  ██████  ██████
+
+*/
+
 /* global define, module, require */
 
 ;(function (factory) {
