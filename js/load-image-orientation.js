@@ -67,33 +67,6 @@ Exif orientation values to correctly display the letter F:
     img.src = testImageURL
   })()
 
-  loadImage.transform = function (img, options, callback, file, data) {
-    originalTransform.call(
-      loadImage,
-      img,
-      options,
-      function (img, data) {
-        if (data) {
-          var exifOrientation = data.exif && data.exif.get('Orientation')
-          if (
-            loadImage.orientation &&
-            exifOrientation > 4 &&
-            exifOrientation < 9
-          ) {
-            // Automatic image orientation switched image dimensions
-            var originalWidth = data.originalWidth
-            var originalHeight = data.originalHeight
-            data.originalWidth = originalHeight
-            data.originalHeight = originalWidth
-          }
-        }
-        callback(img, data)
-      },
-      file,
-      data
-    )
-  }
-
   /**
    * Determines if the image requires orientation.
    *
@@ -128,6 +101,33 @@ Exif orientation values to correctly display the letter F:
     return (
       requiresOrientation(options, true) ||
       originalRequiresMetaData.call(loadImage, options)
+    )
+  }
+
+  loadImage.transform = function (img, options, callback, file, data) {
+    originalTransform.call(
+      loadImage,
+      img,
+      options,
+      function (img, data) {
+        if (data) {
+          var exifOrientation = data.exif && data.exif.get('Orientation')
+          if (
+            loadImage.orientation &&
+            exifOrientation > 4 &&
+            exifOrientation < 9
+          ) {
+            // Automatic image orientation switched image dimensions
+            var originalWidth = data.originalWidth
+            var originalHeight = data.originalHeight
+            data.originalWidth = originalHeight
+            data.originalHeight = originalWidth
+          }
+        }
+        callback(img, data)
+      },
+      file,
+      data
     )
   }
 
