@@ -40,7 +40,7 @@
 
   // Transform image coordinates, allows to override e.g.
   // the canvas orientation based on the orientation option,
-  // gets canvas, options passed as arguments:
+  // gets canvas, options and data passed as arguments:
   loadImage.transformCoordinates = function () {}
 
   // Returns transformed options, allows to override e.g.
@@ -121,6 +121,8 @@
   loadImage.scale = function (img, options, data) {
     // eslint-disable-next-line no-param-reassign
     options = options || {}
+    // eslint-disable-next-line no-param-reassign
+    data = data || {}
     var canvas = document.createElement('canvas')
     var useCanvas =
       img.getContext ||
@@ -168,7 +170,7 @@
     }
     if (useCanvas) {
       // eslint-disable-next-line no-param-reassign
-      options = loadImage.getTransformedOptions(img, options, data || {})
+      options = loadImage.getTransformedOptions(img, options, data)
       sourceX = options.left || 0
       sourceY = options.top || 0
       if (options.sourceWidth) {
@@ -285,7 +287,7 @@
       }
       canvas.width = destWidth
       canvas.height = destHeight
-      loadImage.transformCoordinates(canvas, options)
+      loadImage.transformCoordinates(canvas, options, data)
       return loadImage.renderImageToCanvas(
         canvas,
         img,
