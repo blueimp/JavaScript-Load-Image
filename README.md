@@ -332,6 +332,34 @@ an `integer` in the range of `1` to `8` or the boolean value `true`.
 When set to `true`, it will set the orientation value based on the EXIF data of
 the image, which will be parsed automatically if the exif library is available.
 
+Exif orientation values to correctly display the letter F:
+
+```
+    1             2
+  ██████        ██████
+  ██                ██
+  ████            ████
+  ██                ██
+  ██                ██
+
+    3             4
+      ██        ██
+      ██        ██
+    ████        ████
+      ██        ██
+  ██████        ██████
+
+    5             6
+██████████    ██
+██  ██        ██  ██
+██            ██████████
+
+    7             8
+        ██    ██████████
+    ██  ██        ██  ██
+██████████            ██
+```
+
 Setting `orientation` to `true` enables the `canvas` and `meta` options, unless
 the browser supports automatic image orientation (see
 [browser support for image-orientation](https://caniuse.com/#feat=css-image-orientation)).  
