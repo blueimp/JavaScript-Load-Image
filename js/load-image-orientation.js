@@ -126,12 +126,9 @@ Exif orientation values to correctly display the letter F:
       options,
       function (img, data) {
         if (data) {
-          var exifOrientation = data.exif && data.exif.get('Orientation')
-          if (
-            loadImage.orientation &&
-            exifOrientation > 4 &&
-            exifOrientation < 9
-          ) {
+          var autoOrientation =
+            loadImage.orientation && data.exif && data.exif.get('Orientation')
+          if (autoOrientation > 4 && autoOrientation < 9) {
             // Automatic image orientation switched image dimensions
             var originalWidth = data.originalWidth
             var originalHeight = data.originalHeight
