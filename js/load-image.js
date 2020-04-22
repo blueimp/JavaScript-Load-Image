@@ -54,7 +54,7 @@
       return loadImage.onload(img, event, file, url, callback, options)
     }
     if (typeof file === 'string') {
-      if (loadImage.hasMetaOption(options)) {
+      if (loadImage.requiresMetaData(options)) {
         loadImage.fetchBlob(file, fetchBlobCallback, options)
       } else {
         fetchBlobCallback()
@@ -102,7 +102,7 @@
 
   // Determines if meta data should be loaded automatically.
   // Requires the load image meta extension to load meta data.
-  loadImage.hasMetaOption = function (options) {
+  loadImage.requiresMetaData = function (options) {
     return options && options.meta
   }
 

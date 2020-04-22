@@ -109,15 +109,12 @@
   }
 
   // Determines if the target image should be a canvas element:
-  loadImage.hasCanvasOption = function (options) {
+  loadImage.requiresCanvas = function (options) {
     return options.canvas || options.crop || !!options.aspectRatio
   }
 
   // Scales and/or crops the given image (img or canvas HTML element)
-  // using the given options.
-  // Returns a canvas object if the browser supports canvas
-  // and the hasCanvasOption method returns true or a canvas
-  // object is passed as image, else the scaled image:
+  // using the given options:
   loadImage.scale = function (img, options, data) {
     // eslint-disable-next-line no-param-reassign
     options = options || {}
@@ -125,8 +122,7 @@
     data = data || {}
     var canvas = document.createElement('canvas')
     var useCanvas =
-      img.getContext ||
-      (loadImage.hasCanvasOption(options) && canvas.getContext)
+      img.getContext || (loadImage.requiresCanvas(options) && canvas.getContext)
     var width = img.naturalWidth || img.width
     var height = img.naturalHeight || img.height
     var destWidth = width

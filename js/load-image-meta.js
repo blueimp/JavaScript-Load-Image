@@ -181,7 +181,7 @@
 
   var originalTransform = loadImage.transform
   loadImage.transform = function (img, options, callback, file, data) {
-    if (loadImage.hasMetaOption(options)) {
+    if (loadImage.requiresMetaData(options)) {
       loadImage.parseMetaData(
         file,
         function (data) {

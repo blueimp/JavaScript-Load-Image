@@ -44,8 +44,8 @@ Exif orientation values to correctly display the letter F:
   'use strict'
 
   var originalTransform = loadImage.transform
-  var originalHasCanvasOption = loadImage.hasCanvasOption
-  var originalHasMetaOption = loadImage.hasMetaOption
+  var originalRequiresCanvas = loadImage.requiresCanvas
+  var originalRequiresMetaData = loadImage.requiresMetaData
   var originalTransformCoordinates = loadImage.transformCoordinates
   var originalGetTransformedOptions = loadImage.getTransformedOptions
 
@@ -95,19 +95,19 @@ Exif orientation values to correctly display the letter F:
   }
 
   // Determines if the target image should be a canvas element:
-  loadImage.hasCanvasOption = function (options) {
+  loadImage.requiresCanvas = function (options) {
     return (
       (options.orientation === true && !loadImage.orientation) ||
       (options.orientation > 1 && options.orientation < 9) ||
-      originalHasCanvasOption.call(loadImage, options)
+      originalRequiresCanvas.call(loadImage, options)
     )
   }
 
   // Determines if meta data should be loaded automatically:
-  loadImage.hasMetaOption = function (options) {
+  loadImage.requiresMetaData = function (options) {
     return (
       (options && options.orientation === true && !loadImage.orientation) ||
-      originalHasMetaOption.call(loadImage, options)
+      originalRequiresMetaData.call(loadImage, options)
     )
   }
 
