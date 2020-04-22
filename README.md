@@ -332,11 +332,15 @@ an `integer` in the range of `1` to `8` or the boolean value `true`.
 When set to `true`, it will set the orientation value based on the EXIF data of
 the image, which will be parsed automatically if the exif library is available.
 
-Setting `orientation` to an integer in the range of `2` to `8` enables the
-`canvas` option.  
 Setting `orientation` to `true` enables the `canvas` and `meta` options, unless
 the browser supports automatic image orientation (see
-[browser support for image-orientation](https://caniuse.com/#feat=css-image-orientation)).
+[browser support for image-orientation](https://caniuse.com/#feat=css-image-orientation)).  
+Setting `orientation` to `1` enables the `canvas` and `meta` options if the
+browser does support automatic image orientation (to allow reset of the
+orientation).  
+Setting `orientation` to an integer in the range of `2` to `8` always enables
+the `canvas` option and also enables the `meta` option if the browser supports
+automatic image orientation (again to allow reset).
 
 ### meta
 
