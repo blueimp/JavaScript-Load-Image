@@ -94,11 +94,31 @@ Exif orientation values to correctly display the letter F:
     )
   }
 
+  /**
+   * Determines if the image requires orientation.
+   *
+   * @param {object} [options] Options object
+   * @param {boolean} [withMetaData] Is meta data required for orientation
+   * @returns {boolean} Returns true if the image requires orientation
+   */
+  function requiresOrientation(options, withMetaData) {
+    var orientation = options && options.orientation
+    return (
+      // Exif orientation for browsers without automatic image orientation:
+      (orientation === true && !loadImage.orientation) ||
+      // Orientation reset for browsers with automatic image orientation:
+      (orientation === 1 && loadImage.orientation) ||
+      // Orientation to defined value, requires meta data for orientation reset:
+      ((!withMetaData || loadImage.orientation) &&
+        orientation > 1 &&
+        orientation < 9)
+    )
+  }
+
   // Determines if the target image should be a canvas element:
   loadImage.requiresCanvas = function (options) {
     return (
-      (options.orientation === true && !loadImage.orientation) ||
-      (options.orientation > 1 && options.orientation < 9) ||
+      requiresOrientation(options) ||
       originalRequiresCanvas.call(loadImage, options)
     )
   }
@@ -106,7 +126,7 @@ Exif orientation values to correctly display the letter F:
   // Determines if meta data should be loaded automatically:
   loadImage.requiresMetaData = function (options) {
     return (
-      (options && options.orientation === true && !loadImage.orientation) ||
+      requiresOrientation(options, true) ||
       originalRequiresMetaData.call(loadImage, options)
     )
   }
