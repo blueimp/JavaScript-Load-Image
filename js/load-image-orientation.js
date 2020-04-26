@@ -235,13 +235,9 @@ Exif orientation values to correctly display the letter F:
     var ctx = canvas.getContext('2d')
     var width = canvas.width
     var height = canvas.height
-    var styleWidth = canvas.style.width
-    var styleHeight = canvas.style.height
     if (orientation > 4) {
       canvas.width = height
       canvas.height = width
-      canvas.style.width = styleHeight
-      canvas.style.height = styleWidth
     }
     switch (orientation) {
       case 2:
