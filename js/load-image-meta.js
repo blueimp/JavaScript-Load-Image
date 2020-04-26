@@ -96,6 +96,8 @@
           var markerLength
           var parsers
           var i
+          var arr1
+          var arr2
           // Check for the JPEG marker (0xffd8):
           if (dataView.getUint16(0) === 0xffd8) {
             while (offset < maxOffset) {
@@ -144,9 +146,12 @@
               if (buffer.slice) {
                 data.imageHead = buffer.slice(0, headLength)
               } else {
-                // Workaround for IE10, which does not yet
-                // support ArrayBuffer.slice:
-                data.imageHead = new Uint8Array(buffer).subarray(0, headLength)
+                // Workaround for IE10, which does not support
+                // ArrayBuffer.slice:
+                arr1 = new Uint8Array(buffer, 0, headLength)
+                arr2 = new Uint8Array(headLength)
+                arr2.set(arr1)
+                data.imageHead = arr2.buffer
               }
             }
           } else {
