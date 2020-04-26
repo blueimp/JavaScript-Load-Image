@@ -91,8 +91,8 @@
     it('Return an object with onload and onerror methods', function () {
       var img = loadImage(blobGIF, function () {})
       expect(img).to.be.an.instanceOf(Object)
-      expect(img.onload).to.be.a('function')
-      expect(img.onerror).to.be.a('function')
+      expect(img.onload).to.be.an.instanceOf(Function)
+      expect(img.onerror).to.be.an.instanceOf(Function)
     })
 
     it('Load image url', function (done) {
@@ -984,7 +984,7 @@
         loadImage(
           blobGIF,
           function (img) {
-            expect(img.getContext).to.be.ok
+            expect(img.getContext).to.be.an.instanceOf(Function)
             expect(img.nodeName.toLowerCase()).to.equal('canvas')
             done()
           },
@@ -998,7 +998,7 @@
         loadImage(
           blobGIF,
           function (img) {
-            expect(img.getContext).to.be.ok
+            expect(img.getContext).to.be.an.instanceOf(Function)
             expect(img.nodeName.toLowerCase()).to.equal('canvas')
             expect(img.width).to.equal(30)
             expect(img.height).to.equal(20)
@@ -1018,7 +1018,7 @@
             img = loadImage.scale(img, {
               maxWidth: 30
             })
-            expect(img.getContext).to.be.ok
+            expect(img.getContext).to.be.an.instanceOf(Function)
             expect(img.nodeName.toLowerCase()).to.equal('canvas')
             expect(img.width).to.equal(30)
             expect(img.height).to.equal(20)
