@@ -1031,7 +1031,7 @@
   })
 
   describe('Metadata', function () {
-    it('Parse Exif tags', function (done) {
+    it('Parse EXIF tags', function (done) {
       loadImage.parseMetaData(blobJPEG, function (data) {
         expect(data.exif).to.be.ok
         expect(data.exif.get('Orientation')).to.equal(6)
@@ -1039,7 +1039,7 @@
       })
     })
 
-    it('Do not parse Exif tags if disabled', function (done) {
+    it('Do not parse EXIF tags if disabled', function (done) {
       loadImage.parseMetaData(
         blobJPEG,
         function (data) {
@@ -1050,7 +1050,7 @@
       )
     })
 
-    it('Parse Exif tag offsets', function (done) {
+    it('Parse EXIF tag offsets', function (done) {
       loadImage.parseMetaData(blobJPEG, function (data) {
         expect(data.exifOffsets).to.be.ok
         expect(data.exifOffsets.get('Orientation')).to.equal(0x16)
@@ -1060,7 +1060,7 @@
       })
     })
 
-    it('Do not parse Exif tag offsets if disabled', function (done) {
+    it('Do not parse EXIF tag offsets if disabled', function (done) {
       loadImage.parseMetaData(
         blobJPEG,
         function (data) {
@@ -1071,7 +1071,7 @@
       )
     })
 
-    it('Only parse included Exif tags', function (done) {
+    it('Only parse included EXIF tags', function (done) {
       loadImage.parseMetaData(
         blobJPEG,
         function (data) {
@@ -1091,7 +1091,7 @@
       )
     })
 
-    it('Do not parse excluded Exif tags', function (done) {
+    it('Do not parse excluded EXIF tags', function (done) {
       loadImage.parseMetaData(
         blobJPEG,
         function (data) {
@@ -1236,7 +1236,7 @@
       ).to.be.ok
     })
 
-    it('Write Exif Orientation tag and replace image head', function (done) {
+    it('Write EXIF Orientation tag and replace image head', function (done) {
       loadImage(
         blobJPEG,
         function (img, data) {
@@ -1245,7 +1245,7 @@
           expect(data.exif.get('Orientation')).to.equal(6)
           expect(data.iptc).to.be.ok
           expect(data.iptc.get('ObjectName')).to.equal('blueimp.net')
-          // Reset Exif Orientation data:
+          // Reset EXIF Orientation data:
           loadImage.writeExifData(data.imageHead, data, 'Orientation', 1)
           img.toBlob(function (blob) {
             loadImage.replaceHead(blob, data.imageHead, function (newBlob) {
