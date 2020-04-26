@@ -82,8 +82,6 @@
     sourceY,
     sourceWidth,
     sourceHeight,
-    destX,
-    destY,
     destWidth,
     destHeight,
     options
@@ -100,8 +98,8 @@
       sourceY,
       sourceWidth,
       sourceHeight,
-      destX,
-      destY,
+      0,
+      0,
       destWidth,
       destHeight
     )
@@ -252,8 +250,6 @@
             sourceY,
             sourceWidth,
             sourceHeight,
-            0,
-            0,
             canvas.width,
             canvas.height,
             options
@@ -273,8 +269,6 @@
             0,
             sourceWidth,
             sourceHeight,
-            0,
-            0,
             sourceWidth,
             sourceHeight,
             options
@@ -291,8 +285,6 @@
         sourceY,
         sourceWidth,
         sourceHeight,
-        0,
-        0,
         destWidth,
         destHeight,
         options
