@@ -164,6 +164,8 @@
     return false
   }
 
+  loadImage.global = $
+
   if (typeof define === 'function' && define.amd) {
     define(function () {
       return loadImage

@@ -28,7 +28,7 @@
   var originalTransform = loadImage.transform
 
   loadImage.createCanvas = function (width, height, offscreen) {
-    if (offscreen && window.OffscreenCanvas) {
+    if (offscreen && loadImage.global.OffscreenCanvas) {
       return new OffscreenCanvas(width, height)
     }
     var canvas = document.createElement('canvas')
@@ -131,7 +131,8 @@
     data = data || {}
     var useCanvas =
       img.getContext ||
-      (loadImage.requiresCanvas(options) && !!window.HTMLCanvasElement)
+      (loadImage.requiresCanvas(options) &&
+        !!loadImage.global.HTMLCanvasElement)
     var width = img.naturalWidth || img.width
     var height = img.naturalHeight || img.height
     var destWidth = width
