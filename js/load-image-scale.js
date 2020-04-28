@@ -119,9 +119,9 @@
     options = options || {}
     // eslint-disable-next-line no-param-reassign
     data = data || {}
-    var canvas = document.createElement('canvas')
     var useCanvas =
-      img.getContext || (loadImage.requiresCanvas(options) && canvas.getContext)
+      img.getContext ||
+      (loadImage.requiresCanvas(options) && !!window.HTMLCanvasElement)
     var width = img.naturalWidth || img.width
     var height = img.naturalHeight || img.height
     var destWidth = width
@@ -137,6 +137,7 @@
     var pixelRatio
     var downsamplingRatio
     var tmp
+    var canvas
     /**
      * Scales up image dimensions
      */
@@ -254,6 +255,7 @@
           options
         )
       }
+      canvas = document.createElement('canvas')
       downsamplingRatio = options.downsamplingRatio
       if (
         downsamplingRatio > 0 &&
