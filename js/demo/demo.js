@@ -142,6 +142,7 @@ $(function () {
       pixelRatio: window.devicePixelRatio,
       downsamplingRatio: 0.5,
       orientation: Number($('#orientation').val()) || true,
+      imageSmoothingEnabled: $('#image-smoothing').is(':checked'),
       meta: true
     }
     exifNode.hide().find('table').remove()
@@ -265,6 +266,7 @@ $(function () {
           maxWidth: result.width() * pixelRatio,
           contain: true,
           pixelRatio: pixelRatio,
+          imageSmoothingEnabled: $('#image-smoothing').is(':checked')
         })
       )
       coordinates = null
