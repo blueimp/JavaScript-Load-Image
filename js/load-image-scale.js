@@ -88,6 +88,7 @@
   ) {
     var ctx = canvas.getContext('2d')
     if (options.imageSmoothingEnabled === false) {
+      ctx.msImageSmoothingEnabled = false
       ctx.imageSmoothingEnabled = false
     } else if (options.imageSmoothingQuality) {
       ctx.imageSmoothingQuality = options.imageSmoothingQuality
