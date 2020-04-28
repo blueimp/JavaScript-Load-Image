@@ -117,9 +117,11 @@ $(function () {
       // eslint-disable-next-line no-param-reassign
       data = result.data()
     }
-    if (data.imageHead && data.exif) {
-      // Reset Exif Orientation data:
-      loadImage.writeExifData(data.imageHead, data, 'Orientation', 1)
+    if (data.imageHead) {
+      if (data.exif) {
+        // Reset Exif Orientation data:
+        loadImage.writeExifData(data.imageHead, data, 'Orientation', 1)
+      }
       img.toBlob(function (blob) {
         loadImage.replaceHead(blob, data.imageHead, function (newBlob) {
           content
