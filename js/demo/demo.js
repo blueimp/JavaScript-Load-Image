@@ -250,10 +250,9 @@ $(function () {
           top: coordinates.y * pixelRatio,
           sourceWidth: coordinates.w * pixelRatio,
           sourceHeight: coordinates.h * pixelRatio,
-          minWidth: result.width(),
-          maxWidth: result.width(),
+          maxWidth: result.width() * pixelRatio,
+          contain: true,
           pixelRatio: pixelRatio,
-          downsamplingRatio: 0.5
         })
       )
       coordinates = null
