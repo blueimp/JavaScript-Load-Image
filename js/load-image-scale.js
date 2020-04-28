@@ -75,9 +75,9 @@
   }
 
   // Canvas render method, allows to implement a different rendering algorithm:
-  loadImage.renderImageToCanvas = function (
-    canvas,
+  loadImage.drawImage = function (
     img,
+    canvas,
     sourceX,
     sourceY,
     sourceWidth,
@@ -240,9 +240,9 @@
         while (sourceWidth * downsamplingRatio > destWidth) {
           canvas.width = sourceWidth * downsamplingRatio
           canvas.height = sourceHeight * downsamplingRatio
-          loadImage.renderImageToCanvas(
-            canvas,
+          loadImage.drawImage(
             img,
+            canvas,
             sourceX,
             sourceY,
             sourceWidth,
@@ -259,9 +259,9 @@
           img = document.createElement('canvas')
           img.width = sourceWidth
           img.height = sourceHeight
-          loadImage.renderImageToCanvas(
-            img,
+          loadImage.drawImage(
             canvas,
+            img,
             0,
             0,
             sourceWidth,
@@ -279,9 +279,9 @@
         canvas.style.width = canvas.width / pixelRatio + 'px'
         canvas.style.height = canvas.height / pixelRatio + 'px'
       }
-      return loadImage.renderImageToCanvas(
-        canvas,
+      return loadImage.drawImage(
         img,
+        canvas,
         sourceX,
         sourceY,
         sourceWidth,
