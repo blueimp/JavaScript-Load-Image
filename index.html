@@ -80,6 +80,24 @@
       <input type="url" id="url" placeholder="Image URL" />
     </p>
     <p>Or <strong>drag &amp; drop</strong> an image file onto this webpage.</p>
+    <p>
+      <label for="orientation">Orientation:</label>
+      <select id="orientation">
+        <option value="0">true: according to the EXIF orientation value</option>
+        <option value="1">1: top-left (original)</option>
+        <option value="2">2: top-right (horizontal flip)</option>
+        <option value="3">3: bottom-right (180° rotate left)</option>
+        <option value="4">4: bottom-left (vertical flip)</option>
+        <option value="5"
+          >5: left-top (vertical flip + 90° rotate right)</option
+        >
+        <option value="6">6: right-top (90° rotate right)</option>
+        <option value="7"
+          >7: right-bottom (horizontal flip + 90° rotate right)</option
+        >
+        <option value="8">8: left-bottom (90° rotate left)</option>
+      </select>
+    </p>
     <h2>Result</h2>
     <p id="actions" style="display: none;">
       <button type="button" id="edit">Edit</button>

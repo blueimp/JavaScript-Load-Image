@@ -141,7 +141,7 @@ $(function () {
       canvas: true,
       pixelRatio: window.devicePixelRatio,
       downsamplingRatio: 0.5,
-      orientation: true,
+      orientation: Number($('#orientation').val()) || true,
       meta: true
     }
     exifNode.hide().find('table').remove()
@@ -205,6 +205,18 @@ $(function () {
   $('#file-input').on('change', fileChangeHandler)
 
   $('#url').on('change paste input', urlChangeHandler)
+
+  $('#orientation').on('change', function () {
+    var img = result.find('img, canvas')[0]
+    if (img) {
+      updateResults(
+        loadImage.scale(img, {
+          pixelRatio: window.devicePixelRatio,
+          orientation: Number($('#orientation').val()) || true
+        })
+      )
+    }
+  })
 
   $('#edit').on('click', function (event) {
     event.preventDefault()
