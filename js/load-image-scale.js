@@ -228,7 +228,6 @@
       ) {
         destWidth *= pixelRatio
         destHeight *= pixelRatio
-        canvas.getContext('2d').scale(pixelRatio, pixelRatio)
       }
       // Check if workaround for Chromium orientation crop bug is required:
       // https://bugs.chromium.org/p/chromium/issues/detail?id=1074354
