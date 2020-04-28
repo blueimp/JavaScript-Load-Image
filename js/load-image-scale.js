@@ -104,7 +104,7 @@
       destWidth,
       destHeight
     )
-    return canvas
+    return ctx
   }
 
   // Determines if the target image should be a canvas element:
@@ -303,17 +303,20 @@
         canvas.style.width = canvas.width / pixelRatio + 'px'
         canvas.style.height = canvas.height / pixelRatio + 'px'
       }
-      return loadImage.drawImage(
-        img,
-        canvas,
-        sourceX,
-        sourceY,
-        sourceWidth,
-        sourceHeight,
-        destWidth,
-        destHeight,
-        options
-      )
+      loadImage
+        .drawImage(
+          img,
+          canvas,
+          sourceX,
+          sourceY,
+          sourceWidth,
+          sourceHeight,
+          destWidth,
+          destHeight,
+          options
+        )
+        .setTransform(1, 0, 0, 1, 0, 0) // reset to the identity matrix
+      return canvas
     }
     img.width = destWidth
     img.height = destHeight
