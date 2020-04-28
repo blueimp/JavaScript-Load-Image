@@ -64,23 +64,43 @@ Exif orientation values to correctly display the letter F:
   var originalTransformCoordinates = loadImage.transformCoordinates
   var originalGetTransformedOptions = loadImage.getTransformedOptions
 
-  ;(function () {
-    // black 2x1 JPEG, with the following meta information set:
+  ;(function ($) {
+    // black+white 3x2 JPEG, with the following meta information set:
     // - EXIF Orientation: 6 (Rotated 90° CCW)
+    // Image data layout (B=black, F=white):
+    // BFF
+    // BBB
     var testImageURL =
       'data:image/jpeg;base64,/9j/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAYAAAA' +
       'AAAD/2wCEAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBA' +
       'QEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE' +
-      'BAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf/AABEIAAEAAgMBEQACEQEDEQH/x' +
-      'ABKAAEAAAAAAAAAAAAAAAAAAAALEAEAAAAAAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAA' +
-      'AAAAAEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8H//2Q=='
+      'BAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf/AABEIAAIAAwMBEQACEQEDEQH/x' +
+      'ABRAAEAAAAAAAAAAAAAAAAAAAAKEAEBAQADAQEAAAAAAAAAAAAGBQQDCAkCBwEBAAAAAAA' +
+      'AAAAAAAAAAAAAABEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AG8T9NfSMEVMhQ' +
+      'voP3fFiRZ+MTHDifa/95OFSZU5OzRzxkyejv8ciEfhSceSXGjS8eSdLnZc2HDm4M3BxcXw' +
+      'H/9k='
     var img = document.createElement('img')
     img.onload = function () {
-      // Check if browser supports automatic image orientation:
-      loadImage.orientation = img.width === 1 && img.height === 2
+      // Check if the browser supports automatic image orientation:
+      $.orientation = img.width === 2 && img.height === 3
+      if ($.orientation) {
+        var canvas = document.createElement('canvas')
+        canvas.width = canvas.height = 1
+        var ctx = canvas.getContext('2d')
+        ctx.drawImage(img, 1, 1, 1, 1, 0, 0, 1, 1)
+        // Check if the source image coordinates (sX, sY, sWidth, sHeight) are
+        // correctly applied to the auto-orientated image, which should result
+        // in a white opaque pixel (e.g. in Safari).
+        // Browsers that show a transparent pixel (e.g. Chromium) fail to crop
+        // auto-oriented images correctly and require a workaround, e.g.
+        // drawing the complete source image to an intermediate canvas first.
+        // See https://bugs.chromium.org/p/chromium/issues/detail?id=1074354
+        $.orientationCropBug =
+          ctx.getImageData(0, 0, 1, 1).data.toString() !== '255,255,255,255'
+      }
     }
     img.src = testImageURL
-  })()
+  })(loadImage)
 
   /**
    * Determines if the image requires orientation.

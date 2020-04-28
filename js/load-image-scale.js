@@ -230,6 +230,31 @@
         destHeight *= pixelRatio
         canvas.getContext('2d').scale(pixelRatio, pixelRatio)
       }
+      // Check if workaround for Chromium orientation crop bug is required:
+      // https://bugs.chromium.org/p/chromium/issues/detail?id=1074354
+      if (
+        loadImage.orientationCropBug &&
+        !img.getContext &&
+        (sourceX || sourceY || sourceWidth !== width || sourceHeight !== height)
+      ) {
+        // Write the complete source image to an intermediate canvas first:
+        tmp = img
+        // eslint-disable-next-line no-param-reassign
+        img = document.createElement('canvas')
+        img.width = width
+        img.height = height
+        loadImage.drawImage(
+          tmp,
+          img,
+          0,
+          0,
+          width,
+          height,
+          width,
+          height,
+          options
+        )
+      }
       downsamplingRatio = options.downsamplingRatio
       if (
         downsamplingRatio > 0 &&
