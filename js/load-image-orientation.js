@@ -103,30 +103,85 @@ Exif orientation values to correctly display the letter F:
   })(loadImage)
 
   /**
-   * Determines if the image requires orientation.
+   * Determines if the orientation requires a canvas element.
    *
    * @param {object} [options] Options object
    * @param {boolean} [withMetaData] Is meta data required for orientation
-   * @returns {boolean} Returns true if the image requires orientation
+   * @returns {boolean} Returns true if orientation requires canvas/meta
    */
-  function requiresOrientation(options, withMetaData) {
+  function requiresCanvasOrientation(options, withMetaData) {
     var orientation = options && options.orientation
     return (
       // Exif orientation for browsers without automatic image orientation:
       (orientation === true && !loadImage.orientation) ||
       // Orientation reset for browsers with automatic image orientation:
       (orientation === 1 && loadImage.orientation) ||
-      // Orientation to defined value, requires meta data for orientation reset:
+      // Orientation to defined value, requires meta for orientation reset only:
       ((!withMetaData || loadImage.orientation) &&
         orientation > 1 &&
         orientation < 9)
     )
   }
 
+  /**
+   * Determines if the image requires an orientation change.
+   *
+   * @param {number} [orientation] Defined orientation value
+   * @param {number} [autoOrientation] Auto-orientation based on Exif data
+   * @returns {boolean} Returns true if an orientation change is required
+   */
+  function requiresOrientationChange(orientation, autoOrientation) {
+    return (
+      orientation !== autoOrientation &&
+      ((orientation === 1 && autoOrientation > 1 && autoOrientation < 9) ||
+        (orientation > 1 && orientation < 9))
+    )
+  }
+
+  /**
+   * Determines orientation combinations that require a rotation by 180°.
+   *
+   * The following is a list of combinations that return true:
+   *
+   * 2 (flip) => 5 (rot90,flip), 7 (rot90,flip), 6 (rot90), 8 (rot90)
+   * 4 (flip) => 5 (rot90,flip), 7 (rot90,flip), 6 (rot90), 8 (rot90)
+   *
+   * 5 (rot90,flip) => 2 (flip), 4 (flip), 6 (rot90), 8 (rot90)
+   * 7 (rot90,flip) => 2 (flip), 4 (flip), 6 (rot90), 8 (rot90)
+   *
+   * 6 (rot90) => 2 (flip), 4 (flip), 5 (rot90,flip), 7 (rot90,flip)
+   * 8 (rot90) => 2 (flip), 4 (flip), 5 (rot90,flip), 7 (rot90,flip)
+   *
+   * @param {number} [orientation] Defined orientation value
+   * @param {number} [autoOrientation] Auto-orientation based on Exif data
+   * @returns {boolean} Returns true if rotation by 180° is required
+   */
+  function requiresRot180(orientation, autoOrientation) {
+    if (autoOrientation > 1 && autoOrientation < 9) {
+      switch (orientation) {
+        case 2:
+        case 4:
+          return autoOrientation > 4
+        case 5:
+        case 7:
+          return autoOrientation % 2 === 0
+        case 6:
+        case 8:
+          return (
+            autoOrientation === 2 ||
+            autoOrientation === 4 ||
+            autoOrientation === 5 ||
+            autoOrientation === 7
+          )
+      }
+    }
+    return false
+  }
+
   // Determines if the target image should be a canvas element:
   loadImage.requiresCanvas = function (options) {
     return (
-      requiresOrientation(options) ||
+      requiresCanvasOrientation(options) ||
       originalRequiresCanvas.call(loadImage, options)
     )
   }
@@ -134,7 +189,7 @@ Exif orientation values to correctly display the letter F:
   // Determines if meta data should be loaded automatically:
   loadImage.requiresMetaData = function (options) {
     return (
-      requiresOrientation(options, true) ||
+      requiresCanvasOrientation(options, true) ||
       originalRequiresMetaData.call(loadImage, options)
     )
   }
@@ -167,74 +222,29 @@ Exif orientation values to correctly display the letter F:
   // based on the given orientation option:
   loadImage.getTransformedOptions = function (img, opts, data) {
     var options = originalGetTransformedOptions.call(loadImage, img, opts)
+    var exifOrientation = data.exif && data.exif.get('Orientation')
     var orientation = options.orientation
-    var newOptions
-    var i
-    if (orientation === true) {
-      if (loadImage.orientation) {
-        // Browser supports automatic image orientation
-        return options
-      }
-      orientation = data && data.exif && data.exif.get('Orientation')
-    }
-    if (!(orientation > 1 && orientation < 9)) {
+    var autoOrientation = loadImage.orientation && exifOrientation
+    if (orientation === true) orientation = exifOrientation
+    if (!requiresOrientationChange(orientation, autoOrientation)) {
       return options
     }
-    newOptions = {}
-    for (i in options) {
+    var top = options.top
+    var right = options.right
+    var bottom = options.bottom
+    var left = options.left
+    var newOptions = {}
+    for (var i in options) {
       if (Object.prototype.hasOwnProperty.call(options, i)) {
         newOptions[i] = options[i]
       }
     }
     newOptions.orientation = orientation
-    switch (orientation) {
-      case 2:
-        // horizontal flip
-        newOptions.left = options.right
-        newOptions.right = options.left
-        break
-      case 3:
-        // 180° rotate left
-        newOptions.left = options.right
-        newOptions.top = options.bottom
-        newOptions.right = options.left
-        newOptions.bottom = options.top
-        break
-      case 4:
-        // vertical flip
-        newOptions.top = options.bottom
-        newOptions.bottom = options.top
-        break
-      case 5:
-        // vertical flip + 90° rotate right
-        newOptions.left = options.top
-        newOptions.top = options.left
-        newOptions.right = options.bottom
-        newOptions.bottom = options.right
-        break
-      case 6:
-        // 90° rotate right
-        newOptions.left = options.top
-        newOptions.top = options.right
-        newOptions.right = options.bottom
-        newOptions.bottom = options.left
-        break
-      case 7:
-        // horizontal flip + 90° rotate right
-        newOptions.left = options.bottom
-        newOptions.top = options.right
-        newOptions.right = options.top
-        newOptions.bottom = options.left
-        break
-      case 8:
-        // 90° rotate left
-        newOptions.left = options.bottom
-        newOptions.top = options.left
-        newOptions.right = options.top
-        newOptions.bottom = options.right
-        break
-    }
-    if (newOptions.orientation > 4) {
+    if (
+      (orientation > 4 && !(autoOrientation > 4)) ||
+      (orientation < 5 && autoOrientation > 4)
+    ) {
+      // Image dimensions and target dimensions are switched
       newOptions.maxWidth = options.maxHeight
       newOptions.maxHeight = options.maxWidth
       newOptions.minWidth = options.minHeight
@@ -242,22 +252,191 @@ Exif orientation values to correctly display the letter F:
       newOptions.sourceWidth = options.sourceHeight
       newOptions.sourceHeight = options.sourceWidth
     }
+    if (autoOrientation > 1) {
+      // Browsers which correctly apply source image coordinates to
+      // auto-oriented images
+      switch (autoOrientation) {
+        case 2:
+          // horizontal flip
+          right = options.left
+          left = options.right
+          break
+        case 3:
+          // 180° rotate left
+          top = options.bottom
+          right = options.left
+          bottom = options.top
+          left = options.right
+          break
+        case 4:
+          // vertical flip
+          top = options.bottom
+          bottom = options.top
+          break
+        case 5:
+          // horizontal flip + 90° rotate left
+          top = options.left
+          right = options.bottom
+          bottom = options.right
+          left = options.top
+          break
+        case 6:
+          // 90° rotate left
+          top = options.left
+          right = options.top
+          bottom = options.right
+          left = options.bottom
+          break
+        case 7:
+          // vertical flip + 90° rotate left
+          top = options.right
+          right = options.top
+          bottom = options.left
+          left = options.bottom
+          break
+        case 8:
+          // 90° rotate right
+          top = options.right
+          right = options.bottom
+          bottom = options.left
+          left = options.top
+          break
+      }
+      // Some orientation combinations require additional rotation by 180°:
+      if (requiresRot180(orientation, autoOrientation)) {
+        var tmpTop = top
+        var tmpRight = right
+        top = bottom
+        right = left
+        bottom = tmpTop
+        left = tmpRight
+      }
+    }
+    newOptions.top = top
+    newOptions.right = right
+    newOptions.bottom = bottom
+    newOptions.left = left
+    // Account for defined browser orientation:
+    switch (orientation) {
+      case 2:
+        // horizontal flip
+        newOptions.right = left
+        newOptions.left = right
+        break
+      case 3:
+        // 180° rotate left
+        newOptions.top = bottom
+        newOptions.right = left
+        newOptions.bottom = top
+        newOptions.left = right
+        break
+      case 4:
+        // vertical flip
+        newOptions.top = bottom
+        newOptions.bottom = top
+        break
+      case 5:
+        // vertical flip + 90° rotate right
+        newOptions.top = left
+        newOptions.right = bottom
+        newOptions.bottom = right
+        newOptions.left = top
+        break
+      case 6:
+        // 90° rotate right
+        newOptions.top = right
+        newOptions.right = bottom
+        newOptions.bottom = left
+        newOptions.left = top
+        break
+      case 7:
+        // horizontal flip + 90° rotate right
+        newOptions.top = right
+        newOptions.right = top
+        newOptions.bottom = left
+        newOptions.left = bottom
+        break
+      case 8:
+        // 90° rotate left
+        newOptions.top = left
+        newOptions.right = top
+        newOptions.bottom = right
+        newOptions.left = bottom
+        break
+    }
     return newOptions
   }
 
   // Transform image orientation based on the given EXIF orientation option:
-  loadImage.transformCoordinates = function (canvas, options) {
-    originalTransformCoordinates.call(loadImage, canvas, options)
+  loadImage.transformCoordinates = function (canvas, options, data) {
+    originalTransformCoordinates.call(loadImage, canvas, options, data)
     var orientation = options.orientation
-    if (!(orientation > 1 && orientation < 9)) {
+    var autoOrientation =
+      loadImage.orientation && data.exif && data.exif.get('Orientation')
+    if (!requiresOrientationChange(orientation, autoOrientation)) {
       return
     }
     var ctx = canvas.getContext('2d')
     var width = canvas.width
     var height = canvas.height
-    if (orientation > 4) {
+    var sourceWidth = width
+    var sourceHeight = height
+    if (
+      (orientation > 4 && !(autoOrientation > 4)) ||
+      (orientation < 5 && autoOrientation > 4)
+    ) {
+      // Image dimensions and target dimensions are switched
       canvas.width = height
       canvas.height = width
+    }
+    if (orientation > 4) {
+      // Destination and source dimensions are switched
+      sourceWidth = height
+      sourceHeight = width
+    }
+    // Reset automatic browser orientation:
+    switch (autoOrientation) {
+      case 2:
+        // horizontal flip
+        ctx.translate(sourceWidth, 0)
+        ctx.scale(-1, 1)
+        break
+      case 3:
+        // 180° rotate left
+        ctx.translate(sourceWidth, sourceHeight)
+        ctx.rotate(Math.PI)
+        break
+      case 4:
+        // vertical flip
+        ctx.translate(0, sourceHeight)
+        ctx.scale(1, -1)
+        break
+      case 5:
+        // horizontal flip + 90° rotate left
+        ctx.rotate(-0.5 * Math.PI)
+        ctx.scale(-1, 1)
+        break
+      case 6:
+        // 90° rotate left
+        ctx.rotate(-0.5 * Math.PI)
+        ctx.translate(-sourceWidth, 0)
+        break
+      case 7:
+        // vertical flip + 90° rotate left
+        ctx.rotate(-0.5 * Math.PI)
+        ctx.translate(-sourceWidth, sourceHeight)
+        ctx.scale(1, -1)
+        break
+      case 8:
+        // 90° rotate right
+        ctx.rotate(0.5 * Math.PI)
+        ctx.translate(0, -sourceHeight)
+        break
+    }
+    // Some orientation combinations require additional rotation by 180°:
+    if (requiresRot180(orientation, autoOrientation)) {
+      ctx.translate(sourceWidth, sourceHeight)
+      ctx.rotate(Math.PI)
     }
     switch (orientation) {
       case 2:
