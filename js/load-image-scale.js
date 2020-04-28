@@ -27,7 +27,10 @@
 
   var originalTransform = loadImage.transform
 
-  loadImage.createCanvas = function (width, height) {
+  loadImage.createCanvas = function (width, height, offscreen) {
+    if (offscreen && window.OffscreenCanvas) {
+      return new OffscreenCanvas(width, height)
+    }
     var canvas = document.createElement('canvas')
     canvas.width = width
     canvas.height = height
@@ -247,7 +250,7 @@
         // Write the complete source image to an intermediate canvas first:
         tmp = img
         // eslint-disable-next-line no-param-reassign
-        img = loadImage.createCanvas(width, height)
+        img = loadImage.createCanvas(width, height, true)
         loadImage.drawImage(
           tmp,
           img,
@@ -270,7 +273,8 @@
         while (sourceWidth * downsamplingRatio > destWidth) {
           canvas = loadImage.createCanvas(
             sourceWidth * downsamplingRatio,
-            sourceHeight * downsamplingRatio
+            sourceHeight * downsamplingRatio,
+            true
           )
           loadImage.drawImage(
             img,
