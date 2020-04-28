@@ -255,7 +255,6 @@
           options
         )
       }
-      canvas = document.createElement('canvas')
       downsamplingRatio = options.downsamplingRatio
       if (
         downsamplingRatio > 0 &&
@@ -264,6 +263,7 @@
         destHeight < sourceHeight
       ) {
         while (sourceWidth * downsamplingRatio > destWidth) {
+          canvas = document.createElement('canvas')
           canvas.width = sourceWidth * downsamplingRatio
           canvas.height = sourceHeight * downsamplingRatio
           loadImage.drawImage(
@@ -282,22 +282,10 @@
           sourceWidth = canvas.width
           sourceHeight = canvas.height
           // eslint-disable-next-line no-param-reassign
-          img = document.createElement('canvas')
-          img.width = sourceWidth
-          img.height = sourceHeight
-          loadImage.drawImage(
-            canvas,
-            img,
-            0,
-            0,
-            sourceWidth,
-            sourceHeight,
-            sourceWidth,
-            sourceHeight,
-            options
-          )
+          img = canvas
         }
       }
+      canvas = document.createElement('canvas')
       canvas.width = destWidth
       canvas.height = destHeight
       loadImage.transformCoordinates(canvas, options, data)
