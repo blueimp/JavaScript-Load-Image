@@ -27,6 +27,13 @@
 
   var originalTransform = loadImage.transform
 
+  loadImage.createCanvas = function (width, height) {
+    var canvas = document.createElement('canvas')
+    canvas.width = width
+    canvas.height = height
+    return canvas
+  }
+
   loadImage.transform = function (img, options, callback, file, data) {
     originalTransform.call(
       loadImage,
@@ -240,9 +247,7 @@
         // Write the complete source image to an intermediate canvas first:
         tmp = img
         // eslint-disable-next-line no-param-reassign
-        img = document.createElement('canvas')
-        img.width = width
-        img.height = height
+        img = loadImage.createCanvas(width, height)
         loadImage.drawImage(
           tmp,
           img,
@@ -263,9 +268,10 @@
         destHeight < sourceHeight
       ) {
         while (sourceWidth * downsamplingRatio > destWidth) {
-          canvas = document.createElement('canvas')
-          canvas.width = sourceWidth * downsamplingRatio
-          canvas.height = sourceHeight * downsamplingRatio
+          canvas = loadImage.createCanvas(
+            sourceWidth * downsamplingRatio,
+            sourceHeight * downsamplingRatio
+          )
           loadImage.drawImage(
             img,
             canvas,
@@ -285,9 +291,7 @@
           img = canvas
         }
       }
-      canvas = document.createElement('canvas')
-      canvas.width = destWidth
-      canvas.height = destHeight
+      canvas = loadImage.createCanvas(destWidth, destHeight)
       loadImage.transformCoordinates(canvas, options, data)
       if (pixelRatio > 1) {
         canvas.style.width = canvas.width / pixelRatio + 'px'

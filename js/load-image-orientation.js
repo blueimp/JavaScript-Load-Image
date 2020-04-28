@@ -84,8 +84,7 @@ Exif orientation values to correctly display the letter F:
       // Check if the browser supports automatic image orientation:
       $.orientation = img.width === 2 && img.height === 3
       if ($.orientation) {
-        var canvas = document.createElement('canvas')
-        canvas.width = canvas.height = 1
+        var canvas = $.createCanvas(1, 1)
         var ctx = canvas.getContext('2d')
         ctx.drawImage(img, 1, 1, 1, 1, 0, 0, 1, 1)
         // Check if the source image coordinates (sX, sY, sWidth, sHeight) are
