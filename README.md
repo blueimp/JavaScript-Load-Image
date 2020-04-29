@@ -64,6 +64,12 @@ complete image header after resizing.
 
 ## Setup
 
+Install via [NPM](https://www.npmjs.com/):
+
+```sh
+npm install blueimp-load-image
+```
+
 Include the (combined and minified) JavaScript Load Image script in your HTML
 markup:
 
