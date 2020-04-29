@@ -82,9 +82,12 @@
       console.log('Invalid Exif data: Invalid thumbnail data.')
       return
     }
-    return new Blob([dataView.buffer.slice(offset, offset + length)], {
-      type: 'image/jpeg'
-    })
+    return new Blob(
+      [loadImage.bufferSlice.call(dataView.buffer, offset, offset + length)],
+      {
+        type: 'image/jpeg'
+      }
+    )
   }
 
   var ExifTagTypes = {
