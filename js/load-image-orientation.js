@@ -65,6 +65,8 @@ Exif orientation values to correctly display the letter F:
   var originalGetTransformedOptions = loadImage.getTransformedOptions
 
   ;(function ($) {
+    // Guard for non-browser environments (e.g. server-side rendering):
+    if (!$.global.document) return
     // black+white 3x2 JPEG, with the following meta information set:
     // - EXIF Orientation: 6 (Rotated 90° CCW)
     // Image data layout (B=black, F=white):
