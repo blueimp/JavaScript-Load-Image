@@ -535,7 +535,7 @@ loadImage(
   function (img, data) {
     var exif = data.exif
     var thumbnail = exif && exif.get('Thumbnail')
-    var blob = thumbnail.get('Blob')
+    var blob = thumbnail && thumbnail.get('Blob')
     if (blob) {
       loadImage(
         blob,
