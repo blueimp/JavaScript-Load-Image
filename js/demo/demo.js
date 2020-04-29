@@ -26,17 +26,20 @@ $(function () {
    * Displays tag data
    *
    * @param {*} node jQuery node
-   * @param {object} tags Tags object
+   * @param {object} tags Tags map
+   * @param {string} title Tags title
    */
-  function displayTagData(node, tags) {
+  function displayTagData(node, tags, title) {
     var table = $('<table></table>')
     var row = $('<tr></tr>')
     var cell = $('<td></td>')
+    var headerCell = $('<th colspan="2"></th>')
     var prop
+    table.append(row.clone().append(headerCell.clone().text(title)))
     for (prop in tags) {
       if (Object.prototype.hasOwnProperty.call(tags, prop)) {
         if (typeof tags[prop] === 'object') {
-          displayTagData(node, tags[prop])
+          displayTagData(node, tags[prop], prop)
           continue
         }
         table.append(
@@ -84,13 +87,16 @@ $(function () {
     var exif = data.exif
     var iptc = data.iptc
     if (exif) {
-      displayThumbnailImage(thumbNode, exif.get('Thumbnail'), {
-        orientation: exif.get('Orientation')
-      })
-      displayTagData(exifNode, exif.getAll())
+      var thumbnail = exif.get('Thumbnail')
+      if (thumbnail) {
+        displayThumbnailImage(thumbNode, thumbnail.get('Blob'), {
+          orientation: exif.get('Orientation')
+        })
+      }
+      displayTagData(exifNode, exif.getAll(), 'TIFF')
     }
     if (iptc) {
-      displayTagData(iptcNode, iptc.getAll())
+      displayTagData(iptcNode, iptc.getAll(), 'IPTC')
     }
   }
 

@@ -32,12 +32,12 @@
    *
    * @name ExifMap
    * @class
-   * @param {number} tagCode Private IFD tag code
+   * @param {number|string} tagCode IFD tag code
    */
   function ExifMap(tagCode) {
     if (tagCode) {
       Object.defineProperty(this, 'map', {
-        value: this.privateIFDs[tagCode].map
+        value: this.ifds[tagCode].map
       })
       Object.defineProperty(this, 'tags', {
         value: (this.tags && this.tags[tagCode]) || {}
@@ -47,13 +47,15 @@
 
   ExifMap.prototype.map = {
     Orientation: 0x0112,
-    Thumbnail: 0x0201,
+    Thumbnail: 'ifd1',
+    Blob: 0x0201, // Alias for JPEGInterchangeFormat
     Exif: 0x8769,
     GPSInfo: 0x8825,
     Interoperability: 0xa005
   }
 
-  ExifMap.prototype.privateIFDs = {
+  ExifMap.prototype.ifds = {
+    ifd1: { name: 'Thumbnail', map: ExifMap.prototype.map },
     0x8769: { name: 'Exif', map: {} },
     0x8825: { name: 'GPSInfo', map: {} },
     0xa005: { name: 'Interoperability', map: {} }
@@ -220,6 +222,21 @@
   }
 
   /**
+   * Determines if the given tag should be included.
+   *
+   * @param {object} includeTags Map of tags to include
+   * @param {object} excludeTags Map of tags to exclude
+   * @param {number|string} tagCode Tag code to check
+   * @returns {boolean} True if the tag should be included
+   */
+  function shouldIncludeTag(includeTags, excludeTags, tagCode) {
+    return (
+      (!includeTags || includeTags[tagCode]) &&
+      (!excludeTags || excludeTags[tagCode] !== true)
+    )
+  }
+
+  /**
    * Parses Exif tags.
    *
    * @param {DataView} dataView Data view interface
@@ -256,8 +273,7 @@
     for (i = 0; i < tagsNumber; i += 1) {
       tagOffset = dirOffset + 2 + 12 * i
       tagNumber = dataView.getUint16(tagOffset, littleEndian)
-      if (includeTags && !includeTags[tagNumber]) continue
-      if (excludeTags && excludeTags[tagNumber] === true) continue
+      if (!shouldIncludeTag(includeTags, excludeTags, tagNumber)) continue
       tagValue = getExifValue(
         dataView,
         tiffOffset,
@@ -276,17 +292,17 @@
   }
 
   /**
-   * Parses Private IFD tags.
+   * Parses tags in a given IFD (Image File Directory).
    *
    * @param {object} data Data object to store exif tags and offsets
-   * @param {number} tagCode Private IFD tag code
+   * @param {number|string} tagCode IFD tag code
    * @param {DataView} dataView Data view interface
    * @param {number} tiffOffset TIFF offset
    * @param {boolean} littleEndian Little endian encoding
    * @param {object} includeTags Map of tags to include
    * @param {object} excludeTags Map of tags to exclude
    */
-  function parseExifPrivateIFD(
+  function parseExifIFD(
     data,
     tagCode,
     dataView,
@@ -328,7 +344,7 @@
     var tiffOffset = offset + 10
     var littleEndian
     var dirOffset
-    var privateIFDs
+    var thumbnailIFD
     // Check for the ASCII code for "Exif" (0x45786966):
     if (dataView.getUint32(offset + 4) !== 0x45786966) {
       // No Exif data, might be XMP data instead
@@ -369,8 +385,8 @@
       data.exifTiffOffset = tiffOffset
       data.exifLittleEndian = littleEndian
     }
-    // Parse the tags of the main image directory and retrieve the
-    // offset to the next directory, usually the thumbnail directory:
+    // Parse the tags of the main image directory (IFD0) and retrieve the
+    // offset to the next directory (IFD1), usually the thumbnail directory:
     dirOffset = parseExifTags(
       dataView,
       tiffOffset,
@@ -381,29 +397,14 @@
       includeTags,
       excludeTags
     )
-    if (dirOffset && !options.disableExifThumbnail) {
-      dirOffset = parseExifTags(
-        dataView,
-        tiffOffset,
-        tiffOffset + dirOffset,
-        littleEndian,
-        data.exif,
-        data.exifOffsets,
-        includeTags,
-        excludeTags
-      )
-      // Check for JPEG Thumbnail offset:
-      if (data.exif[0x0201] && data.exif[0x0202]) {
-        data.exif[0x0201] = getExifThumbnail(
-          dataView,
-          tiffOffset + data.exif[0x0201],
-          data.exif[0x0202] // Thumbnail data length
-        )
+    if (dirOffset && shouldIncludeTag(includeTags, excludeTags, 'ifd1')) {
+      data.exif.ifd1 = dirOffset
+      if (data.exifOffsets) {
+        data.exifOffsets.ifd1 = tiffOffset + dirOffset
       }
     }
-    privateIFDs = Object.keys(data.exif.privateIFDs)
-    privateIFDs.forEach(function (tagCode) {
-      parseExifPrivateIFD(
+    Object.keys(data.exif.ifds).forEach(function (tagCode) {
+      parseExifIFD(
         data,
         tagCode,
         dataView,
@@ -413,6 +414,15 @@
         excludeTags
       )
     })
+    thumbnailIFD = data.exif.ifd1
+    // Check for JPEG Thumbnail offset and data length:
+    if (thumbnailIFD && thumbnailIFD[0x0201] && thumbnailIFD[0x0202]) {
+      thumbnailIFD[0x0201] = getExifThumbnail(
+        dataView,
+        tiffOffset + thumbnailIFD[0x0201],
+        thumbnailIFD[0x0202] // Thumbnail data length
+      )
+    }
   }
 
   // Registers the Exif parser for the APP1 JPEG meta data segment:
@@ -441,7 +451,6 @@
 
   // Adds the following options to the parseMetaData method:
   // - disableExif: Disables Exif parsing when true.
-  // - disableExifThumbnail: Disables parsing of Thumbnail data when true.
   // - disableExifOffsets: Disables storing Exif tag offsets when true.
   // - includeExifTags: A map of Exif tags to include for parsing.
   // - excludeExifTags: A map of Exif tags to exclude from parsing.

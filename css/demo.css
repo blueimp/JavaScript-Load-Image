@@ -51,8 +51,10 @@ tr:nth-child(odd) {
   background: #eee;
   color: #222;
 }
-td {
+td,
+th {
   padding: 10px;
+  text-align: left;
 }
 #result,
 #thumbnail {

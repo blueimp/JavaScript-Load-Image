@@ -180,6 +180,9 @@
     }
   }
 
+  // IFD1 directory can contain any IFD0 tags:
+  ExifMapProto.tags.ifd1 = ExifMapProto.tags
+
   ExifMapProto.stringValues = {
     ExposureProgram: {
       0: 'Undefined',
@@ -375,7 +378,7 @@
       if (Object.prototype.hasOwnProperty.call(this, prop)) {
         obj = this[prop]
         if (obj && obj.getAll) {
-          map[this.privateIFDs[prop].name] = obj.getAll()
+          map[this.ifds[prop].name] = obj.getAll()
         } else {
           name = this.tags[prop]
           if (name) map[name] = this.getText(name)
@@ -387,7 +390,7 @@
 
   ExifMapProto.getName = function (tagCode) {
     var name = this.tags[tagCode]
-    if (typeof name === 'object') return this.privateIFDs[tagCode].name
+    if (typeof name === 'object') return this.ifds[tagCode].name
     return name
   }
 
@@ -395,17 +398,17 @@
   ;(function () {
     var tags = ExifMapProto.tags
     var prop
-    var privateIFD
+    var ifd
     var subTags
     // Map the tag names to tags:
     for (prop in tags) {
       if (Object.prototype.hasOwnProperty.call(tags, prop)) {
-        privateIFD = ExifMapProto.privateIFDs[prop]
-        if (privateIFD) {
+        ifd = ExifMapProto.ifds[prop]
+        if (ifd) {
           subTags = tags[prop]
           for (prop in subTags) {
             if (Object.prototype.hasOwnProperty.call(subTags, prop)) {
-              privateIFD.map[subTags[prop]] = Number(prop)
+              ifd.map[subTags[prop]] = Number(prop)
             }
           }
         } else {

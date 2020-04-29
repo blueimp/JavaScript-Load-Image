@@ -533,11 +533,17 @@ Example code displaying a thumbnail image embedded into the Exif meta data:
 loadImage(
   fileOrBlobOrUrl,
   function (img, data) {
-    var thumbBlob = data.exif && data.exif.get('Thumbnail')
-    if (thumbBlob) {
-      loadImage(thumbBlob, function (thumbImage) {
-        document.body.appendChild(thumbImage)
-      })
+    var exif = data.exif
+    var thumbnail = exif && exif.get('Thumbnail')
+    var blob = thumbnail.get('Blob')
+    if (blob) {
+      loadImage(
+        blob,
+        function (thumbImage) {
+          document.body.appendChild(thumbImage)
+        },
+        { orientation: exif.get('Orientation') }
+      )
     }
   },
   { meta: true }
@@ -610,7 +616,6 @@ loadImage(
 The Exif parser adds additional options:
 
 - `disableExif`: Disables Exif parsing when `true`.
-- `disableExifThumbnail`: Disables parsing of Thumbnail data when `true`.
 - `disableExifOffsets`: Disables storing Exif tag offsets when `true`.
 - `includeExifTags`: A map of Exif tags to include for parsing (includes all but
   the excluded tags by default).
@@ -628,8 +633,10 @@ loadImage.parseMetaData(
   {
     includeExifTags: {
       0x0112: true, // Orientation
-      0x0201: true, // JPEGInterchangeFormat (Thumbnail data offset)
-      0x0202: true, // JPEGInterchangeFormatLength (Thumbnail data length)
+      ifd1: {
+        0x0201: true, // JPEGInterchangeFormat (Thumbnail data offset)
+        0x0202: true // JPEGInterchangeFormatLength (Thumbnail data length)
+      },
       0x8769: {
         // ExifIFDPointer
         0x9000: true // ExifVersion
