@@ -214,8 +214,10 @@ $(function () {
     if (img) {
       updateResults(
         loadImage.scale(img, {
+          maxWidth: result.width() * window.devicePixelRatio,
           pixelRatio: window.devicePixelRatio,
-          orientation: Number($('#orientation').val()) || true
+          orientation: Number($('#orientation').val()) || true,
+          imageSmoothingEnabled: $('#image-smoothing').is(':checked')
         })
       )
     }
