@@ -58,7 +58,7 @@
     // 256 KiB should contain all EXIF/ICC/IPTC segments:
     var maxMetaDataSize = options.maxMetaDataSize || 262144
     var noMetaData = !(
-      typeof DataView !== 'undefined' &&
+      loadImage.global.DataView &&
       file &&
       file.size >= 12 &&
       file.type === 'image/jpeg' &&
