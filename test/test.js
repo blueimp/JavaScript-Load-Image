@@ -951,7 +951,7 @@
                 expect(imageData[1]).to.equal(0)
                 expect(imageData[2]).to.equal(0)
                 expect(imageData[3]).to.equal(255)
-                // 0:1 opaque white
+                // 1:0 opaque white
                 expect(imageData[0 + 4]).to.equal(255)
                 expect(imageData[1 + 4]).to.equal(255)
                 expect(imageData[2 + 4]).to.equal(255)
@@ -990,7 +990,7 @@
                 expect(imageData[1]).to.equal(255)
                 expect(imageData[2]).to.equal(255)
                 expect(imageData[3]).to.equal(255)
-                // 0:1 opaque black
+                // 1:0 opaque black
                 expect(imageData[0 + 4]).to.equal(0)
                 expect(imageData[1 + 4]).to.equal(0)
                 expect(imageData[2 + 4]).to.equal(0)
@@ -1025,7 +1025,7 @@
                 expect(imageData[1]).to.equal(255)
                 expect(imageData[2]).to.equal(255)
                 expect(imageData[3]).to.equal(255)
-                // 0:1 opaque black
+                // 1:0 opaque black
                 expect(imageData[0 + 4]).to.equal(0)
                 expect(imageData[1 + 4]).to.equal(0)
                 expect(imageData[2 + 4]).to.equal(0)
@@ -1064,7 +1064,7 @@
                 expect(imageData[1]).to.equal(0)
                 expect(imageData[2]).to.equal(0)
                 expect(imageData[3]).to.equal(255)
-                // 0:1 opaque white
+                // 1:0 opaque white
                 expect(imageData[0 + 4]).to.equal(255)
                 expect(imageData[1 + 4]).to.equal(255)
                 expect(imageData[2 + 4]).to.equal(255)
@@ -1254,22 +1254,22 @@
               expect(imageData[1]).to.equal(0)
               expect(imageData[2]).to.equal(0)
               expect(imageData[3]).to.equal(255)
-              // 0:1 opaque white
+              // 1:0 opaque white
               expect(imageData[0 + 4]).to.equal(255)
               expect(imageData[1 + 4]).to.equal(255)
               expect(imageData[2 + 4]).to.equal(255)
               expect(imageData[3 + 4]).to.equal(255)
-              // 1:0 opaque white
+              // 2:0 opaque white
               expect(imageData[0 + 8]).to.equal(255)
               expect(imageData[1 + 8]).to.equal(255)
               expect(imageData[2 + 8]).to.equal(255)
               expect(imageData[3 + 8]).to.equal(255)
-              // 1:1 opaque black
+              // 0:1 opaque black
               expect(imageData[0 + 12]).to.equal(0)
               expect(imageData[1 + 12]).to.equal(0)
               expect(imageData[2 + 12]).to.equal(0)
               expect(imageData[3 + 12]).to.equal(255)
-              // 2:0 opaque black
+              // 1:1 opaque black
               expect(imageData[0 + 16]).to.equal(0)
               expect(imageData[1 + 16]).to.equal(0)
               expect(imageData[2 + 16]).to.equal(0)
@@ -1311,22 +1311,22 @@
               expect(imageData[1]).to.equal(255)
               expect(imageData[2]).to.equal(255)
               expect(imageData[3]).to.equal(255)
-              // 0:1 opaque white
+              // 1:0 opaque white
               expect(imageData[0 + 4]).to.equal(255)
               expect(imageData[1 + 4]).to.equal(255)
               expect(imageData[2 + 4]).to.equal(255)
               expect(imageData[3 + 4]).to.equal(255)
-              // 1:0 opaque black
+              // 2:0 opaque black
               expect(imageData[0 + 8]).to.equal(0)
               expect(imageData[1 + 8]).to.equal(0)
               expect(imageData[2 + 8]).to.equal(0)
               expect(imageData[3 + 8]).to.equal(255)
-              // 1:1 opaque black
+              // 0:1 opaque black
               expect(imageData[0 + 12]).to.equal(0)
               expect(imageData[1 + 12]).to.equal(0)
               expect(imageData[2 + 12]).to.equal(0)
               expect(imageData[3 + 12]).to.equal(255)
-              // 2:0 opaque black
+              // 1:1 opaque black
               expect(imageData[0 + 16]).to.equal(0)
               expect(imageData[1 + 16]).to.equal(0)
               expect(imageData[2 + 16]).to.equal(0)
@@ -1364,22 +1364,22 @@
               expect(imageData[1]).to.equal(0)
               expect(imageData[2]).to.equal(0)
               expect(imageData[3]).to.equal(255)
-              // 0:1 opaque black
+              // 1:0 opaque black
               expect(imageData[0 + 4]).to.equal(0)
               expect(imageData[1 + 4]).to.equal(0)
               expect(imageData[2 + 4]).to.equal(0)
               expect(imageData[3 + 4]).to.equal(255)
-              // 1:0 opaque black
+              // 2:0 opaque black
               expect(imageData[0 + 8]).to.equal(0)
               expect(imageData[1 + 8]).to.equal(0)
               expect(imageData[2 + 8]).to.equal(0)
               expect(imageData[3 + 8]).to.equal(255)
-              // 1:1 opaque white
+              // 0:1 opaque white
               expect(imageData[0 + 12]).to.equal(255)
               expect(imageData[1 + 12]).to.equal(255)
               expect(imageData[2 + 12]).to.equal(255)
               expect(imageData[3 + 12]).to.equal(255)
-              // 2:0 opaque white
+              // 1:1 opaque white
               expect(imageData[0 + 16]).to.equal(255)
               expect(imageData[1 + 16]).to.equal(255)
               expect(imageData[2 + 16]).to.equal(255)
@@ -1421,22 +1421,22 @@
               expect(imageData[1]).to.equal(0)
               expect(imageData[2]).to.equal(0)
               expect(imageData[3]).to.equal(255)
-              // 0:1 opaque black
+              // 1:0 opaque black
               expect(imageData[0 + 4]).to.equal(0)
               expect(imageData[1 + 4]).to.equal(0)
               expect(imageData[2 + 4]).to.equal(0)
               expect(imageData[3 + 4]).to.equal(255)
-              // 1:0 opaque black
+              // 2:0 opaque black
               expect(imageData[0 + 8]).to.equal(0)
               expect(imageData[1 + 8]).to.equal(0)
               expect(imageData[2 + 8]).to.equal(0)
               expect(imageData[3 + 8]).to.equal(255)
-              // 1:1 opaque black
+              // 0:1 opaque black
               expect(imageData[0 + 12]).to.equal(0)
               expect(imageData[1 + 12]).to.equal(0)
               expect(imageData[2 + 12]).to.equal(0)
               expect(imageData[3 + 12]).to.equal(255)
-              // 2:0 opaque white
+              // 1:1 opaque white
               expect(imageData[0 + 16]).to.equal(255)
               expect(imageData[1 + 16]).to.equal(255)
               expect(imageData[2 + 16]).to.equal(255)
@@ -1479,12 +1479,12 @@
               expect(imageData[1]).to.equal(0)
               expect(imageData[2]).to.equal(0)
               expect(imageData[3]).to.equal(255)
-              // 0:1 opaque black
+              // 1:0 opaque black
               expect(imageData[0 + 4]).to.equal(0)
               expect(imageData[1 + 4]).to.equal(0)
               expect(imageData[2 + 4]).to.equal(0)
               expect(imageData[3 + 4]).to.equal(255)
-              // 1:0 opaque white
+              // 0:1 opaque white
               expect(imageData[0 + 8]).to.equal(255)
               expect(imageData[1 + 8]).to.equal(255)
               expect(imageData[2 + 8]).to.equal(255)
@@ -1494,12 +1494,12 @@
               expect(imageData[1 + 12]).to.equal(0)
               expect(imageData[2 + 12]).to.equal(0)
               expect(imageData[3 + 12]).to.equal(255)
-              // 2:0 opaque white
+              // 0:2 opaque white
               expect(imageData[0 + 16]).to.equal(255)
               expect(imageData[1 + 16]).to.equal(255)
               expect(imageData[2 + 16]).to.equal(255)
               expect(imageData[3 + 16]).to.equal(255)
-              // 2:1 opaque black
+              // 1:2 opaque black
               expect(imageData[0 + 20]).to.equal(0)
               expect(imageData[1 + 20]).to.equal(0)
               expect(imageData[2 + 20]).to.equal(0)
@@ -1533,12 +1533,12 @@
               expect(imageData[1]).to.equal(0)
               expect(imageData[2]).to.equal(0)
               expect(imageData[3]).to.equal(255)
-              // 0:1 opaque black
+              // 1:0 opaque black
               expect(imageData[0 + 4]).to.equal(0)
               expect(imageData[1 + 4]).to.equal(0)
               expect(imageData[2 + 4]).to.equal(0)
               expect(imageData[3 + 4]).to.equal(255)
-              // 1:0 opaque black
+              // 0:1 opaque black
               expect(imageData[0 + 8]).to.equal(0)
               expect(imageData[1 + 8]).to.equal(0)
               expect(imageData[2 + 8]).to.equal(0)
@@ -1548,12 +1548,12 @@
               expect(imageData[1 + 12]).to.equal(255)
               expect(imageData[2 + 12]).to.equal(255)
               expect(imageData[3 + 12]).to.equal(255)
-              // 2:0 opaque black
+              // 0:2 opaque black
               expect(imageData[0 + 16]).to.equal(0)
               expect(imageData[1 + 16]).to.equal(0)
               expect(imageData[2 + 16]).to.equal(0)
               expect(imageData[3 + 16]).to.equal(255)
-              // 2:1 opaque white
+              // 1:2 opaque white
               expect(imageData[0 + 20]).to.equal(255)
               expect(imageData[1 + 20]).to.equal(255)
               expect(imageData[2 + 20]).to.equal(255)
@@ -1591,12 +1591,12 @@
               expect(imageData[1]).to.equal(0)
               expect(imageData[2]).to.equal(0)
               expect(imageData[3]).to.equal(255)
-              // 0:1 opaque white
+              // 1:0 opaque white
               expect(imageData[0 + 4]).to.equal(255)
               expect(imageData[1 + 4]).to.equal(255)
               expect(imageData[2 + 4]).to.equal(255)
               expect(imageData[3 + 4]).to.equal(255)
-              // 1:0 opaque black
+              // 0:1 opaque black
               expect(imageData[0 + 8]).to.equal(0)
               expect(imageData[1 + 8]).to.equal(0)
               expect(imageData[2 + 8]).to.equal(0)
@@ -1606,12 +1606,12 @@
               expect(imageData[1 + 12]).to.equal(255)
               expect(imageData[2 + 12]).to.equal(255)
               expect(imageData[3 + 12]).to.equal(255)
-              // 2:0 opaque black
+              // 0:2 opaque black
               expect(imageData[0 + 16]).to.equal(0)
               expect(imageData[1 + 16]).to.equal(0)
               expect(imageData[2 + 16]).to.equal(0)
               expect(imageData[3 + 16]).to.equal(255)
-              // 2:1 opaque black
+              // 1:2 opaque black
               expect(imageData[0 + 20]).to.equal(0)
               expect(imageData[1 + 20]).to.equal(0)
               expect(imageData[2 + 20]).to.equal(0)
@@ -1645,12 +1645,12 @@
               expect(imageData[1]).to.equal(255)
               expect(imageData[2]).to.equal(255)
               expect(imageData[3]).to.equal(255)
-              // 0:1 opaque black
+              // 1:0 opaque black
               expect(imageData[0 + 4]).to.equal(0)
               expect(imageData[1 + 4]).to.equal(0)
               expect(imageData[2 + 4]).to.equal(0)
               expect(imageData[3 + 4]).to.equal(255)
-              // 1:0 opaque white
+              // 0:1 opaque white
               expect(imageData[0 + 8]).to.equal(255)
               expect(imageData[1 + 8]).to.equal(255)
               expect(imageData[2 + 8]).to.equal(255)
@@ -1660,12 +1660,12 @@
               expect(imageData[1 + 12]).to.equal(0)
               expect(imageData[2 + 12]).to.equal(0)
               expect(imageData[3 + 12]).to.equal(255)
-              // 2:0 opaque black
+              // 0:2 opaque black
               expect(imageData[0 + 16]).to.equal(0)
               expect(imageData[1 + 16]).to.equal(0)
               expect(imageData[2 + 16]).to.equal(0)
               expect(imageData[3 + 16]).to.equal(255)
-              // 2:1 opaque black
+              // 1:2 opaque black
               expect(imageData[0 + 20]).to.equal(0)
               expect(imageData[1 + 20]).to.equal(0)
               expect(imageData[2 + 20]).to.equal(0)
@@ -1699,12 +1699,12 @@
               expect(imageData[1]).to.equal(0)
               expect(imageData[2]).to.equal(0)
               expect(imageData[3]).to.equal(255)
-              // 0:1 opaque black
+              // 1:0 opaque black
               expect(imageData[0 + 4]).to.equal(0)
               expect(imageData[1 + 4]).to.equal(0)
               expect(imageData[2 + 4]).to.equal(0)
               expect(imageData[3 + 4]).to.equal(255)
-              // 1:0 opaque black
+              // 0:1 opaque black
               expect(imageData[0 + 8]).to.equal(0)
               expect(imageData[1 + 8]).to.equal(0)
               expect(imageData[2 + 8]).to.equal(0)
@@ -1714,12 +1714,12 @@
               expect(imageData[1 + 12]).to.equal(255)
               expect(imageData[2 + 12]).to.equal(255)
               expect(imageData[3 + 12]).to.equal(255)
-              // 2:0 opaque black
+              // 0:2 opaque black
               expect(imageData[0 + 16]).to.equal(0)
               expect(imageData[1 + 16]).to.equal(0)
               expect(imageData[2 + 16]).to.equal(0)
               expect(imageData[3 + 16]).to.equal(255)
-              // 2:1 opaque white
+              // 1:2 opaque white
               expect(imageData[0 + 20]).to.equal(255)
               expect(imageData[1 + 20]).to.equal(255)
               expect(imageData[2 + 20]).to.equal(255)
@@ -1804,7 +1804,7 @@
                 expect(imageData[1]).to.equal(0)
                 expect(imageData[2]).to.equal(0)
                 expect(imageData[3]).to.equal(255)
-                // 0:1 opaque white
+                // 1:0 opaque white
                 expect(imageData[0 + 4]).to.equal(255)
                 expect(imageData[1 + 4]).to.equal(255)
                 expect(imageData[2 + 4]).to.equal(255)
@@ -1843,7 +1843,7 @@
                 expect(imageData[1]).to.equal(255)
                 expect(imageData[2]).to.equal(255)
                 expect(imageData[3]).to.equal(255)
-                // 0:1 opaque black
+                // 1:0 opaque black
                 expect(imageData[0 + 4]).to.equal(0)
                 expect(imageData[1 + 4]).to.equal(0)
                 expect(imageData[2 + 4]).to.equal(0)
@@ -1878,7 +1878,7 @@
                 expect(imageData[1]).to.equal(255)
                 expect(imageData[2]).to.equal(255)
                 expect(imageData[3]).to.equal(255)
-                // 0:1 opaque black
+                // 1:0 opaque black
                 expect(imageData[0 + 4]).to.equal(0)
                 expect(imageData[1 + 4]).to.equal(0)
                 expect(imageData[2 + 4]).to.equal(0)
@@ -1917,7 +1917,7 @@
                 expect(imageData[1]).to.equal(0)
                 expect(imageData[2]).to.equal(0)
                 expect(imageData[3]).to.equal(255)
-                // 0:1 opaque white
+                // 1:0 opaque white
                 expect(imageData[0 + 4]).to.equal(255)
                 expect(imageData[1 + 4]).to.equal(255)
                 expect(imageData[2 + 4]).to.equal(255)
