@@ -60,6 +60,20 @@
   var imageUrlJPEG = 'data:image/jpeg;base64,' + b64DataJPEG
   var blobJPEG = browser.canCreateBlob && window.dataURLtoBlob(imageUrlJPEG)
 
+  ;(function imageSmoothingTest($) {
+    var canvas = document.createElement('canvas')
+    if (!canvas.getContext) return
+    var ctx = canvas.getContext('2d')
+    if (ctx.msImageSmoothingEnabled) {
+      $.imageSmoothingEnabled = ctx.msImageSmoothingEnabled
+      $.imageSmoothingEnabledKey = 'msImageSmoothingEnabled'
+    } else {
+      $.imageSmoothingEnabled = ctx.imageSmoothingEnabled
+      $.imageSmoothingEnabledKey = 'imageSmoothingEnabled'
+    }
+    $.imageSmoothingQuality = ctx.imageSmoothingQuality
+  })(browser)
+
   // Test if the browser is using exact image data when transforming the canvas.
   // Both Internet Explorer and Edge Legacy have off-by-one changes to color and
   // transparency values when flipping images.
@@ -480,9 +494,7 @@
     })
 
     describe('image smoothing', function () {
-      if (
-        !document.createElement('canvas').getContext('2d').imageSmoothingEnabled
-      ) {
+      if (!browser.imageSmoothingEnabled) {
         return
       }
 
@@ -492,7 +504,9 @@
             blobGIF,
             function (img) {
               expect(img.width).to.equal(120)
-              expect(img.getContext('2d').imageSmoothingEnabled).to.equal(true)
+              expect(
+                img.getContext('2d')[browser.imageSmoothingEnabledKey]
+              ).to.equal(true)
               done()
             },
             { minWidth: 120, canvas: true }
@@ -506,7 +520,9 @@
             blobGIF,
             function (img) {
               expect(img.width).to.equal(120)
-              expect(img.getContext('2d').imageSmoothingEnabled).to.equal(false)
+              expect(
+                img.getContext('2d')[browser.imageSmoothingEnabledKey]
+              ).to.equal(false)
               done()
             },
             { minWidth: 120, canvas: true, imageSmoothingEnabled: false }
@@ -514,10 +530,7 @@
         ).to.be.ok
       })
 
-      if (
-        document.createElement('canvas').getContext('2d')
-          .imageSmoothingQuality !== 'low'
-      ) {
+      if (browser.imageSmoothingQuality !== 'low') {
         return
       }
 
