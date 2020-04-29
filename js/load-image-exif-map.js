@@ -79,6 +79,9 @@
       0xa004: 'RelatedSoundFile', // Name of related sound file
       0x9003: 'DateTimeOriginal', // Date and time when the original image was generated
       0x9004: 'DateTimeDigitized', // Date and time when the image was stored digitally
+      0x9010: 'OffsetTime', // Time zone when the image file was last changed
+      0x9011: 'OffsetTimeOriginal', // Time zone when the image was stored digitally
+      0x9012: 'OffsetTimeDigitized', // Time zone when the image was stored digitally
       0x9290: 'SubSecTime', // Fractions of seconds for DateTime
       0x9291: 'SubSecTimeOriginal', // Fractions of seconds for DateTimeOriginal
       0x9292: 'SubSecTimeDigitized', // Fractions of seconds for DateTimeDigitized
