@@ -75,7 +75,7 @@
   /**
    * Retrieves tag value for the given DataView and range
    *
-   * @param {number} tagCode Private IFD tag code
+   * @param {number} tagCode tag code
    * @param {IptcMap} map IPTC tag map
    * @param {DataView} dataView Data view interface
    * @param {number} offset Range start
