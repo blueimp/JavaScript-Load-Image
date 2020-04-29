@@ -29,18 +29,11 @@
 })(function (loadImage) {
   'use strict'
 
-  var hasblobSlice =
-    typeof Blob !== 'undefined' &&
+  loadImage.blobSlice =
+    loadImage.global.Blob &&
     (Blob.prototype.slice ||
       Blob.prototype.webkitSlice ||
       Blob.prototype.mozSlice)
-
-  loadImage.blobSlice =
-    hasblobSlice &&
-    function () {
-      var slice = this.slice || this.webkitSlice || this.mozSlice
-      return slice.apply(this, arguments)
-    }
 
   loadImage.metaDataParsers = {
     jpeg: {
