@@ -517,7 +517,7 @@ become available, as well as three additional methods:
 - `exif.getAll()`
 
 ```js
-var flashText = data.exif.getText('Orientation') // e.g. right-top for value 6
+var orientationText = data.exif.getText('Orientation') // e.g. right-top
 
 var name = data.exif.getName(0x0112) // Orientation
 
