@@ -150,9 +150,10 @@
       expect(img.onerror).to.be.an.instanceOf(Function)
     })
 
-    it('Load image url', function (done) {
+    it('Load image url as img element', function (done) {
       expect(
         loadImage(imageUrlGIF, function (img) {
+          expect(img.nodeName.toLowerCase()).to.equal('img')
           expect(img.width).to.equal(60)
           expect(img.height).to.equal(40)
           done()
@@ -160,9 +161,10 @@
       ).to.be.ok
     })
 
-    it('Load image blob', function (done) {
+    it('Load image blob as img element', function (done) {
       expect(
         loadImage(blobGIF, function (img) {
+          expect(img.nodeName.toLowerCase()).to.equal('img')
           expect(img.width).to.equal(60)
           expect(img.height).to.equal(40)
           done()
@@ -170,11 +172,11 @@
       ).to.be.ok
     })
 
-    it('Return image loading error to callback', function (done) {
+    it('Handle image loading error', function (done) {
       expect(
-        loadImage('404', function (img) {
-          expect(img).to.be.an.instanceOf(window.Event)
-          expect(img.type).to.equal('error')
+        loadImage('404', function (err) {
+          expect(err).to.be.an.instanceOf(window.Event)
+          expect(err.type).to.equal('error')
           done()
         })
       ).to.be.ok
@@ -187,6 +189,20 @@
           expect(data.originalHeight).to.equal(40)
           done()
         })
+      ).to.be.ok
+    })
+
+    it('Load image as canvas for canvas: true', function (done) {
+      expect(
+        loadImage(
+          imageUrlGIF,
+          function (img) {
+            expect(img.getContext).to.be.an.instanceOf(Function)
+            expect(img.nodeName.toLowerCase()).to.equal('canvas')
+            done()
+          },
+          { canvas: true }
+        )
       ).to.be.ok
     })
 
@@ -428,6 +444,28 @@
               done()
             },
             { minWidth: 30, minHeight: 20 }
+          )
+        ).to.be.ok
+      })
+
+      it('Accept a canvas element as source image', function (done) {
+        expect(
+          loadImage(
+            blobGIF,
+            function (img) {
+              expect(img.getContext).to.be.an.instanceOf(Function)
+              expect(img.nodeName.toLowerCase()).to.equal('canvas')
+              // eslint-disable-next-line no-param-reassign
+              img = loadImage.scale(img, {
+                maxWidth: 30
+              })
+              expect(img.getContext).to.be.an.instanceOf(Function)
+              expect(img.nodeName.toLowerCase()).to.equal('canvas')
+              expect(img.width).to.equal(30)
+              expect(img.height).to.equal(20)
+              done()
+            },
+            { canvas: true }
           )
         ).to.be.ok
       })
@@ -2232,68 +2270,6 @@
           ).to.be.ok
         })
       })
-    })
-  })
-
-  describe('Canvas', function () {
-    it('Return img element to callback if canvas is not true', function (done) {
-      expect(
-        loadImage(blobGIF, function (img) {
-          expect(img.getContext).to.be.undefined
-          expect(img.nodeName.toLowerCase()).to.equal('img')
-          done()
-        })
-      ).to.be.ok
-    })
-
-    it('Return canvas element to callback if canvas is true', function (done) {
-      expect(
-        loadImage(
-          blobGIF,
-          function (img) {
-            expect(img.getContext).to.be.an.instanceOf(Function)
-            expect(img.nodeName.toLowerCase()).to.equal('canvas')
-            done()
-          },
-          { canvas: true }
-        )
-      ).to.be.ok
-    })
-
-    it('Return scaled canvas element to callback', function (done) {
-      expect(
-        loadImage(
-          blobGIF,
-          function (img) {
-            expect(img.getContext).to.be.an.instanceOf(Function)
-            expect(img.nodeName.toLowerCase()).to.equal('canvas')
-            expect(img.width).to.equal(30)
-            expect(img.height).to.equal(20)
-            done()
-          },
-          { canvas: true, maxWidth: 30 }
-        )
-      ).to.be.ok
-    })
-
-    it('Accept a canvas element as parameter for loadImage.scale', function (done) {
-      expect(
-        loadImage(
-          blobGIF,
-          function (img) {
-            // eslint-disable-next-line no-param-reassign
-            img = loadImage.scale(img, {
-              maxWidth: 30
-            })
-            expect(img.getContext).to.be.an.instanceOf(Function)
-            expect(img.nodeName.toLowerCase()).to.equal('canvas')
-            expect(img.width).to.equal(30)
-            expect(img.height).to.equal(20)
-            done()
-          },
-          { canvas: true }
-        )
-      ).to.be.ok
     })
   })
 
