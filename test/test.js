@@ -206,7 +206,7 @@
       ).to.be.ok
     })
 
-    describe('ObjectURL revoke', function () {
+    describe('Object URL revoke', function () {
       // Using XMLHttpRequest via the request helper function to test Object
       // URLs to work around Edge Legacy and IE caching image URLs.
       if (!window.XMLHttpRequest) return
