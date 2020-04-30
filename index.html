@@ -20,7 +20,7 @@
     <title>JavaScript Load Image</title>
     <meta
       name="description"
-      content="JavaScript Load Image is a library to load images provided as File or Blob objects or via URL. It returns an optionally scaled and/or cropped HTML img or canvas element. It also provides methods to parse image meta data to extract IPTC and Exif tags as well as embedded thumbnail images and to restore the complete image header after resizing."
+      content="JavaScript Load Image is a library to load images provided as File or Blob objects or via URL. It returns an optionally scaled, cropped or rotated HTML img or canvas element. It also provides methods to parse image metadata to extract IPTC and Exif tags as well as embedded thumbnail images, to overwrite the Exif Orientation value and to restore the complete image header after resizing."
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!--
@@ -39,17 +39,19 @@
       <a href="https://developer.mozilla.org/en/DOM/File">File</a> or
       <a href="https://developer.mozilla.org/en/DOM/Blob">Blob</a> objects or
       via URL.<br />
-      It returns an optionally <strong>scaled</strong> and/or
-      <strong>cropped</strong> HTML
+      It returns an optionally <strong>scaled</strong>,
+      <strong>cropped</strong> or <strong>rotated</strong> HTML
       <a href="https://developer.mozilla.org/en/docs/HTML/Element/Img">img</a>
       or
       <a href="https://developer.mozilla.org/en/docs/HTML/Canvas">canvas</a>
-      element.<br />
-      It also provides a method to parse image meta data to extract
+      element.
+    </p>
+    <p>
+      It also provides methods to parse image metadata to extract
       <a href="https://iptc.org/standards/photo-metadata/">IPTC</a> and
       <a href="https://en.wikipedia.org/wiki/Exif">Exif</a> tags as well as
-      embedded thumbnail images and to restore the complete image header after
-      resizing.
+      embedded thumbnail images, to overwrite the Exif Orientation value and to
+      restore the complete image header after resizing.
     </p>
     <ul id="navigation">
       <li>

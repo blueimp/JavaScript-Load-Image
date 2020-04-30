@@ -56,11 +56,15 @@
 
 ## Description
 
-JavaScript Load Image is a library to load images provided as File or Blob
-objects or via URL. It returns an optionally scaled and/or cropped HTML img or
-canvas element. It also provides methods to parse image meta data to extract
-IPTC and Exif tags as well as embedded thumbnail images and to restore the
-complete image header after resizing.
+JavaScript Load Image is a library to load images provided as `File` or `Blob`
+objects or via `URL`. It returns an optionally **scaled**, **cropped** or
+**rotated** HTML `img` or `canvas` element.
+
+It also provides methods to parse image metadata to extract
+[IPTC](https://iptc.org/standards/photo-metadata/) and
+[Exif](https://en.wikipedia.org/wiki/Exif) tags as well as embedded thumbnail
+images, to overwrite the Exif Orientation value and to restore the complete
+image header after resizing.
 
 ## Setup
 
