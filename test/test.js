@@ -2518,8 +2518,8 @@
 
   describe('Fetch', function () {
     if (
-      !('fetch' in window && 'Request' in window) &&
-      !('XMLHttpRequest' in window && 'ProgressEvent' in window)
+      !(window.fetch && window.Request) &&
+      !(window.XMLHttpRequest && window.ProgressEvent)
     ) {
       return
     }

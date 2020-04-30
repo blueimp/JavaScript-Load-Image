@@ -25,7 +25,9 @@
 })(function (loadImage) {
   'use strict'
 
-  if (typeof fetch !== 'undefined' && typeof Request !== 'undefined') {
+  var global = loadImage.global
+
+  if (global.fetch && global.Request) {
     loadImage.fetchBlob = function (url, callback, options) {
       fetch(new Request(url, options))
         .then(function (response) {
@@ -36,11 +38,8 @@
           callback(null, err)
         })
     }
-  } else if (
-    // Check for XHR2 support:
-    typeof XMLHttpRequest !== 'undefined' &&
-    typeof ProgressEvent !== 'undefined'
-  ) {
+  } else if (global.XMLHttpRequest && global.ProgressEvent) {
+    // Browser supports XHR Level 2 and XHR responseType blob
     loadImage.fetchBlob = function (url, callback, options) {
       // eslint-disable-next-line no-param-reassign
       options = options || {}
