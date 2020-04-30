@@ -2274,6 +2274,8 @@
   })
 
   describe('Metadata', function () {
+    if (!window.DataView || !loadImage.blobSlice) return
+
     it('Parse EXIF tags', function (done) {
       loadImage.parseMetaData(blobJPEG, function (data) {
         expect(data.exif).to.be.ok
