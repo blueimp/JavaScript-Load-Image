@@ -77,9 +77,9 @@ $(function () {
   }
 
   /**
-   * Displays meta data
+   * Displays metadata
    *
-   * @param {object} [data] Meta data object
+   * @param {object} [data] Metadata object
    */
   function displayMetaData(data) {
     if (!data) return
@@ -103,7 +103,7 @@ $(function () {
    * Updates the results view
    *
    * @param {*} img Image or canvas element
-   * @param {object} [data] Meta data object
+   * @param {object} [data] Metadata object
    */
   function updateResults(img, data) {
     if (!(img.src || img instanceof HTMLCanvasElement)) {

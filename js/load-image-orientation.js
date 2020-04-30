@@ -107,7 +107,7 @@ Exif orientation values to correctly display the letter F:
    * Determines if the orientation requires a canvas element.
    *
    * @param {object} [options] Options object
-   * @param {boolean} [withMetaData] Is meta data required for orientation
+   * @param {boolean} [withMetaData] Is metadata required for orientation
    * @returns {boolean} Returns true if orientation requires canvas/meta
    */
   function requiresCanvasOrientation(options, withMetaData) {
@@ -187,7 +187,7 @@ Exif orientation values to correctly display the letter F:
     )
   }
 
-  // Determines if meta data should be loaded automatically:
+  // Determines if metadata should be loaded automatically:
   loadImage.requiresMetaData = function (options) {
     return (
       requiresCanvasOrientation(options, true) ||

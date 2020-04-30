@@ -425,7 +425,7 @@
     }
   }
 
-  // Registers the Exif parser for the APP1 JPEG meta data segment:
+  // Registers the Exif parser for the APP1 JPEG metadata segment:
   loadImage.metaDataParsers.jpeg[0xffe1].push(loadImage.parseExifData)
 
   loadImage.exifWriters = {

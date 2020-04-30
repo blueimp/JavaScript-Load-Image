@@ -223,7 +223,7 @@
     }
   }
 
-  // Registers this IPTC parser for the APP13 JPEG meta data segment:
+  // Registers this IPTC parser for the APP13 JPEG metadata segment:
   loadImage.metaDataParsers.jpeg[0xffed].push(loadImage.parseIptcData)
 
   loadImage.IptcMap = IptcMap
