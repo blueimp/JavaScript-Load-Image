@@ -15,8 +15,7 @@ $(function () {
   'use strict'
 
   var result = $('#result')
-  var exifNode = $('#exif')
-  var iptcNode = $('#iptc')
+  var metaNode = $('#meta')
   var thumbNode = $('#thumbnail')
   var actionsNode = $('#actions')
   var coordinates
@@ -93,10 +92,10 @@ $(function () {
           orientation: exif.get('Orientation')
         })
       }
-      displayTagData(exifNode, exif.getAll(), 'TIFF')
+      displayTagData(metaNode, exif.getAll(), 'TIFF')
     }
     if (iptc) {
-      displayTagData(iptcNode, iptc.getAll(), 'IPTC')
+      displayTagData(metaNode, iptc.getAll(), 'IPTC')
     }
   }
 
@@ -153,8 +152,7 @@ $(function () {
       imageSmoothingEnabled: $('#image-smoothing').is(':checked'),
       meta: true
     }
-    exifNode.hide().find('table').remove()
-    iptcNode.hide().find('table').remove()
+    metaNode.hide().find('table').remove()
     thumbNode.hide().empty()
     if (!loadImage(file, updateResults, options)) {
       result
