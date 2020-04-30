@@ -786,8 +786,9 @@ The JavaScript Load Image script is released under the
 
 ## Credits
 
-- Image meta data handling implementation based on the help and contribution of
+- Original image metadata handling implemented with the help and contribution of
   Achim Stöhr.
-- Exif tags mapping based on Jacob Seidelin's
+- Original Exif tags mapping based on Jacob Seidelin's
   [exif-js](https://github.com/jseidelin/exif-js) library.
-- IPTC parser implementation by [Dave Bevan](https://github.com/bevand10).
+- Original IPTC parser implementation by
+  [Dave Bevan](https://github.com/bevand10).
