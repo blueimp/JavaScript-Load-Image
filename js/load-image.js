@@ -34,7 +34,7 @@
      * @param {Error} err Error object
      */
     function fetchBlobCallback(blob, err) {
-      if (err) console.log(err) // eslint-disable-line no-console
+      if (err && $.console) console.log(err) // eslint-disable-line no-console
       if (blob && loadImage.isInstanceOf('Blob', blob)) {
         // eslint-disable-next-line no-param-reassign
         file = blob
