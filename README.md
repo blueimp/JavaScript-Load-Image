@@ -4,7 +4,7 @@
 
 ## Contents
 
-- [Demo](#demo)
+- [Demo](https://blueimp.github.io/JavaScript-Load-Image/)
 - [Description](#description)
 - [Setup](#setup)
 - [Usage](#usage)
@@ -12,6 +12,12 @@
   - [Image scaling](#image-scaling)
 - [Requirements](#requirements)
 - [API](#api)
+  - [Callback](#callback)
+    - [Function signature](#function-signature)
+    - [Canceling event handling](#canceling-event-handling)
+    - [Callback arguments](#callback-arguments)
+    - [Error handling](#error-handling)
+  - [Promise](#promise)
 - [Options](#options)
   - [maxWidth](#maxwidth)
   - [maxHeight](#maxheight)
@@ -36,7 +42,7 @@
   - [canvas](#canvas)
   - [crossOrigin](#crossorigin)
   - [noRevoke](#norevoke)
-- [Meta data parsing](#meta-data-parsing)
+- [Metadata parsing](#metadata-parsing)
   - [Image head](#image-head)
   - [Exif parser](#exif-parser)
     - [Exif Thumbnail](#exif-thumbnail)
@@ -49,10 +55,6 @@
     - [IPTC parser options](#iptc-parser-options)
 - [License](#license)
 - [Credits](#credits)
-
-## Demo
-
-[JavaScript Load Image Demo](https://blueimp.github.io/JavaScript-Load-Image/)
 
 ## Description
 
@@ -116,10 +118,22 @@ document.getElementById('file-input').onchange = function (e) {
 }
 ```
 
+Or using the
+[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+based API like this:
+
+```js
+document.getElementById('file-input').onchange = function (e) {
+  loadImage(e.target.files[0], { maxWidth: 600 }).then(function (data) {
+    document.body.appendChild(data.image)
+  })
+}
+```
+
 ### Image scaling
 
-It is also possible to use the image scaling functionality with an existing
-image:
+It is also possible to use the image scaling functionality directly with an
+existing image:
 
 ```js
 var scaledImage = loadImage.scale(
@@ -130,77 +144,96 @@ var scaledImage = loadImage.scale(
 
 ## Requirements
 
-The JavaScript Load Image library has zero dependencies.
+The JavaScript Load Image library has zero dependencies, but benefits from the
+following two
+[polyfills](https://developer.mozilla.org/en-US/docs/Glossary/Polyfill):
 
-However, JavaScript Load Image is a very suitable complement to the
-[Canvas to Blob](https://github.com/blueimp/JavaScript-Canvas-to-Blob) library.
+- [blueimp-canvas-to-blob](https://github.com/blueimp/JavaScript-Canvas-to-Blob)
+  for browsers without native
+  [canvas.toBlob()](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob)
+  support, to create `Blob` objects out of transformed `canvas` elements.
+- [promise-polyfill](https://github.com/taylorhakes/promise-polyfill) to be able
+  to use the
+  [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+  based `loadImage` API in Browsers without native `Promise` support.
 
 ## API
 
+### Callback
+
+#### Function signature
+
 The `loadImage()` function accepts a
 [File](https://developer.mozilla.org/en/DOM/File) or
-[Blob](https://developer.mozilla.org/en/DOM/Blob) object or a simple image URL
-(e.g. `'https://example.org/image.png'`) as first argument.
+[Blob](https://developer.mozilla.org/en/DOM/Blob) object or an image URL as
+first argument.
 
 If a [File](https://developer.mozilla.org/en/DOM/File) or
 [Blob](https://developer.mozilla.org/en/DOM/Blob) is passed as parameter, it
-returns a HTML `img` element if the browser supports the
-[URL](https://developer.mozilla.org/en/DOM/window.URL) API or a
-[FileReader](https://developer.mozilla.org/en/DOM/FileReader) object if
-supported, or `false`.  
-It always returns a HTML
+returns an HTML `img` element if the browser supports the
+[URL](https://developer.mozilla.org/en/DOM/window.URL) API, alternatively a
+[FileReader](https://developer.mozilla.org/en/DOM/FileReader) object if the
+`FileReader` API is supported, or `false`.
+
+It always returns an HTML
 [img](https://developer.mozilla.org/en/docs/HTML/Element/Img) element when
 passing an image URL:
 
 ```js
-document.getElementById('file-input').onchange = function (e) {
-  var loadingImage = loadImage(
-    e.target.files[0],
-    function (img) {
-      document.body.appendChild(img)
-    },
-    { maxWidth: 600 }
-  )
-  if (!loadingImage) {
-    // Alternative code ...
-  }
-}
+var loadingImage = loadImage(
+  'https://example.org/image.png',
+  function (img) {
+    document.body.appendChild(img)
+  },
+  { maxWidth: 600 }
+)
 ```
+
+#### Canceling event handling
 
 The `img` element or
 [FileReader](https://developer.mozilla.org/en/DOM/FileReader) object returned by
-the `loadImage()` function allows to abort the loading process by setting the
+the `loadImage()` function allows to cancel event handling by setting the
 `onload` and `onerror` event handlers to null:
 
 ```js
-document.getElementById('file-input').onchange = function (e) {
-  var loadingImage = loadImage(
-    e.target.files[0],
-    function (img) {
-      document.body.appendChild(img)
-    },
-    { maxWidth: 600 }
-  )
-  loadingImage.onload = loadingImage.onerror = null
-}
+var loadingImage = loadImage(
+  'https://example.org/image.png',
+  function (img) {
+    document.body.appendChild(img)
+  },
+  { maxWidth: 600 }
+)
+
+// Cancel event handling:
+loadingImage.onload = loadingImage.onerror = null
 ```
 
-The second argument must be a `callback` function, which is called when the
-image has been loaded or an error occurred while loading the image. The callback
-function is passed two arguments.  
-The first is either an HTML `img` element, a
-[canvas](https://developer.mozilla.org/en/HTML/Canvas) element, or an
-[Event](https://developer.mozilla.org/en/DOM/event) object of type `error`.  
-The second is on object with the original image dimensions as properties and
-potentially additional [meta data](#meta-data-parsing):
+#### Callback arguments
+
+For the callback style API, the second argument to `loadImage()` must be a
+`callback` function, which is called when the image has been loaded or an error
+occurred while loading the image.
+
+The callback function is passed two arguments:
+
+1. An HTML [img](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img)
+   element or [canvas](https://developer.mozilla.org/en/HTML/Canvas) element, or
+   an [Event](https://developer.mozilla.org/en/DOM/event) object of type
+   `error`.
+2. An object with the original image dimensions as properties and potentially
+   additional [metadata](#metadata-parsing).
+
+#### Error handling
+
+Example code implementing error handling:
 
 ```js
-var imageUrl = 'https://example.org/image.png'
 loadImage(
-  imageUrl,
+  fileOrBlobOrUrl,
   function (img, data) {
     if (img.type === 'error') {
-      console.error('Error loading image ' + imageUrl)
+      console.error('Error loading image file')
     } else {
       document.body.appendChild(img)
       console.log('Original image width: ', data.originalWidth)
@@ -211,11 +244,46 @@ loadImage(
 )
 ```
 
+### Promise
+
+If the `loadImage()` function is called without a `callback` function as second
+argument and the
+[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+API is available, it returns a `Promise` object:
+
+```js
+loadImage(fileOrBlobOrUrl, { maxWidth: 600 })
+  .then(function (data) {
+    document.body.appendChild(data.image)
+    console.log('Original image width: ', data.originalWidth)
+    console.log('Original image height: ', data.originalHeight)
+  })
+  .catch(function (err) {
+    // Handling image loading errors
+    console.log(err)
+  })
+```
+
+The `Promise` resolves with an object with the following properties:
+
+- `image`: An HTML
+  [img](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img) or
+  [canvas](https://developer.mozilla.org/en/HTML/Canvas) element.
+- `originalWidth`: The original width of the image.
+- `originalHeight`: The original height of the image.
+
+If [metadata](#metadata-parsing) has been parsed, additional properties might be
+present on the object.
+
+If image loading fails, the `Promise` rejects with an
+[Event](https://developer.mozilla.org/en/DOM/event) object of type `error`.
+
 ## Options
 
-The optional third argument to `loadImage()` is a map of options.
+The optional options argument to `loadImage()` allows to configure the image
+loading.
 
-They can be used the following way:
+It can be used the following way using the callback style:
 
 ```js
 loadImage(
@@ -233,24 +301,38 @@ loadImage(
 )
 ```
 
+Or the following way with the `Promise` based API:
+
+```js
+loadImage(fileOrBlobOrUrl, {
+  maxWidth: 600,
+  maxHeight: 300,
+  minWidth: 100,
+  minHeight: 50,
+  canvas: true
+}).then(function (data) {
+  document.body.appendChild(data.image)
+})
+```
+
 All settings are optional. By default, the image is returned as HTML `img`
 element without any image size restrictions.
 
 ### maxWidth
 
-Defines the maximum width of the img/canvas element.
+Defines the maximum width of the `img`/`canvas` element.
 
 ### maxHeight
 
-Defines the maximum height of the img/canvas element.
+Defines the maximum height of the `img`/`canvas` element.
 
 ### minWidth
 
-Defines the minimum width of the img/canvas element.
+Defines the minimum width of the `img`/`canvas` element.
 
 ### minHeight
 
-Defines the minimum height of the img/canvas element.
+Defines the minimum height of the `img`/`canvas` element.
 
 ### sourceWidth
 
@@ -306,15 +388,17 @@ Setting the `aspectRatio` also enables the `crop` option.
 
 Defines the ratio of the canvas pixels to the physical image pixels on the
 screen.  
-Should be set to `window.devicePixelRatio` unless the scaled image is not
-rendered on screen.  
+Should be set to
+[window.devicePixelRatio](https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio)
+unless the scaled image is not rendered on screen.  
 Defaults to `1` and requires `canvas: true`.
 
 ### downsamplingRatio
 
-Defines the ratio in which the image is downsampled.  
-By default, images are downsampled in one step. With a ratio of `0.5`, each step
-scales the image to half the size, before reaching the target dimensions.  
+Defines the ratio in which the image is downsampled (scaled down in steps).  
+By default, images are downsampled in one step.  
+With a ratio of `0.5`, each step scales the image to half the size, before
+reaching the target dimensions.  
 Requires `canvas: true`.
 
 ### imageSmoothingEnabled
@@ -332,15 +416,17 @@ Defaults to `'low'` and requires `canvas: true`.
 
 ### crop
 
-Crops the image to the maxWidth/maxHeight constraints if set to `true`.  
+Crops the image to the `maxWidth`/`maxHeight` constraints if set to `true`.  
 Enabling the `crop` option also enables the `canvas` option.
 
 ### orientation
 
 Transform the canvas according to the specified Exif orientation, which can be
-an `integer` in the range of `1` to `8` or the boolean value `true`.  
+an `integer` in the range of `1` to `8` or the boolean value `true`.
+
 When set to `true`, it will set the orientation value based on the EXIF data of
-the image, which will be parsed automatically if the exif library is available.
+the image, which will be parsed automatically if the Exif extension is
+available.
 
 Exif orientation values to correctly display the letter F:
 
@@ -372,24 +458,28 @@ Exif orientation values to correctly display the letter F:
 
 Setting `orientation` to `true` enables the `canvas` and `meta` options, unless
 the browser supports automatic image orientation (see
-[browser support for image-orientation](https://caniuse.com/#feat=css-image-orientation)).  
+[browser support for image-orientation](https://caniuse.com/#feat=css-image-orientation)).
+
 Setting `orientation` to `1` enables the `canvas` and `meta` options if the
 browser does support automatic image orientation (to allow reset of the
-orientation).  
+orientation).
+
 Setting `orientation` to an integer in the range of `2` to `8` always enables
 the `canvas` option and also enables the `meta` option if the browser supports
 automatic image orientation (again to allow reset).
 
 ### meta
 
-Automatically parses the image meta data if set to `true`.  
-If meta data has been found, the data object passed as second argument to the
+Automatically parses the image metadata if set to `true`.
+
+If metadata has been found, the data object passed as second argument to the
 callback function has additional properties (see
-[meta data parsing](#meta-data-parsing)).  
+[metadata parsing](#metadata-parsing)).
+
 If the file is given as URL and the browser supports the
 [fetch API](https://developer.mozilla.org/en/docs/Web/API/Fetch_API) or the XHR
 [responseType](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType)
-`blob`, fetches the file as Blob to be able to parse the meta data.
+`blob`, fetches the file as `Blob` to be able to parse the metadata.
 
 ### canvas
 
@@ -398,7 +488,7 @@ element if set to `true`.
 
 ### crossOrigin
 
-Sets the crossOrigin property on the img element for loading
+Sets the `crossOrigin` property on the `img` element for loading
 [CORS enabled images](https://developer.mozilla.org/en-US/docs/HTML/CORS_Enabled_Image).
 
 ### noRevoke
@@ -408,10 +498,10 @@ By default, the
 is revoked after the image has been loaded, except when this option is set to
 `true`.
 
-## Meta data parsing
+## Metadata parsing
 
-If the Load Image Meta extension is included, it is also possible to parse image
-meta data automatically with the `meta` option:
+If the Load Image Meta extension is included, it is possible to parse image meta
+data automatically with the `meta` option:
 
 ```js
 loadImage(
@@ -442,29 +532,46 @@ loadImage.parseMetaData(
 )
 ```
 
-The Meta data extension also adds additional options used for the
-`parseMetaData` method:
+Or using the
+[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+based API:
 
-- `maxMetaDataSize`: Maximum number of bytes of meta data to parse.
+```js
+loadImage
+  .parseMetaData(fileOrBlob, {
+    maxMetaDataSize: 262144
+  })
+  .then(function (data) {
+    console.log('Original image head: ', data.imageHead)
+    console.log('Exif data: ', data.exif) // requires exif extension
+    console.log('IPTC data: ', data.iptc) // requires iptc extension
+  })
+```
+
+The Metadata extension adds additional options used for the `parseMetaData`
+method:
+
+- `maxMetaDataSize`: Maximum number of bytes of metadata to parse.
 - `disableImageHead`: Disable parsing the original image head.
-- `disableMetaDataParsers`: Disable parsing meta data (image head only)
+- `disableMetaDataParsers`: Disable parsing metadata (image head only)
 
 ### Image head
 
 Resized JPEG images can be combined with their original image head via
 `loadImage.replaceHead`, which requires the resized image as `Blob` object as
-first argument and an `ArrayBuffer` image head as second argument. The third
-argument must be a `callback` function, which is called with the new `Blob`
-object:
+first argument and an `ArrayBuffer` image head as second argument.
+
+With callback style, the third argument must be a `callback` function, which is
+called with the new `Blob` object:
 
 ```js
 loadImage(
   fileOrBlobOrUrl,
   function (img, data) {
-    if (data.imageHead && data.exif) {
+    if (data.imageHead) {
       img.toBlob(function (blob) {
         loadImage.replaceHead(blob, data.imageHead, function (newBlob) {
-          // do something with newBlob
+          // do something with the new Blob object
         })
       }, 'image/jpeg')
     }
@@ -473,12 +580,39 @@ loadImage(
 )
 ```
 
-**Note:**  
-Blob objects of resized images can be created via
-[canvas.toBlob](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob).
-For browsers which don't have native support, a
-[canvas.toBlob polyfill](https://github.com/blueimp/JavaScript-Canvas-to-Blob)
-is available.
+Or using the
+[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+based API like this:
+
+```js
+loadImage(fileOrBlobOrUrl, { meta: true, canvas: true, maxWidth: 800 })
+  .then(function (data) {
+    if (!data.imageHead) throw new Error('Could not parse image metadata')
+    return new Promise(function (resolve) {
+      data.image.toBlob(function (blob) {
+        data.blob = blob
+        resolve(data)
+      }, 'image/jpeg')
+    })
+  })
+  .then(function (data) {
+    return loadImage.replaceHead(data.blob, data.imageHead)
+  })
+  .then(function (blob) {
+    // do something with the new Blob object
+  })
+  .catch(function (err) {
+    console.error(err)
+  })
+```
+
+**Please note:**  
+`Blob` objects of resized images can be created via
+[canvas.toBlob](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob).  
+[blueimp-canvas-to-blob](https://github.com/blueimp/JavaScript-Canvas-to-Blob)
+provides a polyfill for browsers without native
+[canvas.toBlob](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob)
+support.
 
 ### Exif parser
 
@@ -508,7 +642,7 @@ var orientationOffset = data.exifOffsets.get('Orientation')
 By default, only the following names are mapped:
 
 - `Orientation`
-- `Thumbnail`
+- `Thumbnail` (see [Exif Thumbnail](#exif-thumbnail))
 - `Exif` (see [Exif IFD](#exif-ifd))
 - `GPSInfo` (see [GPSInfo IFD](#gpsinfo-ifd))
 - `Interoperability` (see [Interoperability IFD](#interoperability-ifd))
@@ -531,7 +665,7 @@ var allTags = data.exif.getAll()
 
 #### Exif Thumbnail
 
-Example code displaying a thumbnail image embedded into the Exif meta data:
+Example code displaying a thumbnail image embedded into the Exif metadata:
 
 ```js
 loadImage(
@@ -693,6 +827,10 @@ loadImage(
 )
 ```
 
+**Please note:**  
+The Exif writer relies on the Exif tag offsets being available as
+`data.exifOffsets` property.
+
 ### IPTC parser
 
 If you include the Load Image IPTC Parser extension, the argument passed to the
@@ -781,7 +919,7 @@ loadImage.parseMetaData(
 
 ## License
 
-The JavaScript Load Image script is released under the
+The JavaScript Load Image library is released under the
 [MIT license](https://opensource.org/licenses/MIT).
 
 ## Credits

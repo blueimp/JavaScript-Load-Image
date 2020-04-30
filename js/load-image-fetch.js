@@ -9,7 +9,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-/* global define, module, require */
+/* global define, module, require, Promise */
 
 ;(function (factory) {
   'use strict'
@@ -29,6 +29,11 @@
 
   if (global.fetch && global.Request) {
     loadImage.fetchBlob = function (url, callback, options) {
+      if (global.Promise && typeof callback !== 'function') {
+        return fetch(new Request(url, callback)).then(function (response) {
+          return response.blob()
+        })
+      }
       fetch(new Request(url, options))
         .then(function (response) {
           return response.blob()
@@ -41,24 +46,41 @@
   } else if (global.XMLHttpRequest && global.ProgressEvent) {
     // Browser supports XHR Level 2 and XHR responseType blob
     loadImage.fetchBlob = function (url, callback, options) {
-      // eslint-disable-next-line no-param-reassign
-      options = options || {}
-      var req = new XMLHttpRequest()
-      req.open(options.method || 'GET', url)
-      if (options.headers) {
-        Object.keys(options.headers).forEach(function (key) {
-          req.setRequestHeader(key, options.headers[key])
-        })
+      /**
+       * Promise executor
+       *
+       * @param {Function} resolve Resolution function
+       * @param {Function} reject Rejection function
+       */
+      function executor(resolve, reject) {
+        options = options || {} // eslint-disable-line no-param-reassign
+        var req = new XMLHttpRequest()
+        req.open(options.method || 'GET', url)
+        if (options.headers) {
+          Object.keys(options.headers).forEach(function (key) {
+            req.setRequestHeader(key, options.headers[key])
+          })
+        }
+        req.withCredentials = options.credentials === 'include'
+        req.responseType = 'blob'
+        req.onload = function () {
+          resolve(req.response)
+        }
+        req.onerror = req.onabort = req.ontimeout = function (err) {
+          if (resolve === reject) {
+            // Not using Promises
+            reject(null, err)
+          } else {
+            reject(err)
+          }
+        }
+        req.send(options.body)
       }
-      req.withCredentials = options.credentials === 'include'
-      req.responseType = 'blob'
-      req.onload = function () {
-        callback(req.response)
+      if (global.Promise && typeof callback !== 'function') {
+        options = callback // eslint-disable-line no-param-reassign
+        return new Promise(executor)
       }
-      req.onerror = req.onabort = req.ontimeout = function (err) {
-        callback(null, err)
-      }
-      req.send(options.body)
+      return executor(callback, callback)
     }
   }
 })

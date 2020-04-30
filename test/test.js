@@ -9,7 +9,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-/* global describe, it */
+/* global describe, it, Promise */
 /* eslint-disable no-unused-expressions */
 
 ;(function (expect, loadImage) {
@@ -236,6 +236,50 @@
             })
           })
         ).to.be.ok
+      })
+    })
+
+    describe('Promise', function () {
+      if (!window.Promise) return
+
+      it('Load image url as img element', function () {
+        return loadImage(imageUrlGIF).then(function (data) {
+          var img = data.image
+          expect(img.nodeName.toLowerCase()).to.equal('img')
+          expect(img.width).to.equal(60)
+          expect(img.height).to.equal(40)
+        })
+      })
+
+      it('Load image blob as img element', function () {
+        return loadImage(blobGIF).then(function (data) {
+          var img = data.image
+          expect(img.nodeName.toLowerCase()).to.equal('img')
+          expect(img.width).to.equal(60)
+          expect(img.height).to.equal(40)
+        })
+      })
+
+      it('Handle image loading error', function () {
+        return loadImage('404').catch(function (err) {
+          expect(err).to.be.an.instanceOf(window.Event)
+          expect(err.type).to.equal('error')
+        })
+      })
+
+      it('Provide original image width+height in callback data', function () {
+        return loadImage(imageUrlGIF).then(function (data) {
+          expect(data.originalWidth).to.equal(60)
+          expect(data.originalHeight).to.equal(40)
+        })
+      })
+
+      it('Load image as canvas for canvas: true', function () {
+        return loadImage(imageUrlGIF, { canvas: true }).then(function (data) {
+          var img = data.image
+          expect(img.getContext).to.be.an.instanceOf(Function)
+          expect(img.nodeName.toLowerCase()).to.equal('canvas')
+        })
       })
     })
   })
@@ -2463,7 +2507,7 @@
       )
     })
 
-    it('Parse meta data automatically', function (done) {
+    it('Parse metadata automatically', function (done) {
       expect(
         loadImage(
           blobJPEG,
@@ -2514,6 +2558,61 @@
         { meta: true, orientation: true, canvas: true, minWidth: 40 }
       )
     })
+
+    describe('Promise', function () {
+      if (!window.Promise) return
+
+      it('Parse the complete image head', function () {
+        return loadImage.parseMetaData(blobJPEG).then(function (data) {
+          expect(data.imageHead).to.be.ok
+          return loadImage
+            .parseMetaData(createBlob(data.imageHead, 'image/jpeg'))
+            .then(function (data) {
+              expect(data.exif).to.be.ok
+              expect(data.exif.get('Orientation')).to.equal(6)
+            })
+        })
+      })
+
+      it('Write EXIF Orientation tag and replace image head', function () {
+        return loadImage(blobJPEG, {
+          meta: true,
+          orientation: true,
+          canvas: true,
+          minWidth: 40
+        })
+          .then(function (data) {
+            expect(data.imageHead).to.be.ok
+            expect(data.exif).to.be.ok
+            expect(data.exif.get('Orientation')).to.equal(6)
+            expect(data.iptc).to.be.ok
+            expect(data.iptc.get('ObjectName')).to.equal('blueimp.net')
+            // Reset EXIF Orientation data:
+            loadImage.writeExifData(data.imageHead, data, 'Orientation', 1)
+            return new Promise(function (resolve) {
+              data.image.toBlob(function (blob) {
+                data.blob = blob
+                resolve(data)
+              }, 'image/jpeg')
+            })
+          })
+          .then(function (data) {
+            return loadImage.replaceHead(data.blob, data.imageHead)
+          })
+          .then(function (blob) {
+            return loadImage(blob, { meta: true }).then(function (data) {
+              var img = data.image
+              expect(img.width).to.equal(40)
+              expect(img.height).to.equal(60)
+              expect(data.imageHead).to.be.ok
+              expect(data.exif).to.be.ok
+              expect(data.exif.get('Orientation')).to.equal(1)
+              expect(data.iptc).to.be.ok
+              expect(data.iptc.get('ObjectName')).to.equal('blueimp.net')
+            })
+          })
+      })
+    })
   })
 
   describe('Fetch', function () {
@@ -2523,6 +2622,15 @@
     ) {
       return
     }
+
+    it('Fetch image URL as blob', function (done) {
+      // IE does not allow XMLHttpRequest access to data URLs,
+      // so we use an ObjectURL instead of imageUrlJPEG directly:
+      loadImage.fetchBlob(loadImage.createObjectURL(blobJPEG), function (blob) {
+        expect(blob).to.be.an.instanceOf(Blob)
+        done()
+      })
+    })
 
     it('Fetch image URL as blob if meta option is true', function (done) {
       expect(
@@ -2553,6 +2661,20 @@
           done()
         })
       ).to.be.ok
+    })
+
+    describe('Promise', function () {
+      if (!window.Promise) return
+
+      it('Fetch image URL as blob', function () {
+        // IE does not allow XMLHttpRequest access to data URLs,
+        // so we use an ObjectURL instead of imageUrlJPEG directly:
+        return loadImage
+          .fetchBlob(loadImage.createObjectURL(blobJPEG))
+          .then(function (blob) {
+            expect(blob).to.be.an.instanceOf(Blob)
+          })
+      })
     })
   })
 })(this.chai.expect, this.loadImage)

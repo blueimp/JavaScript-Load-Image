@@ -5,7 +5,7 @@
  * Copyright 2013, Sebastian Tschan
  * https://blueimp.net
  *
- * Image meta data handling implementation
+ * Image metadata handling implementation
  * based on the help and contribution of
  * Achim Stöhr.
  *
@@ -13,7 +13,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-/* global define, module, require, DataView, Uint8Array */
+/* global define, module, require, Promise, DataView, Uint8Array, ArrayBuffer */
 
 ;(function (factory) {
   'use strict'
@@ -54,7 +54,7 @@
     }
   }
 
-  // Parses image meta data and calls the callback with an object argument
+  // Parses image metadata and calls the callback with an object argument
   // with the following properties:
   // * imageHead: The complete image head as ArrayBuffer (Uint8Array for IE10)
   // The options argument accepts an object and supports the following
@@ -62,51 +62,60 @@
   // * maxMetaDataSize: Defines the maximum number of bytes to parse.
   // * disableImageHead: Disables creating the imageHead property.
   loadImage.parseMetaData = function (file, callback, options, data) {
-    // eslint-disable-next-line no-param-reassign
-    options = options || {}
-    // eslint-disable-next-line no-param-reassign
-    data = data || {}
     var that = this
-    // 256 KiB should contain all EXIF/ICC/IPTC segments:
-    var maxMetaDataSize = options.maxMetaDataSize || 262144
-    var noMetaData = !(
-      loadImage.global.DataView &&
-      file &&
-      file.size >= 12 &&
-      file.type === 'image/jpeg' &&
-      loadImage.blobSlice
-    )
-    if (
-      noMetaData ||
-      !loadImage.readFile(
-        loadImage.blobSlice.call(file, 0, maxMetaDataSize),
-        function (e) {
-          if (e.target.error) {
-            // FileReader error
-            // eslint-disable-next-line no-console
-            console.log(e.target.error)
-            callback(data)
-            return
-          }
-          // Note on endianness:
-          // Since the marker and length bytes in JPEG files are always
-          // stored in big endian order, we can leave the endian parameter
-          // of the DataView methods undefined, defaulting to big endian.
-          var buffer = e.target.result
-          var dataView = new DataView(buffer)
-          var offset = 2
-          var maxOffset = dataView.byteLength - 4
-          var headLength = offset
-          var markerBytes
-          var markerLength
-          var parsers
-          var i
-          // Check for the JPEG marker (0xffd8):
-          if (dataView.getUint16(0) === 0xffd8) {
+    /**
+     * Promise executor
+     *
+     * @param {Function} resolve Resolution function
+     * @param {Function} reject Rejection function
+     * @returns {undefined} Undefined
+     */
+    function executor(resolve, reject) {
+      if (
+        !(
+          loadImage.global.DataView &&
+          loadImage.blobSlice &&
+          file &&
+          file.size >= 12 &&
+          file.type === 'image/jpeg'
+        )
+      ) {
+        // Nothing to parse
+        return resolve(data)
+      }
+      // 256 KiB should contain all EXIF/ICC/IPTC segments:
+      var maxMetaDataSize = options.maxMetaDataSize || 262144
+      if (
+        !loadImage.readFile(
+          loadImage.blobSlice.call(file, 0, maxMetaDataSize),
+          function (e) {
+            if (e.target.error) {
+              // FileReader error
+              return reject(e.target.error)
+            }
+            // Note on endianness:
+            // Since the marker and length bytes in JPEG files are always
+            // stored in big endian order, we can leave the endian parameter
+            // of the DataView methods undefined, defaulting to big endian.
+            var buffer = e.target.result
+            var dataView = new DataView(buffer)
+            // Check for the JPEG marker (0xffd8):
+            if (dataView.getUint16(0) !== 0xffd8) {
+              return reject(
+                new Error('Invalid JPEG file: Missing JPEG marker.')
+              )
+            }
+            var offset = 2
+            var maxOffset = dataView.byteLength - 4
+            var headLength = offset
+            var markerBytes
+            var markerLength
+            var parsers
+            var i
             while (offset < maxOffset) {
               markerBytes = dataView.getUint16(offset)
               // Search for APPn (0xffeN) and COM (0xfffe) markers,
-              // which contain application-specific meta-data like
+              // which contain application-specific metadata like
               // Exif, ICC and IPTC data and text comments:
               if (
                 (markerBytes >= 0xffe0 && markerBytes <= 0xffef) ||
@@ -119,7 +128,7 @@
                 markerLength = dataView.getUint16(offset + 2) + 2
                 if (offset + markerLength > dataView.byteLength) {
                   // eslint-disable-next-line no-console
-                  console.log('Invalid meta data: Invalid segment size.')
+                  console.log('Invalid JPEG metadata: Invalid segment size.')
                   break
                 }
                 parsers = loadImage.metaDataParsers.jpeg[markerBytes]
@@ -139,7 +148,7 @@
                 headLength = offset
               } else {
                 // Not an APPn or COM marker, probably safe to
-                // assume that this is the end of the meta data
+                // assume that this is the end of the metadata
                 break
               }
             }
@@ -148,43 +157,78 @@
             if (!options.disableImageHead && headLength > 6) {
               data.imageHead = loadImage.bufferSlice.call(buffer, 0, headLength)
             }
-          } else {
-            // eslint-disable-next-line no-console
-            console.log('Invalid JPEG file: Missing JPEG marker.')
-          }
-          callback(data)
-        },
-        'readAsArrayBuffer'
-      )
-    ) {
-      callback(data)
+            resolve(data)
+          },
+          'readAsArrayBuffer'
+        )
+      ) {
+        // No support for the FileReader interface, nothing to parse
+        resolve(data)
+      }
     }
+    options = options || {} // eslint-disable-line no-param-reassign
+    if (loadImage.global.Promise && typeof callback !== 'function') {
+      options = callback || {} // eslint-disable-line no-param-reassign
+      data = options // eslint-disable-line no-param-reassign
+      return new Promise(executor)
+    }
+    data = data || {} // eslint-disable-line no-param-reassign
+    return executor(callback, callback)
+  }
+
+  /**
+   * Replaces the head of a JPEG Blob
+   *
+   * @param {Blob} blob Resolution function
+   * @param {ArrayBuffer} oldHead Old JPEG head
+   * @param {ArrayBuffer} newHead New JPEG head
+   * @returns {Blob} Combined Blob
+   */
+  function replaceJPEGHead(blob, oldHead, newHead) {
+    return new Blob(
+      [newHead, loadImage.blobSlice.call(blob, oldHead.byteLength)],
+      { type: 'image/jpeg' }
+    )
   }
 
   // Replaces the image head of a JPEG blob with the given one.
-  // Calls the callback with the new Blob:
+  // Returns a Promise or calls the callback with the new Blob:
   loadImage.replaceHead = function (blob, head, callback) {
+    var options = { maxMetaDataSize: 256, disableMetaDataParsers: true }
+    if (!callback && loadImage.global.Promise) {
+      return loadImage.parseMetaData(blob, options).then(function (data) {
+        return replaceJPEGHead(blob, data.imageHead, head)
+      })
+    }
     loadImage.parseMetaData(
       blob,
       function (data) {
-        callback(
-          new Blob(
-            [head, loadImage.blobSlice.call(blob, data.imageHead.byteLength)],
-            { type: 'image/jpeg' }
-          )
-        )
+        callback(replaceJPEGHead(blob, data.imageHead, head))
       },
-      { maxMetaDataSize: 256, disableMetaDataParsers: true }
+      options
     )
   }
 
   var originalTransform = loadImage.transform
   loadImage.transform = function (img, options, callback, file, data) {
     if (loadImage.requiresMetaData(options)) {
+      data = data || {} // eslint-disable-line no-param-reassign
       loadImage.parseMetaData(
         file,
-        function (data) {
-          originalTransform.call(loadImage, img, options, callback, file, data)
+        function (result) {
+          if (result !== data) {
+            // eslint-disable-next-line no-console
+            if (loadImage.global.console) console.log(result)
+            result = data // eslint-disable-line no-param-reassign
+          }
+          originalTransform.call(
+            loadImage,
+            img,
+            options,
+            callback,
+            file,
+            result
+          )
         },
         options,
         data
