@@ -95,7 +95,13 @@ input[type='file'] {
     color: #212121;
   }
   a {
-    filter: brightness(75%);
+    color: #225c8d;
+  }
+  a:visited {
+    color: #378f9a;
+  }
+  a:hover {
+    color: #6fa349;
   }
   figure,
   tr {
