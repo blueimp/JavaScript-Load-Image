@@ -164,20 +164,20 @@ following two
 #### Function signature
 
 The `loadImage()` function accepts a
-[File](https://developer.mozilla.org/en/DOM/File) or
-[Blob](https://developer.mozilla.org/en/DOM/Blob) object or an image URL as
-first argument.
+[File](https://developer.mozilla.org/en-US/docs/Web/API/File) or
+[Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob) object or an image
+URL as first argument.
 
-If a [File](https://developer.mozilla.org/en/DOM/File) or
-[Blob](https://developer.mozilla.org/en/DOM/Blob) is passed as parameter, it
-returns an HTML `img` element if the browser supports the
-[URL](https://developer.mozilla.org/en/DOM/window.URL) API, alternatively a
-[FileReader](https://developer.mozilla.org/en/DOM/FileReader) object if the
-`FileReader` API is supported, or `false`.
+If a [File](https://developer.mozilla.org/en-US/docs/Web/API/File) or
+[Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob) is passed as
+parameter, it returns an HTML `img` element if the browser supports the
+[URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) API, alternatively a
+[FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader) object
+if the `FileReader` API is supported, or `false`.
 
 It always returns an HTML
-[img](https://developer.mozilla.org/en/docs/HTML/Element/Img) element when
-passing an image URL:
+[img](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Img) element
+when passing an image URL:
 
 ```js
 var loadingImage = loadImage(
@@ -192,9 +192,9 @@ var loadingImage = loadImage(
 #### Canceling event handling
 
 The `img` element or
-[FileReader](https://developer.mozilla.org/en/DOM/FileReader) object returned by
-the `loadImage()` function allows to cancel event handling by setting the
-`onload` and `onerror` event handlers to null:
+[FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader) object
+returned by the `loadImage()` function allows to cancel event handling by
+setting the `onload` and `onerror` event handlers to null:
 
 ```js
 var loadingImage = loadImage(
@@ -218,9 +218,11 @@ occurred while loading the image.
 The callback function is passed two arguments:
 
 1. An HTML [img](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img)
-   element or [canvas](https://developer.mozilla.org/en/HTML/Canvas) element, or
-   an [Event](https://developer.mozilla.org/en/DOM/event) object of type
-   `error`.
+   element or
+   [canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
+   element, or an
+   [Event](https://developer.mozilla.org/en-US/docs/Web/API/Event) object of
+   type `error`.
 2. An object with the original image dimensions as properties and potentially
    additional [metadata](#metadata-parsing).
 
@@ -278,7 +280,7 @@ The `Promise` resolves with an object with the following properties:
 
 - `image`: An HTML
   [img](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img) or
-  [canvas](https://developer.mozilla.org/en/HTML/Canvas) element.
+  [canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) element.
 - `originalWidth`: The original width of the image.
 - `originalHeight`: The original height of the image.
 
@@ -286,7 +288,8 @@ If [metadata](#metadata-parsing) has been parsed, additional properties might be
 present on the object.
 
 If image loading fails, the `Promise` rejects with an
-[Event](https://developer.mozilla.org/en/DOM/event) object of type `error`.
+[Event](https://developer.mozilla.org/en-US/docs/Web/API/Event) object of type
+`error`.
 
 ## Options
 
@@ -380,14 +383,14 @@ Defaults to `0` and requires `canvas: true`.
 
 Scales the image up/down to contain it in the max dimensions if set to `true`.  
 This emulates the CSS feature
-[background-image: contain](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Scaling_background_images#contain).
+[background-image: contain](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Backgrounds_and_Borders/Resizing_background_images#contain).
 
 ### cover
 
 Scales the image up/down to cover the max dimensions with the image dimensions
 if set to `true`.  
 This emulates the CSS feature
-[background-image: cover](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Scaling_background_images#cover).
+[background-image: cover](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Backgrounds_and_Borders/Resizing_background_images#cover).
 
 ### aspectRatio
 
@@ -487,24 +490,26 @@ callback function has additional properties (see
 [metadata parsing](#metadata-parsing)).
 
 If the file is given as URL and the browser supports the
-[fetch API](https://developer.mozilla.org/en/docs/Web/API/Fetch_API) or the XHR
+[fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) or the
+XHR
 [responseType](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType)
 `blob`, fetches the file as `Blob` to be able to parse the metadata.
 
 ### canvas
 
-Returns the image as [canvas](https://developer.mozilla.org/en/HTML/Canvas)
-element if set to `true`.
+Returns the image as
+[canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) element if
+set to `true`.
 
 ### crossOrigin
 
 Sets the `crossOrigin` property on the `img` element for loading
-[CORS enabled images](https://developer.mozilla.org/en-US/docs/HTML/CORS_Enabled_Image).
+[CORS enabled images](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image).
 
 ### noRevoke
 
 By default, the
-[created object URL](https://developer.mozilla.org/en/DOM/window.URL.createObjectURL)
+[created object URL](https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL)
 is revoked after the image has been loaded, except when this option is set to
 `true`.
 
@@ -937,6 +942,6 @@ The JavaScript Load Image library is released under the
 - Original image metadata handling implemented with the help and contribution of
   Achim Stöhr.
 - Original Exif tags mapping based on Jacob Seidelin's
-  [exif-js](https://github.com/jseidelin/exif-js) library.
+  [exif-js](https://github.com/exif-js/exif-js) library.
 - Original IPTC parser implementation by
   [Dave Bevan](https://github.com/bevand10).
