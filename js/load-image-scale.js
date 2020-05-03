@@ -236,7 +236,7 @@
       if (
         pixelRatio > 1 &&
         // Check if image has not yet device pixel ratio applied:
-        parseInt(img.style.width, 10) !== width / pixelRatio
+        parseFloat(img.style.width, 10) !== width / pixelRatio
       ) {
         destWidth *= pixelRatio
         destHeight *= pixelRatio
