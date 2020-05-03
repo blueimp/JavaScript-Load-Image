@@ -234,9 +234,16 @@ loadImage(
     console.log('Original image width: ', data.originalWidth)
     console.log('Original image height: ', data.originalHeight)
   },
-  { maxWidth: 600 }
+  { maxWidth: 600, meta: true }
 )
 ```
+
+**Please note:**  
+The original image dimensions reflect the natural width and height of the loaded
+image before applying any transformation.  
+For consistent values across browsers, [metadata](#metadata-parsing) parsing has
+to be enabled via `meta:true`, so `loadImage` can detect automatic image
+orientation and normalize the dimensions.
 
 #### Error handling
 
@@ -264,7 +271,7 @@ argument and the
 API is available, it returns a `Promise` object:
 
 ```js
-loadImage(fileOrBlobOrUrl, { maxWidth: 600 })
+loadImage(fileOrBlobOrUrl, { maxWidth: 600, meta: true })
   .then(function (data) {
     document.body.appendChild(data.image)
     console.log('Original image width: ', data.originalWidth)
@@ -283,6 +290,9 @@ The `Promise` resolves with an object with the following properties:
   [canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) element.
 - `originalWidth`: The original width of the image.
 - `originalHeight`: The original height of the image.
+
+Please also read the note about original image dimensions normalization in the
+[callback arguments](#callback-arguments) section.
 
 If [metadata](#metadata-parsing) has been parsed, additional properties might be
 present on the object.
