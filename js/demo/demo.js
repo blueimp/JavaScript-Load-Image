@@ -14,7 +14,7 @@
 $(function () {
   'use strict'
 
-  var result = $('#result')
+  var resultNode = $('#result')
   var metaNode = $('#meta')
   var thumbNode = $('#thumbnail')
   var actionsNode = $('#actions')
@@ -110,11 +110,13 @@ $(function () {
    */
   function updateResults(img, data) {
     if (!(img.src || img instanceof HTMLCanvasElement)) {
-      result.children().replaceWith($('<span>Loading image file failed</span>'))
+      resultNode
+        .children()
+        .replaceWith($('<span>Loading image file failed</span>'))
       return
     }
     var content = $('<a></a>').append(img)
-    result.children().replaceWith(content)
+    resultNode.children().replaceWith(content)
     if (data) {
       if (img.getContext) {
         actionsNode.show()
@@ -146,7 +148,7 @@ $(function () {
    */
   function displayImage(file) {
     var options = {
-      maxWidth: result.width(),
+      maxWidth: resultNode.width(),
       canvas: true,
       pixelRatio: window.devicePixelRatio,
       downsamplingRatio: 0.5,
@@ -157,7 +159,7 @@ $(function () {
     metaNode.hide().removeData().find('table').remove()
     thumbNode.hide().empty()
     if (!loadImage(file, updateResults, options)) {
-      result
+      resultNode
         .children()
         .replaceWith(
           $(
@@ -200,9 +202,9 @@ $(function () {
     window.webkitURL ||
     window.FileReader
   ) {
-    result.children().remove()
+    resultNode.children().hide()
   } else {
-    result.children().show()
+    resultNode.children().show()
   }
 
   $(document)
@@ -217,11 +219,11 @@ $(function () {
   $('#url').on('change paste input', urlChangeHandler)
 
   orientationNode.on('change', function () {
-    var img = result.find('img, canvas')[0]
+    var img = resultNode.find('img, canvas')[0]
     if (img) {
       updateResults(
         loadImage.scale(img, {
-          maxWidth: result.width() * (window.devicePixelRatio || 1),
+          maxWidth: resultNode.width() * (window.devicePixelRatio || 1),
           pixelRatio: window.devicePixelRatio,
           orientation: Number(orientationNode.val()) || true,
           imageSmoothingEnabled: imageSmoothingNode.is(':checked')
@@ -232,7 +234,7 @@ $(function () {
 
   $('#edit').on('click', function (event) {
     event.preventDefault()
-    var imgNode = result.find('img, canvas')
+    var imgNode = resultNode.find('img, canvas')
     var img = imgNode[0]
     var pixelRatio = window.devicePixelRatio || 1
     var margin = img.width / pixelRatio >= 140 ? 40 : 0
@@ -265,7 +267,7 @@ $(function () {
 
   $('#crop').on('click', function (event) {
     event.preventDefault()
-    var img = result.find('img, canvas')[0]
+    var img = resultNode.find('img, canvas')[0]
     var pixelRatio = window.devicePixelRatio || 1
     if (img && coordinates) {
       updateResults(
@@ -274,7 +276,7 @@ $(function () {
           top: coordinates.y * pixelRatio,
           sourceWidth: coordinates.w * pixelRatio,
           sourceHeight: coordinates.h * pixelRatio,
-          maxWidth: result.width() * pixelRatio,
+          maxWidth: resultNode.width() * pixelRatio,
           contain: true,
           pixelRatio: pixelRatio,
           imageSmoothingEnabled: imageSmoothingNode.is(':checked')
