@@ -82,6 +82,7 @@
       <input type="url" id="url" placeholder="Image URL" />
     </p>
     <p>Or <strong>drag &amp; drop</strong> an image file onto this webpage.</p>
+    <h3>Options</h3>
     <p>
       <label for="orientation">Orientation:</label>
       <select id="orientation">
@@ -110,19 +111,18 @@
       <button type="button" id="crop">Crop</button>
       <button type="button" id="cancel">Cancel</button>
     </p>
-    <div id="result">
-      <p style="display: none;">
+    <figure id="result">
+      <figcaption style="display: none;">
         This demo works only in browsers with support for the
         <a href="https://developer.mozilla.org/en/DOM/window.URL">URL</a> or
         <a href="https://developer.mozilla.org/en/DOM/FileReader">FileReader</a>
         API.
-      </p>
-    </div>
+      </figcaption>
+    </figure>
     <div id="meta" style="display: none;">
       <h3>Image metadata</h3>
-      <div id="thumbnail" style="display: none;"></div>
+      <figure id="thumbnail" style="display: none;"></figure>
     </div>
-
     <script src="js/vendor/canvas-to-blob.js"></script>
     <script src="js/load-image.js"></script>
     <script src="js/load-image-scale.js"></script>

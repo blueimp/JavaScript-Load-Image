@@ -13,59 +13,105 @@ body {
   max-width: 750px;
   margin: 0 auto;
   padding: 1em;
-  font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, sans-serif;
-  font-size: 1em;
-  line-height: 1.4em;
-  background: #222;
-  color: #fff;
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
+  font-family: -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  line-height: 1.4;
+  background: #212121;
+  color: #dedede;
 }
 a {
-  color: orange;
+  color: #61afef;
   text-decoration: none;
 }
-img {
-  border: 0;
-  vertical-align: middle;
+a:visited {
+  color: #56b6c2;
 }
-h1 {
-  line-height: 1em;
+a:hover {
+  color: #98c379;
 }
-h2,
-h3 {
-  margin-top: 2em;
-}
-table {
-  width: 100%;
-  word-wrap: break-word;
-  table-layout: fixed;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
+figure,
 tr {
-  background: #fff;
-  color: #222;
+  background: #363636;
 }
 tr:nth-child(odd) {
-  background: #eee;
-  color: #222;
+  background: #414141;
 }
 td,
 th {
   padding: 10px;
   text-align: left;
 }
-#result,
-#thumbnail {
-  margin-bottom: 20px;
-  padding: 20px;
-  background: #fff;
-  color: #222;
-  text-align: center;
+table {
+  width: 100%;
+  word-wrap: break-word;
+  table-layout: fixed;
+  border-collapse: collapse;
 }
-.jcrop-holder {
-  margin: 0 auto;
+figure {
+  margin: 0;
+  padding: 10px;
+  border-radius: 5px;
+  display: inline-block;
+}
+figure,
+table {
+  margin-bottom: 20px;
+}
+img,
+canvas {
+  border: 0;
+  vertical-align: middle;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+h1 {
+  margin-top: 0.5em;
+}
+button,
+input,
+select,
+textarea {
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+  padding: 5px;
+}
+input[type='file'] {
+  padding: inherit;
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    background: #ececec;
+    color: #212121;
+  }
+  a {
+    filter: brightness(75%);
+  }
+  figure,
+  tr {
+    background: #fff;
+    color: #212121;
+  }
+  tr:nth-child(odd) {
+    background: #f6f6f6;
+  }
+}
+
+#url {
+  width: 100%;
+}
+#result {
+  display: block;
 }
 
 @media (min-width: 481px) {
@@ -76,7 +122,7 @@ th {
   #navigation li {
     display: inline-block;
   }
-  #navigation li:not(:first-child):before {
-    content: '| ';
+  #navigation li:not(:first-child)::before {
+    content: ' | ';
   }
 }
