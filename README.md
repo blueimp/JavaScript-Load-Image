@@ -224,6 +224,18 @@ The callback function is passed two arguments:
 2. An object with the original image dimensions as properties and potentially
    additional [metadata](#metadata-parsing).
 
+```js
+loadImage(
+  fileOrBlobOrUrl,
+  function (img, data) {
+    document.body.appendChild(img)
+    console.log('Original image width: ', data.originalWidth)
+    console.log('Original image height: ', data.originalHeight)
+  },
+  { maxWidth: 600 }
+)
+```
+
 #### Error handling
 
 Example code implementing error handling:
@@ -236,8 +248,6 @@ loadImage(
       console.error('Error loading image file')
     } else {
       document.body.appendChild(img)
-      console.log('Original image width: ', data.originalWidth)
-      console.log('Original image height: ', data.originalHeight)
     }
   },
   { maxWidth: 600 }
