@@ -18,6 +18,8 @@ $(function () {
   var metaNode = $('#meta')
   var thumbNode = $('#thumbnail')
   var actionsNode = $('#actions')
+  var orientationNode = $('#orientation')
+  var imageSmoothingNode = $('#image-smoothing')
   var coordinates
   var jcropAPI
 
@@ -148,8 +150,8 @@ $(function () {
       canvas: true,
       pixelRatio: window.devicePixelRatio,
       downsamplingRatio: 0.5,
-      orientation: Number($('#orientation').val()) || true,
-      imageSmoothingEnabled: $('#image-smoothing').is(':checked'),
+      orientation: Number(orientationNode.val()) || true,
+      imageSmoothingEnabled: imageSmoothingNode.is(':checked'),
       meta: true
     }
     metaNode.hide().find('table').remove()
@@ -213,15 +215,15 @@ $(function () {
 
   $('#url').on('change paste input', urlChangeHandler)
 
-  $('#orientation').on('change', function () {
+  orientationNode.on('change', function () {
     var img = result.find('img, canvas')[0]
     if (img) {
       updateResults(
         loadImage.scale(img, {
           maxWidth: result.width() * (window.devicePixelRatio || 1),
           pixelRatio: window.devicePixelRatio,
-          orientation: Number($('#orientation').val()) || true,
-          imageSmoothingEnabled: $('#image-smoothing').is(':checked')
+          orientation: Number(orientationNode.val()) || true,
+          imageSmoothingEnabled: imageSmoothingNode.is(':checked')
         })
       )
     }
@@ -274,7 +276,7 @@ $(function () {
           maxWidth: result.width() * pixelRatio,
           contain: true,
           pixelRatio: pixelRatio,
-          imageSmoothingEnabled: $('#image-smoothing').is(':checked')
+          imageSmoothingEnabled: imageSmoothingNode.is(':checked')
         })
       )
       coordinates = null
