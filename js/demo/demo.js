@@ -288,6 +288,9 @@ $(function () {
 
   $('#cancel').on('click', function (event) {
     event.preventDefault()
-    if (jcropAPI) jcropAPI.release()
+    if (jcropAPI) {
+      jcropAPI.release()
+      jcropAPI.disable()
+    }
   })
 })
