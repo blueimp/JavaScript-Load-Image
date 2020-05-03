@@ -319,14 +319,14 @@
       6: 'B'
     },
     Orientation: {
-      1: 'top-left',
-      2: 'top-right',
-      3: 'bottom-right',
-      4: 'bottom-left',
-      5: 'left-top',
-      6: 'right-top',
-      7: 'right-bottom',
-      8: 'left-bottom'
+      1: 'Original',
+      2: 'Horizontal flip',
+      3: 'Rotate 180° CCW',
+      4: 'Vertical flip',
+      5: 'Vertical flip + Rotate 90° CW',
+      6: 'Rotate 90° CW',
+      7: 'Horizontal flip + Rotate 90° CW',
+      8: 'Rotate 90° CCW'
     }
   }
 

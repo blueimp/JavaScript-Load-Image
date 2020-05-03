@@ -91,19 +91,16 @@
     <p>
       <label for="orientation">Orientation:</label>
       <select id="orientation">
-        <option value="0">true: according to the EXIF orientation value</option>
-        <option value="1">1: top-left (original)</option>
-        <option value="2">2: top-right (horizontal flip)</option>
-        <option value="3">3: bottom-right (180° rotate left)</option>
-        <option value="4">4: bottom-left (vertical flip)</option>
-        <option value="5"
-          >5: left-top (vertical flip + 90° rotate right)</option
-        >
-        <option value="6">6: right-top (90° rotate right)</option>
-        <option value="7"
-          >7: right-bottom (horizontal flip + 90° rotate right)</option
-        >
-        <option value="8">8: left-bottom (90° rotate left)</option>
+        <option value="-1">undefined: Browser default</option>
+        <option value="0" selected>true: Automatic</option>
+        <option value="1">1: Original</option>
+        <option value="2">2: Horizontal flip</option>
+        <option value="3">3: Rotate 180° CCW</option>
+        <option value="4">4: Vertical flip</option>
+        <option value="5">5: Vertical flip + Rotate 90° CW</option>
+        <option value="6">6: Rotate 90° CW</option>
+        <option value="7">7: Horizontal flip + Rotate 90° CW</option>
+        <option value="8">8: Rotate 90° CCW</option>
       </select>
     </p>
     <p>

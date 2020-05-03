@@ -258,45 +258,45 @@ Exif orientation values to correctly display the letter F:
       // auto-oriented images
       switch (autoOrientation) {
         case 2:
-          // horizontal flip
+          // Horizontal flip
           right = options.left
           left = options.right
           break
         case 3:
-          // 180° rotate left
+          // 180° Rotate CCW
           top = options.bottom
           right = options.left
           bottom = options.top
           left = options.right
           break
         case 4:
-          // vertical flip
+          // Vertical flip
           top = options.bottom
           bottom = options.top
           break
         case 5:
-          // horizontal flip + 90° rotate left
+          // Horizontal flip + 90° Rotate CCW
           top = options.left
           right = options.bottom
           bottom = options.right
           left = options.top
           break
         case 6:
-          // 90° rotate left
+          // 90° Rotate CCW
           top = options.left
           right = options.top
           bottom = options.right
           left = options.bottom
           break
         case 7:
-          // vertical flip + 90° rotate left
+          // Vertical flip + 90° Rotate CCW
           top = options.right
           right = options.top
           bottom = options.left
           left = options.bottom
           break
         case 8:
-          // 90° rotate right
+          // 90° Rotate CW
           top = options.right
           right = options.bottom
           bottom = options.left
@@ -320,45 +320,45 @@ Exif orientation values to correctly display the letter F:
     // Account for defined browser orientation:
     switch (orientation) {
       case 2:
-        // horizontal flip
+        // Horizontal flip
         newOptions.right = left
         newOptions.left = right
         break
       case 3:
-        // 180° rotate left
+        // 180° Rotate CCW
         newOptions.top = bottom
         newOptions.right = left
         newOptions.bottom = top
         newOptions.left = right
         break
       case 4:
-        // vertical flip
+        // Vertical flip
         newOptions.top = bottom
         newOptions.bottom = top
         break
       case 5:
-        // vertical flip + 90° rotate right
+        // Vertical flip + 90° Rotate CW
         newOptions.top = left
         newOptions.right = bottom
         newOptions.bottom = right
         newOptions.left = top
         break
       case 6:
-        // 90° rotate right
+        // 90° Rotate CW
         newOptions.top = right
         newOptions.right = bottom
         newOptions.bottom = left
         newOptions.left = top
         break
       case 7:
-        // horizontal flip + 90° rotate right
+        // Horizontal flip + 90° Rotate CW
         newOptions.top = right
         newOptions.right = top
         newOptions.bottom = left
         newOptions.left = bottom
         break
       case 8:
-        // 90° rotate left
+        // 90° Rotate CCW
         newOptions.top = left
         newOptions.right = top
         newOptions.bottom = right
@@ -398,38 +398,38 @@ Exif orientation values to correctly display the letter F:
     // Reset automatic browser orientation:
     switch (autoOrientation) {
       case 2:
-        // horizontal flip
+        // Horizontal flip
         ctx.translate(sourceWidth, 0)
         ctx.scale(-1, 1)
         break
       case 3:
-        // 180° rotate left
+        // 180° Rotate CCW
         ctx.translate(sourceWidth, sourceHeight)
         ctx.rotate(Math.PI)
         break
       case 4:
-        // vertical flip
+        // Vertical flip
         ctx.translate(0, sourceHeight)
         ctx.scale(1, -1)
         break
       case 5:
-        // horizontal flip + 90° rotate left
+        // Horizontal flip + 90° Rotate CCW
         ctx.rotate(-0.5 * Math.PI)
         ctx.scale(-1, 1)
         break
       case 6:
-        // 90° rotate left
+        // 90° Rotate CCW
         ctx.rotate(-0.5 * Math.PI)
         ctx.translate(-sourceWidth, 0)
         break
       case 7:
-        // vertical flip + 90° rotate left
+        // Vertical flip + 90° Rotate CCW
         ctx.rotate(-0.5 * Math.PI)
         ctx.translate(-sourceWidth, sourceHeight)
         ctx.scale(1, -1)
         break
       case 8:
-        // 90° rotate right
+        // 90° Rotate CW
         ctx.rotate(0.5 * Math.PI)
         ctx.translate(0, -sourceHeight)
         break
@@ -441,38 +441,38 @@ Exif orientation values to correctly display the letter F:
     }
     switch (orientation) {
       case 2:
-        // horizontal flip
+        // Horizontal flip
         ctx.translate(width, 0)
         ctx.scale(-1, 1)
         break
       case 3:
-        // 180° rotate left
+        // 180° Rotate CCW
         ctx.translate(width, height)
         ctx.rotate(Math.PI)
         break
       case 4:
-        // vertical flip
+        // Vertical flip
         ctx.translate(0, height)
         ctx.scale(1, -1)
         break
       case 5:
-        // vertical flip + 90° rotate right
+        // Vertical flip + 90° Rotate CW
         ctx.rotate(0.5 * Math.PI)
         ctx.scale(1, -1)
         break
       case 6:
-        // 90° rotate right
+        // 90° Rotate CW
         ctx.rotate(0.5 * Math.PI)
         ctx.translate(0, -height)
         break
       case 7:
-        // horizontal flip + 90° rotate right
+        // Horizontal flip + 90° Rotate CW
         ctx.rotate(0.5 * Math.PI)
         ctx.translate(width, -height)
         ctx.scale(-1, 1)
         break
       case 8:
-        // 90° rotate left
+        // 90° Rotate CCW
         ctx.rotate(-0.5 * Math.PI)
         ctx.translate(-width, 0)
         break
