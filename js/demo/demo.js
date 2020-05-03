@@ -206,8 +206,7 @@ $(function () {
   $(document)
     .on('dragover', function (e) {
       e.preventDefault()
-      var originalEvent = event.originalEvent
-      if (originalEvent) originalEvent.dataTransfer.dropEffect = 'copy'
+      if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy'
     })
     .on('drop', fileChangeHandler)
 
