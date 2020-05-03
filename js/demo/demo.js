@@ -85,6 +85,7 @@ $(function () {
    */
   function displayMetaData(data) {
     if (!data) return
+    metaNode.data(data)
     var exif = data.exif
     var iptc = data.iptc
     if (exif) {
@@ -119,10 +120,9 @@ $(function () {
         actionsNode.show()
       }
       displayMetaData(data)
-      result.data(data)
     } else {
       // eslint-disable-next-line no-param-reassign
-      data = result.data()
+      data = metaNode.data()
     }
     if (data.imageHead) {
       if (data.exif) {
@@ -154,7 +154,7 @@ $(function () {
       imageSmoothingEnabled: imageSmoothingNode.is(':checked'),
       meta: true
     }
-    metaNode.hide().find('table').remove()
+    metaNode.hide().removeData().find('table').remove()
     thumbNode.hide().empty()
     if (!loadImage(file, updateResults, options)) {
       result
