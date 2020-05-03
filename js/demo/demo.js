@@ -193,14 +193,16 @@ $(function () {
     if (url) displayImage(url)
   }
 
-  // Hide URL/FileReader API requirement message in capable browsers:
+  // Show the URL/FileReader API requirement message if not supported:
   if (
     window.createObjectURL ||
     window.URL ||
     window.webkitURL ||
     window.FileReader
   ) {
-    result.children().hide()
+    result.children().remove()
+  } else {
+    result.children().show()
   }
 
   $(document)
