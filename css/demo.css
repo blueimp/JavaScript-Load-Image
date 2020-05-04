@@ -87,6 +87,7 @@ textarea {
 }
 input[type='file'] {
   padding: inherit;
+  max-width: 100%;
 }
 
 @media (prefers-color-scheme: light) {
