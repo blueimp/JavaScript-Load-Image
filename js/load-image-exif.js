@@ -431,7 +431,9 @@
   loadImage.exifWriters = {
     // Orientation writer:
     0x0112: function (buffer, data, value) {
-      var view = new DataView(buffer, data.exifOffsets[0x0112] + 8, 2)
+      var orientationOffset = data.exifOffsets[0x0112]
+      if (!orientationOffset) return buffer
+      var view = new DataView(buffer, orientationOffset + 8, 2)
       view.setUint16(0, value, data.exifLittleEndian)
       return buffer
     }

@@ -854,7 +854,10 @@ loadImage(
 
 **Please note:**  
 The Exif writer relies on the Exif tag offsets being available as
-`data.exifOffsets` property.
+`data.exifOffsets` property, which requires that Exif data has been parsed from
+the image.  
+The Exif writer can only change existing values, not add new tags, e.g. it
+cannot add an Exif `Orientation` tag for an image that does not have one.
 
 ### IPTC parser
 
