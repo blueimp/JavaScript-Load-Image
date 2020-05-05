@@ -80,7 +80,8 @@
    * @returns {undefined|Blob} Returns the Thumbnail Blob or undefined
    */
   function getExifThumbnail(dataView, offset, length) {
-    if (!length || offset + length > dataView.byteLength) {
+    if (!length) return
+    if (offset + length > dataView.byteLength) {
       console.log('Invalid Exif data: Invalid thumbnail data.')
       return
     }
@@ -416,7 +417,7 @@
     })
     thumbnailIFD = data.exif.ifd1
     // Check for JPEG Thumbnail offset and data length:
-    if (thumbnailIFD && thumbnailIFD[0x0201] && thumbnailIFD[0x0202]) {
+    if (thumbnailIFD && thumbnailIFD[0x0201]) {
       thumbnailIFD[0x0201] = getExifThumbnail(
         dataView,
         tiffOffset + thumbnailIFD[0x0201],
