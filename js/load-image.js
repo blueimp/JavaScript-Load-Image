@@ -107,10 +107,20 @@
         img.src = url
       }
       img.onerror = function (event) {
-        return loadImage.onerror(img, event, file, url, reject, options)
+        revokeHelper(url, options)
+        if (reject) reject.call(img, event)
       }
-      img.onload = function (event) {
-        return loadImage.onload(img, event, file, url, resolveWrapper, options)
+      img.onload = function () {
+        revokeHelper(url, options)
+        var data = {
+          originalWidth: img.naturalWidth || img.width,
+          originalHeight: img.naturalHeight || img.height
+        }
+        try {
+          loadImage.transform(img, options, resolveWrapper, file, data)
+        } catch (error) {
+          if (reject) reject(error)
+        }
       }
       if (typeof file === 'string') {
         if (loadImage.requiresMetaData(options)) {
@@ -167,26 +177,6 @@
 
   loadImage.transform = function (img, options, callback, file, data) {
     callback(img, data)
-  }
-
-  loadImage.onerror = function (img, event, file, url, callback, options) {
-    revokeHelper(url, options)
-    if (callback) {
-      callback.call(img, event)
-    }
-  }
-
-  loadImage.onload = function (img, event, file, url, callback, options) {
-    revokeHelper(url, options)
-
-    try {
-      loadImage.transform(img, options, callback, file, {
-        originalWidth: img.naturalWidth || img.width,
-        originalHeight: img.naturalHeight || img.height
-      })
-    } catch (error) {
-      callback(error)
-    }
   }
 
   // Loads a given File object via FileReader interface,
