@@ -19,7 +19,7 @@
   /**
    * Creates an object URL for a given File object.
    *
-   * @param {File|Blob} blob File or Blob object
+   * @param {Blob} blob Blob object
    * @returns {string|boolean} Returns object URL if API exists, else false.
    */
   function createObjectURL(blob) {
@@ -51,7 +51,7 @@
   /**
    * Loads an image for a given File object.
    *
-   * @param {File|Blob|string} file File or Blob object or image URL
+   * @param {Blob|string} file Blob object or image URL
    * @param {Function|object} [callback] Image load event callback or options
    * @param {object} [options] Options object
    * @returns {HTMLImageElement|HTMLCanvasElement|FileReader|Promise} Object
