@@ -67,10 +67,10 @@
    * - disableImageHead: Disables creating the imageHead property.
    *
    * @param {Blob} file Blob object
-   * @param {Function} callback Callback fynction
+   * @param {Function} [callback] Callback function
    * @param {object} [options] Parsing options
    * @param {object} [data] Result data object
-   * @returns {Promise|undefined} Returns Promise if no callback is provided.
+   * @returns {Promise<object>|undefined} Returns Promise if no callback given.
    */
   function parseMetaData(file, callback, options, data) {
     var that = this
@@ -205,7 +205,7 @@
    * @param {Blob} blob Blob object
    * @param {ArrayBuffer} head New JPEG head
    * @param {Function} [callback] Callback function
-   * @returns {Promise|undefined} Combined Blob
+   * @returns {Promise<Blob|null>|undefined} Combined Blob
    */
   function replaceHead(blob, head, callback) {
     var options = { maxMetaDataSize: 256, disableMetaDataParsers: true }

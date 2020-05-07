@@ -88,12 +88,16 @@
   }
 
   /**
+   * @typedef { HTMLImageElement|HTMLCanvasElement } Result
+   */
+
+  /**
    * Loads an image for a given File object.
    *
    * @param {Blob|string} file Blob object or image URL
    * @param {Function|object} [callback] Image load event callback or options
    * @param {object} [options] Options object
-   * @returns {HTMLImageElement|HTMLCanvasElement|FileReader|Promise} Object
+   * @returns {HTMLImageElement|FileReader|Promise<Result>} Object
    */
   function loadImage(file, callback, options) {
     /**
@@ -101,7 +105,7 @@
      *
      * @param {Function} resolve Resolution function
      * @param {Function} reject Rejection function
-     * @returns {HTMLImageElement|HTMLCanvasElement|FileReader} Object
+     * @returns {HTMLImageElement|FileReader} Object
      */
     function executor(resolve, reject) {
       var img = document.createElement('img')
