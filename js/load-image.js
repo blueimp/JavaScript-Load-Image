@@ -9,7 +9,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-/* global define, module, Promise, webkitURL */
+/* global define, module, Promise */
 
 ;(function ($) {
   'use strict'
@@ -112,12 +112,8 @@
     }
     return executor(callback, callback)
   }
-  // The check for URL.revokeObjectURL fixes an issue with Opera 12,
-  // which provides URL.createObjectURL but doesn't properly implement it:
-  var urlAPI =
-    ($.createObjectURL && $) ||
-    ($.URL && URL.revokeObjectURL && URL) ||
-    ($.webkitURL && webkitURL)
+
+  var urlAPI = $.URL || $.webkitURL
 
   /**
    * Helper function to revoke an object URL
