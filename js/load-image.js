@@ -45,6 +45,9 @@
           // Not using Promises
           if (resolve) resolve(img, data)
           return
+        } else if (img instanceof Error) {
+          reject(img)
+          return
         }
         data = data || {} // eslint-disable-line no-param-reassign
         data.image = img
@@ -159,10 +162,15 @@
 
   loadImage.onload = function (img, event, file, url, callback, options) {
     revokeHelper(url, options)
-    loadImage.transform(img, options, callback, file, {
-      originalWidth: img.naturalWidth || img.width,
-      originalHeight: img.naturalHeight || img.height
-    })
+
+    try {
+      loadImage.transform(img, options, callback, file, {
+        originalWidth: img.naturalWidth || img.width,
+        originalHeight: img.naturalHeight || img.height
+      })
+    } catch (error) {
+      callback(error)
+    }
   }
 
   loadImage.createObjectURL = function (file) {
