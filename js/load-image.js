@@ -14,6 +14,40 @@
 ;(function ($) {
   'use strict'
 
+  var urlAPI = $.URL || $.webkitURL
+
+  /**
+   * Creates an object URL for a given File object.
+   *
+   * @param {File|Blob} blob File or Blob object
+   * @returns {string|boolean} Returns object URL if API exists, else false.
+   */
+  function createObjectURL(blob) {
+    return urlAPI ? urlAPI.createObjectURL(blob) : false
+  }
+
+  /**
+   * Revokes a given object URL.
+   *
+   * @param {string} url Blob object URL
+   * @returns {undefined|boolean} Returns undefined if API exists, else false.
+   */
+  function revokeObjectURL(url) {
+    return urlAPI ? urlAPI.revokeObjectURL(url) : false
+  }
+
+  /**
+   * Helper function to revoke an object URL
+   *
+   * @param {string} url Blob Object URL
+   * @param {object} [options] Options object
+   */
+  function revokeHelper(url, options) {
+    if (url && url.slice(0, 5) === 'blob:' && !(options && options.noRevoke)) {
+      revokeObjectURL(url)
+    }
+  }
+
   /**
    * Loads an image for a given File object.
    *
@@ -63,7 +97,7 @@
         if (err && $.console) console.log(err) // eslint-disable-line no-console
         if (blob && loadImage.isInstanceOf('Blob', blob)) {
           file = blob // eslint-disable-line no-param-reassign
-          url = loadImage.createObjectURL(file)
+          url = createObjectURL(file)
         } else {
           url = file
           if (options && options.crossOrigin) {
@@ -91,7 +125,7 @@
         // (Firefox 3.6) support the File API but not Blobs:
         loadImage.isInstanceOf('File', file)
       ) {
-        url = loadImage.createObjectURL(file)
+        url = createObjectURL(file)
         if (url) {
           img.src = url
           return img
@@ -111,20 +145,6 @@
       return new Promise(executor)
     }
     return executor(callback, callback)
-  }
-
-  var urlAPI = $.URL || $.webkitURL
-
-  /**
-   * Helper function to revoke an object URL
-   *
-   * @param {string} url Blob Object URL
-   * @param {object} [options] Options object
-   */
-  function revokeHelper(url, options) {
-    if (url && url.slice(0, 5) === 'blob:' && !(options && options.noRevoke)) {
-      loadImage.revokeObjectURL(url)
-    }
   }
 
   // Determines if metadata should be loaded automatically.
@@ -169,14 +189,6 @@
     }
   }
 
-  loadImage.createObjectURL = function (file) {
-    return urlAPI ? urlAPI.createObjectURL(file) : false
-  }
-
-  loadImage.revokeObjectURL = function (url) {
-    return urlAPI ? urlAPI.revokeObjectURL(url) : false
-  }
-
   // Loads a given File object via FileReader interface,
   // invokes the callback with the event object (load or error).
   // The result can be read via event.target.result:
@@ -195,6 +207,8 @@
   }
 
   loadImage.global = $
+  loadImage.createObjectURL = createObjectURL
+  loadImage.revokeObjectURL = revokeObjectURL
 
   if (typeof define === 'function' && define.amd) {
     define(function () {
