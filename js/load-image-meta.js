@@ -192,6 +192,7 @@
    * @returns {Blob} Combined Blob
    */
   function replaceJPEGHead(blob, oldHead, newHead) {
+    if (!blob || !oldHead || !newHead) return null
     return new Blob([newHead, blobSlice.call(blob, oldHead.byteLength)], {
       type: 'image/jpeg'
     })
