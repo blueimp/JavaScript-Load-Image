@@ -36,7 +36,8 @@
       Blob.prototype.mozSlice)
 
   loadImage.bufferSlice =
-    loadImage.global.ArrayBuffer.prototype.slice ||
+    (loadImage.global.ArrayBuffer &&
+      loadImage.global.ArrayBuffer.prototype.slice) ||
     function (begin, end) {
       // Polyfill for IE10, which does not support ArrayBuffer.slice
       // eslint-disable-next-line no-param-reassign
