@@ -132,6 +132,7 @@ $(function () {
         loadImage.writeExifData(data.imageHead, data, 'Orientation', 1)
       }
       img.toBlob(function (blob) {
+        if (!blob) return
         loadImage.replaceHead(blob, data.imageHead, function (newBlob) {
           content
             .attr('href', loadImage.createObjectURL(newBlob))
