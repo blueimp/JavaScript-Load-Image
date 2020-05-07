@@ -9,7 +9,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-/* global describe, it, Promise */
+/* global describe, before, after, it, Promise */
 /* eslint-disable no-unused-expressions */
 
 ;(function (expect, loadImage) {
@@ -284,6 +284,104 @@
           expect(img.getContext).to.be.an.instanceOf(Function)
           expect(img.nodeName.toLowerCase()).to.equal('canvas')
         })
+      })
+    })
+  })
+
+  describe('Exceptions', function () {
+    var originalTransform = loadImage.transform
+
+    before(function () {
+      loadImage.transform = function (img, options, callback) {
+        if (options.throwError) throw options.throwError
+        callback(options.callbackError)
+      }
+    })
+
+    after(function () {
+      loadImage.transform = originalTransform
+    })
+
+    it('Pass error to callback', function (done) {
+      var error = new Error('ERROR')
+      expect(
+        loadImage(
+          imageUrlGIF,
+          function (err) {
+            expect(err).to.be.an.instanceOf(Error)
+            expect(err.message).to.equal(error.message)
+            done()
+          },
+          { callbackError: error }
+        )
+      ).to.be.ok
+    })
+
+    it('Pass exception error to callback', function (done) {
+      var error = new Error('ERROR')
+      expect(
+        loadImage(
+          imageUrlGIF,
+          function (err) {
+            expect(err).to.be.an.instanceOf(Error)
+            expect(err.message).to.equal(error.message)
+            done()
+          },
+          { throwError: error }
+        )
+      ).to.be.ok
+    })
+
+    it('Pass exception string to callback', function (done) {
+      var error = 'ERROR'
+      expect(
+        loadImage(
+          imageUrlGIF,
+          function (err) {
+            expect(err).to.be.a('string')
+            expect(err).to.equal(error)
+            done()
+          },
+          { throwError: error }
+        )
+      ).to.be.ok
+    })
+
+    describe('Promise', function () {
+      it('Reject with error ', function () {
+        var error = new Error('ERROR')
+        return loadImage(imageUrlGIF, { callbackError: error })
+          .then(function () {
+            throw new Error('Promise not rejected')
+          })
+          .catch(function (err) {
+            expect(err).to.be.an.instanceOf(Error)
+            expect(err.message).to.equal(error.message)
+          })
+      })
+
+      it('Reject with exception error ', function () {
+        var error = new Error('ERROR')
+        return loadImage(imageUrlGIF, { throwError: error })
+          .then(function () {
+            throw new Error('Promise not rejected')
+          })
+          .catch(function (err) {
+            expect(err).to.be.an.instanceOf(Error)
+            expect(err.message).to.equal(error.message)
+          })
+      })
+
+      it('Reject with exception string ', function () {
+        var error = 'ERROR'
+        return loadImage(imageUrlGIF, { throwError: error })
+          .then(function () {
+            throw new Error('Promise not rejected')
+          })
+          .catch(function (err) {
+            expect(err).to.be.a('string')
+            expect(err).to.equal(error)
+          })
       })
     })
   })
