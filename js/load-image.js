@@ -76,6 +76,18 @@
   }
 
   /**
+   * Cross-frame instanceof check.
+   *
+   * @param {string} type Instance type
+   * @param {object} obj Object instance
+   * @returns {boolean} Returns true if the object is of the given instance.
+   */
+  function isInstanceOf(type, obj) {
+    // Cross-frame instanceof check
+    return Object.prototype.toString.call(obj) === '[object ' + type + ']'
+  }
+
+  /**
    * Loads an image for a given File object.
    *
    * @param {Blob|string} file Blob object or image URL
@@ -122,7 +134,7 @@
        */
       function fetchBlobCallback(blob, err) {
         if (err && $.console) console.log(err) // eslint-disable-line no-console
-        if (blob && loadImage.isInstanceOf('Blob', blob)) {
+        if (blob && isInstanceOf('Blob', blob)) {
           file = blob // eslint-disable-line no-param-reassign
           url = createObjectURL(file)
         } else {
@@ -156,12 +168,7 @@
           fetchBlobCallback()
         }
         return img
-      } else if (
-        loadImage.isInstanceOf('Blob', file) ||
-        // Files are also Blob instances, but some browsers
-        // (Firefox 3.6) support the File API but not Blobs:
-        loadImage.isInstanceOf('File', file)
-      ) {
+      } else if (isInstanceOf('Blob', file) || isInstanceOf('File', file)) {
         url = createObjectURL(file)
         if (url) {
           img.src = url
@@ -196,17 +203,13 @@
     callback()
   }
 
-  loadImage.isInstanceOf = function (type, obj) {
-    // Cross-frame instanceof check
-    return Object.prototype.toString.call(obj) === '[object ' + type + ']'
-  }
-
   loadImage.transform = function (img, options, callback, file, data) {
     callback(img, data)
   }
 
   loadImage.global = $
   loadImage.readFile = readFile
+  loadImage.isInstanceOf = isInstanceOf
   loadImage.createObjectURL = createObjectURL
   loadImage.revokeObjectURL = revokeObjectURL
 
