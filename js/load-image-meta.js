@@ -55,14 +55,22 @@
     }
   }
 
-  // Parses image metadata and calls the callback with an object argument
-  // with the following properties:
-  // * imageHead: The complete image head as ArrayBuffer (Uint8Array for IE10)
-  // The options argument accepts an object and supports the following
-  // properties:
-  // * maxMetaDataSize: Defines the maximum number of bytes to parse.
-  // * disableImageHead: Disables creating the imageHead property.
-  loadImage.parseMetaData = function (file, callback, options, data) {
+  /**
+   * Parses image metadata and calls the callback with an object argument
+   * with the following property:
+   * - imageHead: The complete image head as ArrayBuffer
+   * The options argument accepts an object and supports the following
+   * properties:
+   * - maxMetaDataSize: Defines the maximum number of bytes to parse.
+   * - disableImageHead: Disables creating the imageHead property.
+   *
+   * @param {Blob} file Blob object
+   * @param {Function} callback Callback fynction
+   * @param {object} [options] Parsing options
+   * @param {object} [data] Result data object
+   * @returns {Promise|undefined} Returns Promise if no callback is provided.
+   */
+  function parseMetaData(file, callback, options, data) {
     var that = this
     /**
      * Promise executor
@@ -197,11 +205,11 @@
   loadImage.replaceHead = function (blob, head, callback) {
     var options = { maxMetaDataSize: 256, disableMetaDataParsers: true }
     if (!callback && loadImage.global.Promise) {
-      return loadImage.parseMetaData(blob, options).then(function (data) {
+      return parseMetaData(blob, options).then(function (data) {
         return replaceJPEGHead(blob, data.imageHead, head)
       })
     }
-    loadImage.parseMetaData(
+    parseMetaData(
       blob,
       function (data) {
         callback(replaceJPEGHead(blob, data.imageHead, head))
@@ -214,7 +222,7 @@
   loadImage.transform = function (img, options, callback, file, data) {
     if (loadImage.requiresMetaData(options)) {
       data = data || {} // eslint-disable-line no-param-reassign
-      loadImage.parseMetaData(
+      parseMetaData(
         file,
         function (result) {
           if (result !== data) {
@@ -238,4 +246,6 @@
       originalTransform.apply(loadImage, arguments)
     }
   }
+
+  loadImage.parseMetaData = parseMetaData
 })
