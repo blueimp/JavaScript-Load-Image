@@ -97,16 +97,11 @@
       if (
         !loadImage.readFile(
           loadImage.blobSlice.call(file, 0, maxMetaDataSize),
-          function (e) {
-            if (e.target.error) {
-              // FileReader error
-              return reject(e.target.error)
-            }
+          function (buffer) {
             // Note on endianness:
             // Since the marker and length bytes in JPEG files are always
             // stored in big endian order, we can leave the endian parameter
             // of the DataView methods undefined, defaulting to big endian.
-            var buffer = e.target.result
             var dataView = new DataView(buffer)
             // Check for the JPEG marker (0xffd8):
             if (dataView.getUint16(0) !== 0xffd8) {
@@ -168,6 +163,7 @@
             }
             resolve(data)
           },
+          reject,
           'readAsArrayBuffer'
         )
       ) {

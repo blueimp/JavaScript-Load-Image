@@ -49,6 +49,33 @@
   }
 
   /**
+   * Loads a given File object via FileReader interface.
+   *
+   * @param {Blob} file Blob object
+   * @param {Function} onload Load event callback
+   * @param {Function} [onerror] Error/Abort event callback
+   * @param {string} [method=readAsDataURL] FileReader method
+   * @returns {FileReader|boolean} Returns FileReader if API exists, else false.
+   */
+  function readFile(file, onload, onerror, method) {
+    if (!$.FileReader) return false
+    var reader = new FileReader()
+    reader.onload = function () {
+      onload.call(reader, this.result)
+    }
+    if (onerror) {
+      reader.onabort = reader.onerror = function () {
+        onerror.call(reader, this.error)
+      }
+    }
+    var readerMethod = reader[method || 'readAsDataURL']
+    if (readerMethod) {
+      readerMethod.call(reader, file)
+      return reader
+    }
+  }
+
+  /**
    * Loads an image for a given File object.
    *
    * @param {Blob|string} file Blob object or image URL
@@ -140,14 +167,13 @@
           img.src = url
           return img
         }
-        return loadImage.readFile(file, function (e) {
-          var target = e.target
-          if (target && target.result) {
-            img.src = target.result
-          } else if (reject) {
-            reject(e)
-          }
-        })
+        return readFile(
+          file,
+          function (url) {
+            img.src = url
+          },
+          reject
+        )
       }
     }
     if ($.Promise && typeof callback !== 'function') {
@@ -179,24 +205,8 @@
     callback(img, data)
   }
 
-  // Loads a given File object via FileReader interface,
-  // invokes the callback with the event object (load or error).
-  // The result can be read via event.target.result:
-  loadImage.readFile = function (file, callback, method) {
-    if ($.FileReader) {
-      var fileReader = new FileReader()
-      fileReader.onload = fileReader.onerror = callback
-      // eslint-disable-next-line no-param-reassign
-      method = method || 'readAsDataURL'
-      if (fileReader[method]) {
-        fileReader[method](file)
-        return fileReader
-      }
-    }
-    return false
-  }
-
   loadImage.global = $
+  loadImage.readFile = readFile
   loadImage.createObjectURL = createObjectURL
   loadImage.revokeObjectURL = revokeObjectURL
 
