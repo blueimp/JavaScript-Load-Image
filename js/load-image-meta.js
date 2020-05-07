@@ -29,15 +29,17 @@
 })(function (loadImage) {
   'use strict'
 
-  loadImage.blobSlice =
-    loadImage.global.Blob &&
+  var global = loadImage.global
+  var originalTransform = loadImage.transform
+
+  var blobSlice =
+    global.Blob &&
     (Blob.prototype.slice ||
       Blob.prototype.webkitSlice ||
       Blob.prototype.mozSlice)
 
-  loadImage.bufferSlice =
-    (loadImage.global.ArrayBuffer &&
-      loadImage.global.ArrayBuffer.prototype.slice) ||
+  var bufferSlice =
+    (global.ArrayBuffer && ArrayBuffer.prototype.slice) ||
     function (begin, end) {
       // Polyfill for IE10, which does not support ArrayBuffer.slice
       // eslint-disable-next-line no-param-reassign
@@ -48,7 +50,7 @@
       return arr2.buffer
     }
 
-  loadImage.metaDataParsers = {
+  var metaDataParsers = {
     jpeg: {
       0xffe1: [], // APP1 marker
       0xffed: [] // APP13 marker
@@ -82,8 +84,8 @@
     function executor(resolve, reject) {
       if (
         !(
-          loadImage.global.DataView &&
-          loadImage.blobSlice &&
+          global.DataView &&
+          blobSlice &&
           file &&
           file.size >= 12 &&
           file.type === 'image/jpeg'
@@ -96,7 +98,7 @@
       var maxMetaDataSize = options.maxMetaDataSize || 262144
       if (
         !loadImage.readFile(
-          loadImage.blobSlice.call(file, 0, maxMetaDataSize),
+          blobSlice.call(file, 0, maxMetaDataSize),
           function (buffer) {
             // Note on endianness:
             // Since the marker and length bytes in JPEG files are always
@@ -135,7 +137,7 @@
                   console.log('Invalid JPEG metadata: Invalid segment size.')
                   break
                 }
-                parsers = loadImage.metaDataParsers.jpeg[markerBytes]
+                parsers = metaDataParsers.jpeg[markerBytes]
                 if (parsers && !options.disableMetaDataParsers) {
                   for (i = 0; i < parsers.length; i += 1) {
                     parsers[i].call(
@@ -159,7 +161,7 @@
             // Meta length must be longer than JPEG marker (2)
             // plus APPn marker (2), followed by length bytes (2):
             if (!options.disableImageHead && headLength > 6) {
-              data.imageHead = loadImage.bufferSlice.call(buffer, 0, headLength)
+              data.imageHead = bufferSlice.call(buffer, 0, headLength)
             }
             resolve(data)
           },
@@ -172,7 +174,7 @@
       }
     }
     options = options || {} // eslint-disable-line no-param-reassign
-    if (loadImage.global.Promise && typeof callback !== 'function') {
+    if (global.Promise && typeof callback !== 'function') {
       options = callback || {} // eslint-disable-line no-param-reassign
       data = options // eslint-disable-line no-param-reassign
       return new Promise(executor)
@@ -184,23 +186,29 @@
   /**
    * Replaces the head of a JPEG Blob
    *
-   * @param {Blob} blob Resolution function
+   * @param {Blob} blob Blob object
    * @param {ArrayBuffer} oldHead Old JPEG head
    * @param {ArrayBuffer} newHead New JPEG head
    * @returns {Blob} Combined Blob
    */
   function replaceJPEGHead(blob, oldHead, newHead) {
-    return new Blob(
-      [newHead, loadImage.blobSlice.call(blob, oldHead.byteLength)],
-      { type: 'image/jpeg' }
-    )
+    return new Blob([newHead, blobSlice.call(blob, oldHead.byteLength)], {
+      type: 'image/jpeg'
+    })
   }
 
-  // Replaces the image head of a JPEG blob with the given one.
-  // Returns a Promise or calls the callback with the new Blob:
-  loadImage.replaceHead = function (blob, head, callback) {
+  /**
+   * Replaces the image head of a JPEG blob with the given one.
+   * Returns a Promise or calls the callback with the new Blob.
+   *
+   * @param {Blob} blob Blob object
+   * @param {ArrayBuffer} head New JPEG head
+   * @param {Function} [callback] Callback function
+   * @returns {Promise|undefined} Combined Blob
+   */
+  function replaceHead(blob, head, callback) {
     var options = { maxMetaDataSize: 256, disableMetaDataParsers: true }
-    if (!callback && loadImage.global.Promise) {
+    if (!callback && global.Promise) {
       return parseMetaData(blob, options).then(function (data) {
         return replaceJPEGHead(blob, data.imageHead, head)
       })
@@ -214,7 +222,6 @@
     )
   }
 
-  var originalTransform = loadImage.transform
   loadImage.transform = function (img, options, callback, file, data) {
     if (loadImage.requiresMetaData(options)) {
       data = data || {} // eslint-disable-line no-param-reassign
@@ -223,7 +230,7 @@
         function (result) {
           if (result !== data) {
             // eslint-disable-next-line no-console
-            if (loadImage.global.console) console.log(result)
+            if (global.console) console.log(result)
             result = data // eslint-disable-line no-param-reassign
           }
           originalTransform.call(
@@ -243,5 +250,9 @@
     }
   }
 
+  loadImage.blobSlice = blobSlice
+  loadImage.bufferSlice = bufferSlice
+  loadImage.replaceHead = replaceHead
   loadImage.parseMetaData = parseMetaData
+  loadImage.metaDataParsers = metaDataParsers
 })
