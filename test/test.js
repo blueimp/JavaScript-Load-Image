@@ -261,10 +261,14 @@
       })
 
       it('Handle image loading error', function () {
-        return loadImage('404').catch(function (err) {
-          expect(err).to.be.an.instanceOf(window.Event)
-          expect(err.type).to.equal('error')
-        })
+        return loadImage('404')
+          .then(function () {
+            throw new Error('Promise not rejected')
+          })
+          .catch(function (err) {
+            expect(err).to.be.an.instanceOf(window.Event)
+            expect(err.type).to.equal('error')
+          })
       })
 
       it('Provide original image width+height in callback data', function () {
