@@ -19,7 +19,7 @@
     canCreateBlob: !!window.dataURLtoBlob
   }
 
-  // black 60x40 GIF
+  // black+white 60x40 GIF
   // Image data layout (B=black, F=white), scaled to 3x2:
   // BFF
   // BBB
@@ -29,6 +29,12 @@
     'stpXsLv9gr2q8UZshnDTjTUbWH7TqvS6/Y7P6/f8vv9vVwAAOw=='
   var imageUrlGIF = 'data:image/gif;base64,' + b64DataGIF
   var blobGIF = browser.canCreateBlob && window.dataURLtoBlob(imageUrlGIF)
+  var fileGIF
+  try {
+    fileGIF = new File([blobGIF], 'image.gif')
+  } catch (_) {
+    // No File constructor support
+  }
 
   // black 3x2 GIF
   // Image data layout (B=black, F=white):
@@ -206,7 +212,22 @@
       ).to.be.ok
     })
 
-    describe('Object URL revoke', function () {
+    describe('File', function () {
+      if (!fileGIF) return
+
+      it('Load image file as img element', function (done) {
+        expect(
+          loadImage(fileGIF, function (img) {
+            expect(img.nodeName.toLowerCase()).to.equal('img')
+            expect(img.width).to.equal(60)
+            expect(img.height).to.equal(40)
+            done()
+          })
+        ).to.be.ok
+      })
+    })
+
+    describe('Object URL', function () {
       // Using XMLHttpRequest via the request helper function to test Object
       // URLs to work around Edge Legacy and IE caching image URLs.
       if (!window.XMLHttpRequest) return
