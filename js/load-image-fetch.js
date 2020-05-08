@@ -29,15 +29,20 @@
 
   if (global.fetch && global.Request) {
     loadImage.fetchBlob = function (url, callback, options) {
+      /**
+       * Fetch response handler.
+       *
+       * @param {Response} response Fetch response
+       * @returns {Blob} Fetched Blob.
+       */
+      function responseHandler(response) {
+        return response.blob()
+      }
       if (global.Promise && typeof callback !== 'function') {
-        return fetch(new Request(url, callback)).then(function (response) {
-          return response.blob()
-        })
+        return fetch(new Request(url, callback)).then(responseHandler)
       }
       fetch(new Request(url, options))
-        .then(function (response) {
-          return response.blob()
-        })
+        .then(responseHandler)
         .then(callback)
         [
           // Avoid parsing error in IE<9, where catch is a reserved word.
