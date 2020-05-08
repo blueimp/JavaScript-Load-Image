@@ -39,7 +39,11 @@
           return response.blob()
         })
         .then(callback)
-        .catch(function (err) {
+        [
+          // Avoid parsing error in IE<9, where catch is a reserved word.
+          // eslint-disable-next-line dot-notation
+          'catch'
+        ](function (err) {
           callback(null, err)
         })
     }
