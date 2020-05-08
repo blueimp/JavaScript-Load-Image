@@ -20,6 +20,11 @@ $(function () {
   var actionsNode = $('#actions')
   var orientationNode = $('#orientation')
   var imageSmoothingNode = $('#image-smoothing')
+  var fileInputNode = $('#file-input')
+  var urlNode = $('#url')
+  var editNode = $('#edit')
+  var cropNode = $('#crop')
+  var cancelNode = $('#cancel')
   var coordinates
   var jcropAPI
 
@@ -215,9 +220,9 @@ $(function () {
     })
     .on('drop', fileChangeHandler)
 
-  $('#file-input').on('change', fileChangeHandler)
+  fileInputNode.on('change', fileChangeHandler)
 
-  $('#url').on('change paste input', urlChangeHandler)
+  urlNode.on('change paste input', urlChangeHandler)
 
   orientationNode.on('change', function () {
     var img = resultNode.find('img, canvas')[0]
@@ -233,7 +238,7 @@ $(function () {
     }
   })
 
-  $('#edit').on('click', function (event) {
+  editNode.on('click', function (event) {
     event.preventDefault()
     var imgNode = resultNode.find('img, canvas')
     var img = imgNode[0]
@@ -266,7 +271,7 @@ $(function () {
       })
   })
 
-  $('#crop').on('click', function (event) {
+  cropNode.on('click', function (event) {
     event.preventDefault()
     var img = resultNode.find('img, canvas')[0]
     var pixelRatio = window.devicePixelRatio || 1
@@ -287,7 +292,7 @@ $(function () {
     }
   })
 
-  $('#cancel').on('click', function (event) {
+  cancelNode.on('click', function (event) {
     event.preventDefault()
     if (jcropAPI) {
       jcropAPI.release()
