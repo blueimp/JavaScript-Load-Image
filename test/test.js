@@ -9,7 +9,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-/* global describe, before, after, it, Promise */
+/* global describe, before, after, it, Promise, ArrayBuffer */
 /* eslint-disable no-unused-expressions */
 
 ;(function (expect, loadImage) {
@@ -104,7 +104,7 @@
   /**
    * Helper function to create a blob object from the given image data
    *
-   * @param {*} data Image data
+   * @param {ArrayBuffer} data Image data
    * @param {string} type Image content type
    * @returns {Blob} Image Blob object
    */
@@ -118,7 +118,7 @@
         window.MozBlobBuilder ||
         window.MSBlobBuilder
       var builder = new BlobBuilder()
-      builder.append(data.buffer || data)
+      builder.append(data)
       return builder.getBlob(type)
     }
   }
