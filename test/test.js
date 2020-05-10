@@ -36,7 +36,7 @@
     // No File constructor support
   }
 
-  // black 3x2 GIF
+  // black+white 3x2 GIF
   // Image data layout (B=black, F=white):
   // BFF
   // BBB
