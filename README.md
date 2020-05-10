@@ -70,7 +70,7 @@ image header after resizing.
 
 ## Setup
 
-Install via [NPM](https://www.npmjs.com/):
+Install via [NPM](https://www.npmjs.com/package/blueimp-load-image):
 
 ```sh
 npm install blueimp-load-image
