@@ -108,12 +108,21 @@ $(function () {
   }
 
   /**
+   * Removes meta data from the page
+   */
+  function removeMetaData() {
+    metaNode.hide().removeData().find('table').remove()
+    thumbNode.hide().empty()
+  }
+
+  /**
    * Updates the results view
    *
    * @param {*} img Image or canvas element
    * @param {object} [data] Metadata object
    */
   function updateResults(img, data) {
+    removeMetaData()
     if (!(img.src || img instanceof HTMLCanvasElement)) {
       resultNode
         .children()
@@ -162,9 +171,8 @@ $(function () {
       imageSmoothingEnabled: imageSmoothingNode.is(':checked'),
       meta: true
     }
-    metaNode.hide().removeData().find('table').remove()
-    thumbNode.hide().empty()
     if (!loadImage(file, updateResults, options)) {
+      removeMetaData()
       resultNode
         .children()
         .replaceWith(
