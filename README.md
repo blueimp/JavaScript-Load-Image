@@ -107,9 +107,9 @@ Or alternatively, choose which components you want to include:
 In your application code, use the `loadImage()` function like this:
 
 ```js
-document.getElementById('file-input').onchange = function (e) {
+document.getElementById('file-input').onchange = function () {
   loadImage(
-    e.target.files[0],
+    this.files[0],
     function (img) {
       document.body.appendChild(img)
     },
@@ -123,8 +123,8 @@ Or using the
 based API like this:
 
 ```js
-document.getElementById('file-input').onchange = function (e) {
-  loadImage(e.target.files[0], { maxWidth: 600 }).then(function (data) {
+document.getElementById('file-input').onchange = function () {
+  loadImage(this.files[0], { maxWidth: 600 }).then(function (data) {
     document.body.appendChild(data.image)
   })
 }
