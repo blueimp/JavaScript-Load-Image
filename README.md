@@ -447,7 +447,7 @@ Enabling the `crop` option also enables the `canvas` option.
 Transform the canvas according to the specified Exif orientation, which can be
 an `integer` in the range of `1` to `8` or the boolean value `true`.
 
-When set to `true`, it will set the orientation value based on the EXIF data of
+When set to `true`, it will set the orientation value based on the Exif data of
 the image, which will be parsed automatically if the Exif extension is
 available.
 
@@ -680,9 +680,9 @@ become available, as well as three additional methods:
 - `exif.getAll()`
 
 ```js
-var orientationText = data.exif.getText('Orientation') // e.g. right-top
+var orientationText = data.exif.getText('Orientation') // e.g. "Rotate 90° CW"
 
-var name = data.exif.getName(0x0112) // Orientation
+var name = data.exif.getName(0x0112) // "Orientation"
 
 // A map of all parsed tags with their mapped names/text as keys/values:
 var allTags = data.exif.getAll()
