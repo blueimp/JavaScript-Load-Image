@@ -76,7 +76,11 @@ Install via [NPM](https://www.npmjs.com/package/blueimp-load-image):
 npm install blueimp-load-image
 ```
 
-Include the (combined and minified) JavaScript Load Image script in your HTML
+This will install the JavaScript files inside
+`./node_modules/blueimp-load-image/js/` relative to your current directory, from
+where you can copy them into a folder that is served by your web server.
+
+Next include the combined and minified JavaScript Load Image script in your HTML
 markup:
 
 ```html
@@ -86,17 +90,31 @@ markup:
 Or alternatively, choose which components you want to include:
 
 ```html
+<!-- required for all operations -->
 <script src="js/load-image.js"></script>
 
+<!-- required for scaling, cropping and as dependency for rotation -->
 <script src="js/load-image-scale.js"></script>
+
+<!-- required to parse meta data and to restore the complete image head -->
 <script src="js/load-image-meta.js"></script>
+
+<!-- required to parse meta data from images loaded via URL -->
 <script src="js/load-image-fetch.js"></script>
+
+<!-- required for rotation and cross-browser image orientation -->
 <script src="js/load-image-orientation.js"></script>
 
+<!-- required to parse Exif tags and cross-browser image orientation -->
 <script src="js/load-image-exif.js"></script>
+
+<!-- required to display text mappings for Exif tags -->
 <script src="js/load-image-exif-map.js"></script>
 
+<!-- required to parse IPTC tags -->
 <script src="js/load-image-iptc.js"></script>
+
+<!-- required to display text mappings for IPTC tags -->
 <script src="js/load-image-iptc-map.js"></script>
 ```
 
