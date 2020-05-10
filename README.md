@@ -130,6 +130,18 @@ document.getElementById('file-input').onchange = function () {
 }
 ```
 
+With
+[async/await](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await)
+(requires a modern browser or a code transpiler like
+[Babel](https://babeljs.io/) or [TypeScript](https://www.typescriptlang.org/)):
+
+```js
+document.getElementById('file-input').onchange = async function () {
+  let data = await loadImage(this.files[0], { maxWidth: 600 })
+  document.body.appendChild(data.image)
+}
+```
+
 ### Image scaling
 
 It is also possible to use the image scaling functionality directly with an
