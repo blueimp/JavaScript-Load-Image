@@ -11,6 +11,7 @@
   - [Image loading](#image-loading)
   - [Image scaling](#image-scaling)
 - [Requirements](#requirements)
+- [Browser support](#browser-support)
 - [API](#api)
   - [Callback](#callback)
     - [Function signature](#function-signature)
@@ -186,6 +187,60 @@ following two
   to use the
   [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
   based `loadImage` API in Browsers without native `Promise` support.
+
+## Browser support
+
+Browsers which implement the following APIs support all options:
+
+- Loading images from File and Blob objects:
+  - [URL.createObjectURL](https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL)
+    or
+    [FileReader.readAsDataURL](https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL)
+- Parsing meta data:
+  - [FileReader.readAsArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsArrayBuffer)
+  - [Blob.slice](https://developer.mozilla.org/en-US/docs/Web/API/Blob/slice)
+  - [DataView](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView)
+    (no [BigInt](https://developer.mozilla.org/en-US/docs/Glossary/BigInt)
+    support required)
+- Parsing meta data from images loaded via URL:
+  - [fetch Response.blob](https://developer.mozilla.org/en-US/docs/Web/API/Body/blob)
+    or
+    [XMLHttpRequest.responseType blob](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType#blob)
+- Promise based API:
+  - [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+
+This includes (but is not limited to) the following browsers:
+
+- Chrome 32+
+- Firefox 29+
+- Safari 8+
+- Mobile Chrome 42+ (Android)
+- Mobile Firefox 50+ (Android)
+- Mobile Safari 8+ (iOS)
+- Edge 74+
+- Edge Legacy 12+
+- Internet Explorer 10+ `*`
+
+`*` Internet Explorer [requires](#requirements) a polyfill for the `Promise`
+based API.
+
+Loading an image from a URL and applying transformations (scaling, cropping and
+rotating - except `orientation:true`, which requires reading meta data) is
+supported by all browsers which implement the
+[HTMLCanvasElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement)
+interface.
+
+Loading an image from a URL and scaling it in size is supported by all browsers
+which implement the
+[img](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img) element and
+has been tested successfully with browser engines as old as Internet Explorer 5
+(via
+[IE11's emulation mode](<https://docs.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/samples/dn255001(v=vs.85)>)).
+
+The `loadImage()` function applies options using
+[progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
+and falls back to a configuration that is supported by the browser, e.g. if the
+`canvas` element is not supported, an equivalent `img` element is returned.
 
 ## API
 
