@@ -136,9 +136,9 @@ document.getElementById('file-input').onchange = function () {
 }
 ```
 
-Or using the
+Or use the
 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
-based API like this:
+based API like this ([requires](#requirements) a polyfill for older browsers):
 
 ```js
 document.getElementById('file-input').onchange = function () {
@@ -180,8 +180,8 @@ following two
 
 - [blueimp-canvas-to-blob](https://github.com/blueimp/JavaScript-Canvas-to-Blob)
   for browsers without native
-  [canvas.toBlob()](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob)
-  support, to create `Blob` objects out of transformed `canvas` elements.
+  [HTMLCanvasElement.toBlob](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob)
+  support, to create `Blob` objects out of `canvas` elements.
 - [promise-polyfill](https://github.com/taylorhakes/promise-polyfill) to be able
   to use the
   [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
@@ -336,7 +336,7 @@ If image loading fails, the `Promise` rejects with an
 The optional options argument to `loadImage()` allows to configure the image
 loading.
 
-It can be used the following way using the callback style:
+It can be used the following way with the callback style:
 
 ```js
 loadImage(
@@ -663,11 +663,9 @@ loadImage(fileOrBlobOrUrl, { meta: true, canvas: true, maxWidth: 800 })
 
 **Please note:**  
 `Blob` objects of resized images can be created via
-[canvas.toBlob](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob).  
+[HTMLCanvasElement.toBlob](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob).  
 [blueimp-canvas-to-blob](https://github.com/blueimp/JavaScript-Canvas-to-Blob)
-provides a polyfill for browsers without native
-[canvas.toBlob](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob)
-support.
+provides a polyfill for browsers without native `canvas.toBlob()` support.
 
 ### Exif parser
 
