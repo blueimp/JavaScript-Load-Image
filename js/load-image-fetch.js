@@ -27,7 +27,12 @@
 
   var global = loadImage.global
 
-  if (global.fetch && global.Request) {
+  if (
+    global.fetch &&
+    global.Request &&
+    global.Response &&
+    global.Response.prototype.blob
+  ) {
     loadImage.fetchBlob = function (url, callback, options) {
       /**
        * Fetch response handler.
@@ -52,8 +57,11 @@
           callback(null, err)
         })
     }
-  } else if (global.XMLHttpRequest && global.ProgressEvent) {
-    // Browser supports XHR Level 2 and XHR responseType blob
+  } else if (
+    global.XMLHttpRequest &&
+    // https://xhr.spec.whatwg.org/#the-responsetype-attribute
+    new XMLHttpRequest().responseType === ''
+  ) {
     loadImage.fetchBlob = function (url, callback, options) {
       /**
        * Promise executor
