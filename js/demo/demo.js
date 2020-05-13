@@ -120,9 +120,18 @@ $(function () {
    *
    * @param {*} img Image or canvas element
    * @param {object} [data] Metadata object
+   * @param {boolean} [keepMetaData] Keep meta data if true
    */
-  function updateResults(img, data) {
-    removeMetaData()
+  function updateResults(img, data, keepMetaData) {
+    if (!keepMetaData) {
+      removeMetaData()
+      if (data) {
+        if (img.getContext) {
+          actionsNode.show()
+        }
+        displayMetaData(data)
+      }
+    }
     if (!(img.src || img instanceof HTMLCanvasElement)) {
       resultNode
         .children()
@@ -131,15 +140,6 @@ $(function () {
     }
     var content = $('<a></a>').append(img)
     resultNode.children().replaceWith(content)
-    if (data) {
-      if (img.getContext) {
-        actionsNode.show()
-      }
-      displayMetaData(data)
-    } else {
-      // eslint-disable-next-line no-param-reassign
-      data = metaNode.data()
-    }
     if (data.imageHead) {
       if (data.exif) {
         // Reset Exif Orientation data:
@@ -241,7 +241,9 @@ $(function () {
           pixelRatio: window.devicePixelRatio,
           orientation: Number(orientationNode.val()) || true,
           imageSmoothingEnabled: imageSmoothingNode.is(':checked')
-        })
+        }),
+        metaNode.data(),
+        true
       )
     }
   })
@@ -294,7 +296,9 @@ $(function () {
           contain: true,
           pixelRatio: pixelRatio,
           imageSmoothingEnabled: imageSmoothingNode.is(':checked')
-        })
+        }),
+        metaNode.data(),
+        true
       )
       coordinates = null
     }
