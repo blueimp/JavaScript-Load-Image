@@ -304,7 +304,6 @@
       loadImage.transformCoordinates(canvas, options, data)
       if (pixelRatio > 1) {
         canvas.style.width = canvas.width / pixelRatio + 'px'
-        canvas.style.height = canvas.height / pixelRatio + 'px'
       }
       loadImage
         .drawImage(
