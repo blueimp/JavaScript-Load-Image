@@ -123,16 +123,19 @@ $(function () {
    * @param {boolean} [keepMetaData] Keep meta data if true
    */
   function updateResults(img, data, keepMetaData) {
+    var isCanvas = window.HTMLCanvasElement && img instanceof HTMLCanvasElement
     if (!keepMetaData) {
       removeMetaData()
       if (data) {
-        if (img.getContext) {
-          actionsNode.show()
-        }
         displayMetaData(data)
       }
+      if (isCanvas) {
+        actionsNode.show()
+      } else {
+        actionsNode.hide()
+      }
     }
-    if (!(img.src || img instanceof HTMLCanvasElement)) {
+    if (!(isCanvas || img.src)) {
       resultNode
         .children()
         .replaceWith($('<span>Loading image file failed</span>'))
