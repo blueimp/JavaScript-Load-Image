@@ -15,7 +15,7 @@
 - [API](#api)
   - [Callback](#callback)
     - [Function signature](#function-signature)
-    - [Canceling event handling](#canceling-event-handling)
+    - [Cancel image loading](#cancel-image-loading)
     - [Callback arguments](#callback-arguments)
     - [Error handling](#error-handling)
   - [Promise](#promise)
@@ -123,7 +123,8 @@ Or alternatively, choose which components you want to include:
 
 ### Image loading
 
-In your application code, use the `loadImage()` function like this:
+In your application code, use the `loadImage()` function with
+[callback](#callback) style:
 
 ```js
 document.getElementById('file-input').onchange = function () {
@@ -137,9 +138,8 @@ document.getElementById('file-input').onchange = function () {
 }
 ```
 
-Or use the
-[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
-based API like this ([requires](#requirements) a polyfill for older browsers):
+Or use the [Promise](#promise) based API like this ([requires](#requirements) a
+polyfill for older browsers):
 
 ```js
 document.getElementById('file-input').onchange = function () {
@@ -274,12 +274,20 @@ var loadingImage = loadImage(
 )
 ```
 
-#### Canceling event handling
+#### Cancel image loading
 
-The `img` element or
-[FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader) object
-returned by the `loadImage()` function allows to cancel event handling by
-setting the `onload` and `onerror` event handlers to null:
+Some browsers (e.g. Chrome) will cancel the image loading process if the `src`
+property of an `img` element is changed.  
+To avoid unnecessary requests, we can use the
+[data URL](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs)
+of a 1x1 pixel transparent GIF image as `src` target to cancel the original
+image download.
+
+To disable callback handling, we can also unset the image event handlers and for
+maximum browser compatibility, cancel the file reading process if the returned
+object is a
+[FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader)
+instance:
 
 ```js
 var loadingImage = loadImage(
@@ -290,9 +298,28 @@ var loadingImage = loadImage(
   { maxWidth: 600 }
 )
 
-// Cancel event handling:
-loadingImage.onload = loadingImage.onerror = null
+if (loadingImage) {
+  // Unset event handling for the loading image:
+  loadingImage.onload = loadingImage.onerror = null
+
+  // Cancel image loading process:
+  if (loadingImage.abort) {
+    // FileReader instance, stop the file reading process:
+    loadingImage.abort()
+  } else {
+    // HTMLImageElement element, cancel the original image request by changing
+    // the target source to the data URL of a 1x1 pixel transparent image GIF:
+    loadingImage.src =
+      'data:image/gif;base64,' +
+      'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+  }
+}
 ```
+
+**Please note:**  
+The `img` element (or `FileReader` instance) for the loading image is only
+returned when using the callback style API and not available with the
+[Promise](#promise) based API.
 
 #### Callback arguments
 
