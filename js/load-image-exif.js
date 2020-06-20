@@ -441,7 +441,7 @@
   }
 
   loadImage.writeExifData = function (buffer, data, id, value) {
-    loadImage.exifWriters[data.exif.map[id]](buffer, data, value)
+    return loadImage.exifWriters[data.exif.map[id]](buffer, data, value)
   }
 
   loadImage.ExifMap = ExifMap

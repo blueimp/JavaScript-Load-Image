@@ -2650,7 +2650,14 @@
           expect(data.iptc).to.be.ok
           expect(data.iptc.get('ObjectName')).to.equal('blueimp.net')
           // Reset EXIF Orientation data:
-          loadImage.writeExifData(data.imageHead, data, 'Orientation', 1)
+          var buffer = loadImage.writeExifData(
+            data.imageHead,
+            data,
+            'Orientation',
+            1
+          )
+          // Check if Orientation writer changes image head buffer in place:
+          expect(buffer).to.equal(data.imageHead)
           img.toBlob(function (blob) {
             loadImage.replaceHead(blob, data.imageHead, function (newBlob) {
               loadImage(
@@ -2703,7 +2710,14 @@
             expect(data.iptc).to.be.ok
             expect(data.iptc.get('ObjectName')).to.equal('blueimp.net')
             // Reset EXIF Orientation data:
-            loadImage.writeExifData(data.imageHead, data, 'Orientation', 1)
+            var buffer = loadImage.writeExifData(
+              data.imageHead,
+              data,
+              'Orientation',
+              1
+            )
+            // Check if Orientation writer changes image head buffer in place:
+            expect(buffer).to.equal(data.imageHead)
             return new Promise(function (resolve) {
               data.image.toBlob(function (blob) {
                 data.blob = blob
