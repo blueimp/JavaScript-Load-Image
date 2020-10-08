@@ -1060,7 +1060,8 @@ loadImage.parseMetaData(
 The JavaScript Load Image library is released under the
 [MIT license](https://opensource.org/licenses/MIT).
 
-## Credits
+## Credits 
+## Specially Thanks To Achim Stöhr and Jacob Seidelin.
 
 - Original image metadata handling implemented with the help and contribution of
   Achim Stöhr.
