@@ -160,7 +160,6 @@ input[type='file'] {
 input[type='file']::-webkit-file-upload-button {
   -webkit-appearance: none;
   box-sizing: border-box;
-  margin: 0;
   padding: 0.5em 0.75em;
   font-family: inherit;
   font-size: 100%;
@@ -176,7 +175,6 @@ input[type='file']::-webkit-file-upload-button:active {
 }
 input[type='file']::-ms-browse {
   box-sizing: border-box;
-  margin: 0;
   padding: 0.5em 0.75em;
   font-family: inherit;
   font-size: 100%;
