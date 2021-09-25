@@ -246,11 +246,15 @@
       0x0045: 'Flash fired, red-eye reduction mode, return light not detected',
       0x0047: 'Flash fired, red-eye reduction mode, return light detected',
       0x0049: 'Flash fired, compulsory flash mode, red-eye reduction mode',
-      0x004d: 'Flash fired, compulsory flash mode, red-eye reduction mode, return light not detected',
-      0x004f: 'Flash fired, compulsory flash mode, red-eye reduction mode, return light detected',
+      0x004d:
+        'Flash fired, compulsory flash mode, red-eye reduction mode, return light not detected',
+      0x004f:
+        'Flash fired, compulsory flash mode, red-eye reduction mode, return light detected',
       0x0059: 'Flash fired, auto mode, red-eye reduction mode',
-      0x005d: 'Flash fired, auto mode, return light not detected, red-eye reduction mode',
-      0x005f: 'Flash fired, auto mode, return light detected, red-eye reduction mode'
+      0x005d:
+        'Flash fired, auto mode, return light not detected, red-eye reduction mode',
+      0x005f:
+        'Flash fired, auto mode, return light detected, red-eye reduction mode'
     },
     SensingMethod: {
       1: 'Undefined',

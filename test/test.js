@@ -1141,8 +1141,9 @@
                 expect(img.height).to.equal(1)
                 // Image data layout after orientation (B=black, F=white):
                 // BF
-                var imageData = img.getContext('2d').getImageData(0, 0, 2, 1)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 2, 1).data
                 // 0:0 opaque black
                 expect(imageData[0]).to.equal(0)
                 expect(imageData[1]).to.equal(0)
@@ -1180,8 +1181,9 @@
                 }
                 // Image data layout after orientation (B=black, F=white):
                 // FB
-                var imageData = img.getContext('2d').getImageData(0, 0, 2, 1)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 2, 1).data
                 // 0:0 opaque white
                 expect(imageData[0]).to.equal(255)
                 expect(imageData[1]).to.equal(255)
@@ -1215,8 +1217,9 @@
                 expect(img.height).to.equal(1)
                 // Image data layout after orientation (B=black, F=white):
                 // FB
-                var imageData = img.getContext('2d').getImageData(0, 0, 2, 1)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 2, 1).data
                 // 0:0 opaque white
                 expect(imageData[0]).to.equal(255)
                 expect(imageData[1]).to.equal(255)
@@ -1254,8 +1257,9 @@
                 }
                 // Image data layout after orientation (B=black, F=white):
                 // BF
-                var imageData = img.getContext('2d').getImageData(0, 0, 2, 1)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 2, 1).data
                 // 0:0 opaque black
                 expect(imageData[0]).to.equal(0)
                 expect(imageData[1]).to.equal(0)
@@ -1294,8 +1298,9 @@
                 // Image data layout after orientation (B=black, F=white):
                 // B
                 // F
-                var imageData = img.getContext('2d').getImageData(0, 0, 1, 2)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 1, 2).data
                 // 0:0 opaque black
                 expect(imageData[0]).to.equal(0)
                 expect(imageData[1]).to.equal(0)
@@ -1330,8 +1335,9 @@
                 // Image data layout after orientation (B=black, F=white):
                 // B
                 // F
-                var imageData = img.getContext('2d').getImageData(0, 0, 1, 2)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 1, 2).data
                 // 0:0 opaque black
                 expect(imageData[0]).to.equal(0)
                 expect(imageData[1]).to.equal(0)
@@ -1370,8 +1376,9 @@
                 // Image data layout after orientation (B=black, F=white):
                 // F
                 // B
-                var imageData = img.getContext('2d').getImageData(0, 0, 1, 2)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 1, 2).data
                 // 0:0 opaque white
                 expect(imageData[0]).to.equal(255)
                 expect(imageData[1]).to.equal(255)
@@ -1406,8 +1413,9 @@
                 // Image data layout after orientation (B=black, F=white):
                 // F
                 // B
-                var imageData = img.getContext('2d').getImageData(0, 0, 1, 2)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 1, 2).data
                 // 0:0 opaque white
                 expect(imageData[0]).to.equal(255)
                 expect(imageData[1]).to.equal(255)
@@ -1994,8 +2002,9 @@
                 expect(img.height).to.equal(1)
                 // Image data layout after orientation (B=black, F=white):
                 // BF
-                var imageData = img.getContext('2d').getImageData(0, 0, 2, 1)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 2, 1).data
                 // 0:0 opaque black
                 expect(imageData[0]).to.equal(0)
                 expect(imageData[1]).to.equal(0)
@@ -2033,8 +2042,9 @@
                 }
                 // Image data layout after orientation (B=black, F=white):
                 // FB
-                var imageData = img.getContext('2d').getImageData(0, 0, 2, 1)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 2, 1).data
                 // 0:0 opaque white
                 expect(imageData[0]).to.equal(255)
                 expect(imageData[1]).to.equal(255)
@@ -2068,8 +2078,9 @@
                 expect(img.height).to.equal(1)
                 // Image data layout after orientation (B=black, F=white):
                 // FB
-                var imageData = img.getContext('2d').getImageData(0, 0, 2, 1)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 2, 1).data
                 // 0:0 opaque white
                 expect(imageData[0]).to.equal(255)
                 expect(imageData[1]).to.equal(255)
@@ -2107,8 +2118,9 @@
                 }
                 // Image data layout after orientation (B=black, F=white):
                 // BF
-                var imageData = img.getContext('2d').getImageData(0, 0, 2, 1)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 2, 1).data
                 // 0:0 opaque black
                 expect(imageData[0]).to.equal(0)
                 expect(imageData[1]).to.equal(0)
@@ -2147,8 +2159,9 @@
                 // Image data layout after orientation (B=black, F=white):
                 // B
                 // F
-                var imageData = img.getContext('2d').getImageData(0, 0, 1, 2)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 1, 2).data
                 // 0:0 opaque black
                 expect(imageData[0]).to.equal(0)
                 expect(imageData[1]).to.equal(0)
@@ -2183,8 +2196,9 @@
                 // Image data layout after orientation (B=black, F=white):
                 // B
                 // F
-                var imageData = img.getContext('2d').getImageData(0, 0, 1, 2)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 1, 2).data
                 // 0:0 opaque black
                 expect(imageData[0]).to.equal(0)
                 expect(imageData[1]).to.equal(0)
@@ -2223,8 +2237,9 @@
                 // Image data layout after orientation (B=black, F=white):
                 // F
                 // B
-                var imageData = img.getContext('2d').getImageData(0, 0, 1, 2)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 1, 2).data
                 // 0:0 opaque white
                 expect(imageData[0]).to.equal(255)
                 expect(imageData[1]).to.equal(255)
@@ -2259,8 +2274,9 @@
                 // Image data layout after orientation (B=black, F=white):
                 // F
                 // B
-                var imageData = img.getContext('2d').getImageData(0, 0, 1, 2)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 1, 2).data
                 // 0:0 opaque white
                 expect(imageData[0]).to.equal(255)
                 expect(imageData[1]).to.equal(255)
@@ -2295,8 +2311,9 @@
                 // Image data layout after orientation (B=black, F=white):
                 // B
                 // F
-                var imageData = img.getContext('2d').getImageData(0, 0, 1, 2)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 1, 2).data
                 // 0:0 opaque black
                 expect(imageData[0]).to.equal(0)
                 expect(imageData[1]).to.equal(0)
@@ -2331,8 +2348,9 @@
                 // Image data layout after orientation (B=black, F=white):
                 // F
                 // F
-                var imageData = img.getContext('2d').getImageData(0, 0, 1, 2)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 1, 2).data
                 // 0:0 opaque black
                 expect(imageData[0]).to.equal(255)
                 expect(imageData[1]).to.equal(255)
@@ -2367,8 +2385,9 @@
                 // Image data layout after orientation (B=black, F=white):
                 // B
                 // B
-                var imageData = img.getContext('2d').getImageData(0, 0, 1, 2)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 1, 2).data
                 // 0:0 opaque black
                 expect(imageData[0]).to.equal(0)
                 expect(imageData[1]).to.equal(0)
@@ -2403,8 +2422,9 @@
                 // Image data layout after orientation (B=black, F=white):
                 // B
                 // B
-                var imageData = img.getContext('2d').getImageData(0, 0, 1, 2)
-                  .data
+                var imageData = img
+                  .getContext('2d')
+                  .getImageData(0, 0, 1, 2).data
                 // 0:0 opaque black
                 expect(imageData[0]).to.equal(0)
                 expect(imageData[1]).to.equal(0)
