@@ -4,7 +4,6 @@ services:
     image: nginx:alpine
     ports:
       - 127.0.0.1:80:80
-      - ${SERVER_HOST:-127.0.0.1}:${SERVER_PORT-}:80
     volumes:
       - .:/usr/share/nginx/html:ro
   mocha:
