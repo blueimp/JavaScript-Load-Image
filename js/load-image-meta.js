@@ -208,7 +208,7 @@
    * @returns {Promise<Blob|null>|undefined} Combined Blob
    */
   function replaceHead(blob, head, callback) {
-    var options = { maxMetaDataSize: 256, disableMetaDataParsers: true }
+    var options = { maxMetaDataSize: 1024, disableMetaDataParsers: true }
     if (!callback && global.Promise) {
       return parseMetaData(blob, options).then(function (data) {
         return replaceJPEGHead(blob, data.imageHead, head)
